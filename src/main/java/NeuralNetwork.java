@@ -74,10 +74,10 @@ public class NeuralNetwork {
                 .updater(Updater.NESTEROVS).momentum(0.9)
                 .regularization(true).l2(1e-4)
                 .list()
-                .layer(0, new DenseLayer.Builder().nIn(28 * 28).nOut(500).build())
+                .layer(0, new DenseLayer.Builder().nIn(3).nOut(500).build())
                 .layer(1, new DenseLayer.Builder().nIn(500).nOut(100).build())
-                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).activation(Activation.SOFTMAX).nIn(100).nOut(10).build())
-                .pretrain(false).backprop(true)
+                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).activation(Activation.SOFTMAX).nIn(100).nOut(3).build())
+                .pretrain(true).backprop(true)
                 .build();
 
         return conf;
