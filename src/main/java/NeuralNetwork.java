@@ -60,11 +60,11 @@ public class NeuralNetwork {
         buildNetwork(this.conf);
     }
 
-    public void buildNetwork(MultiLayerConfiguration conf){
+    private void buildNetwork(MultiLayerConfiguration conf){
         this.network = new MultiLayerNetwork(conf);
     }
 
-    public MultiLayerConfiguration getNetwork1(){
+    private MultiLayerConfiguration getNetwork1(){
         this.conf = new NeuralNetConfiguration.Builder()
                 .seed(this.seed)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(1)
@@ -75,16 +75,16 @@ public class NeuralNetwork {
                 .regularization(true).l2(1e-4)
                 .list()
                 .layer(0, new DenseLayer.Builder().nIn(3).nOut(500).build())
-                .layer(1, new DenseLayer.Builder().nIn(500).nOut(100).build())
-                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).activation(Activation.SOFTMAX).nIn(100).nOut(3).build())
+                .layer(1, new DenseLayer.Builder().nOut(100).build())
+                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).activation(Activation.SOFTMAX).nOut(3).build())
                 .pretrain(true).backprop(true)
                 .build();
 
         return conf;
     }
 
-    public MultiLayerConfiguration getConvolutionalNetwork1(){
-        //Lenet model
+    private MultiLayerConfiguration getConvolutionalNetwork1(){
+        System.out.println("Creation convolutional network");
         this.conf = new NeuralNetConfiguration.Builder()
                 .seed(this.seed)
                 .iterations(this.iterations)
@@ -95,7 +95,7 @@ public class NeuralNetwork {
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.RMSPROP).momentum(0.9)
                 .list()
-                .layer(0, convInit("cnn1", this.nIn, 50, new int[]{5, 5}, new int[]{1, 1}, new int[]{0, 0}, 0)) //nIn maybe z
+                .layer(0, convInit("cnn1", 192, 50, new int[]{5, 5}, new int[]{1, 1}, new int[]{0, 0}, 0)) //nIn maybe z
                 .layer(1, maxPool("maxPool1", new int[]{2, 2}))
                 .layer(2, conv5x5("cnn2", 100, new int[]{5, 5}, new int[]{1, 1}, 0))
                 .layer(3, maxPool("maxPool2", new int[]{2, 2}))

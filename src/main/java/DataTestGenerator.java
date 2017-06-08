@@ -33,7 +33,7 @@ public class DataTestGenerator {
         INDArray npArray = Nd4j.rand(l*m, n).reshape(l, m, n);
         System.out.println("******* Array Generated *******");
         System.out.println("Shape: " + ArrayUtils.toString(npArray.shape()));
-        System.out.println("Array: " + npArray);
+        //System.out.println("Array: " + npArray);
         return npArray;
     }
 
@@ -42,13 +42,13 @@ public class DataTestGenerator {
         npArray.mul(-1);
         System.out.println("******* Negative Array Generated *******");
         System.out.println("Shape: " + ArrayUtils.toString(npArray.shape()));
-        System.out.println("Array: " + npArray);
+        //System.out.println("Array: " + npArray);
         return npArray;
     }
 
     public INDArrayDataSetIterator generateDataSet(int nbData){
-        INDArray negLabel = generateINDArray().reshape(9, 3);
-        INDArray posLabel = generateINDArray().reshape(9, 3);
+        INDArray negLabel = generateINDArray().reshape(9,3);
+        INDArray posLabel = generateINDArray().reshape(9,3);
         List<INDArray> labels = new ArrayList<INDArray>();
         List<INDArray> features = new ArrayList<INDArray>();
 
