@@ -81,7 +81,7 @@ public class Main {
     }
 
     private static MultiLayerConfiguration getCNNConf(){
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3, 3)
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(1, 1)
                 .nIn(1)
                 .nOut(20)
                 .stride(1, 1)
@@ -107,6 +107,15 @@ public class Main {
                 .activation(Activation.SOFTMAX)
                 .build();
 
+        ConvolutionLayer layer4 = new ConvolutionLayer.Builder(1, 1)
+                .nOut(20)
+                .stride(1, 1)
+                .padding(2, 2)
+                .weightInit(WeightInit.XAVIER)
+                .name("Convolution layer")
+                .activation(Activation.RELU)
+                .build();
+
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iteration)
@@ -119,11 +128,17 @@ public class Main {
                 .list()
                     .layer(0, layer0)
                     .layer(1, layer1)
-                    .layer(2, layer2)
-                    .layer(3, layer3)
+                    .layer(2, layer4)
+                    .layer(3, layer1)
+                    .layer(4, layer4)
+                    .layer(5, layer1)
+                    .layer(6, layer4)
+                    .layer(7, layer1)
+                    .layer(8, layer2)
+                    .layer(9, layer3)
                 .pretrain(false)
                 .backprop(true)
-                .setInputType(InputType.convolutional(5, 5, 1))
+                .setInputType(InputType.convolutional(2048, 2880, 1))
                 .build();
         return conf;
 
@@ -131,6 +146,10 @@ public class Main {
 
     private static void training(INDArrayDataSetIterator iterator, MultiLayerNetwork mlnet) {
         log.info("***** Training Model *****");
+        /*while(iterator.hasNext()){
+            DataSet ds = iterator.next();
+            mlnet.fit(ds);
+        }*/
         mlnet.fit(iterator);
     }
 

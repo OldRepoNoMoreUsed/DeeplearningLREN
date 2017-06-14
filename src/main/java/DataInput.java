@@ -82,10 +82,10 @@ public class DataInput {
                 }
             }
             System.out.println("Size " + tab.length);
-            float[] test = new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-
-            INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
-            System.out.println("Array: " + array);
+            //float[] test = new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+            //INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
+            //System.out.println("Array: " + array);
+            INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
             return array;
             //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
