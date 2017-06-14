@@ -35,17 +35,164 @@ import java.util.*;
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
 
-    private static final String[] allowedFormats = {"nii.gz"};
     private static final long seed = 12345;
+    private static String path = "src/main/resources/3D/sub";
     private static final Random randGen = new Random(seed);
-    private static String path = "src/main/resources/Dataset/";
-    private static int batchSize = 1;
 
-    private static DataTestGenerator dtg;
+    private static int height;
+    private static int width;
+    private static int nbChannel;
+    private static int iteration;
+    private static int nbLabels;
 
     public static void main(String[] args) {
+        log.info("***** Main start *****");
+        log.info("***** Get info from datas *****");
+        DataInput di = new DataInput(path);
+        di.printInfo();
 
-        /*Random rand = new Random(seed);
+        log.info("**** Set up hyper-parameter");
+        width =di.getX();
+        height = di.getY();
+        nbChannel = di.getZ(); //Surement a modifier getZ() par 1
+        iteration = 1;
+        nbLabels = 2;
+
+        log.info("***** Get an INDArrayDataSetIterator *****");
+        INDArrayDataSetIterator iterator = di.getDataSetIterator();
+        System.out.println("***** Iterator Info *****");
+        System.out.printf("String of iterator: " + iterator.toString());
+        System.out.println("\nTotal example: " + iterator.totalExamples());
+        System.out.println("Labels: " + iterator.getLabels());
+        System.out.println("***************************");
+
+        log.info("***** Get CNN model *****");
+        MultiLayerConfiguration conf = getCNNConf();
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+
+        log.info("***** Train model *****");
+        training(iterator, model);
+
+        log.info("***** Eval model *****");
+        evalModel(iterator, model);
+
+        log.info("***** END MAIN *****");
+    }
+
+    private static MultiLayerConfiguration getCNNConf(){
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(10, 2304)
+                .nIn(16)
+                .nOut(20)
+                .stride(1, 1)
+                .padding(10, 2304)
+                .weightInit(WeightInit.XAVIER)
+                .name("Convolution layer")
+                .activation(Activation.RELU)
+                .build();
+
+        SubsamplingLayer layer1 = new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                .kernelSize(2, 2)
+                .stride(2, 2)
+                .name("Max pooling layer")
+                .build();
+
+        DenseLayer layer2 = new DenseLayer.Builder()
+                .activation(Activation.RELU)
+                .nOut(50)
+                .build();
+
+        OutputLayer layer3 = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .nOut(nbLabels)
+                .activation(Activation.SOFTMAX)
+                .build();
+
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .iterations(iteration)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .learningRate(0.001)
+                .regularization(true)
+                .l2(0.0004)
+                .updater(org.deeplearning4j.nn.conf.Updater.NESTEROVS)
+                .momentum(0.9)
+                .list()
+                    .layer(0, layer0)
+                    .layer(1, layer1)
+                    .layer(2, layer2)
+                    .layer(3, layer3)
+                .pretrain(false)
+                .backprop(true)
+                .setInputType(InputType.convolutional(height, width, nbChannel))
+                .build();
+        return conf;
+
+    }
+
+    private static void training(INDArrayDataSetIterator iterator, MultiLayerNetwork mlnet) {
+        log.info("***** Training Model *****");
+        mlnet.fit(iterator);
+    }
+
+    private static void evalModel(INDArrayDataSetIterator iterator, MultiLayerNetwork mlnet){
+        log.info("***** Evaluating Model *****");
+        iterator.reset();
+        Evaluation eval = new Evaluation();
+        while(iterator.hasNext()){
+            DataSet next = iterator.next();
+            INDArray predict = mlnet.output(next.getFeatureMatrix());
+            eval.eval(next.getLabels(), predict);
+        }
+        System.out.println(eval.stats());
+    }
+
+    private static INDArray getGeneratedINDArray(int choice){
+        DataTestGenerator dtg = new DataTestGenerator();
+        if(choice != 1){
+            return dtg.generateINDArray();
+        }
+        return dtg.generateNegativeINDArray();
+    }
+
+    public static void testWithDataSet(){
+        int nRows = 9;
+        int nColumns = 3;
+        int nbChannels = 1;
+
+        DataTestGenerator dtg = new DataTestGenerator();
+        INDArrayDataSetIterator ds = dtg.generateDataSet(1000);
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
+        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
+
+        training(ds, mlnet);
+        evalModel(ds, mlnet);
+    }
+
+    public static void test(){
+        //Test la fonction fit avec des INDArray
+        int nRows = 9;
+        int nColumns = 3;
+        int nbChannels = 1;
+        int nIn = nRows * nColumns * nbChannels;
+
+        log.info("Generate INDArray");
+        INDArray dataPos = getGeneratedINDArray(0);
+        INDArray dataNeg = getGeneratedINDArray(1);
+
+        log.info("Setup the Neural Network...");
+        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
+        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
+
+        log.info("Train model");
+        mlnet.fit(dataPos.reshape(9, 3));
+        mlnet.fit(dataNeg.reshape(9, 3));
+    }
+
+}
+
+/*{
+        Random rand = new Random(seed);
         File parentDir = new File("src/main/resources/Dataset/Female");
         FileSplit filesInDir = new FileSplit(parentDir, new String[]{"gz"}, rand);
         ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
@@ -55,7 +202,7 @@ public class Main {
         InputSplit trainData = filesInDirSplit[0];
         InputSplit testData = filesInDirSplit[1];
         System.out.println("Taille trainData: " + trainData.length());
-        System.out.println("Taille testData: " + testData.length());*/
+        System.out.println("Taille testData: " + testData.length());
 
 
         //TODO: Explorer les nativeImageLoader, y'a peut etre une piste pour le loading des nifti et les mettre dans DataVec
@@ -76,11 +223,12 @@ public class Main {
         }catch(IOException e){
             e.printStackTrace();
         }
-        DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 1, 0, 2);*/
+        DataSetIterator iterator = new RecordReaderDataSetIterator(recordReader, 1, 0, 2);
 
         //Test de transformation de nifti en INDArray
         //INDArray arr = data.getData();
         INDArrayDataSetIterator ds = data.getDataSetIterator();
+        System.out.println("Labels: " + ds.getLabels());
         //Fin du test
 
         //https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/org/deeplearning4j/examples/convolution/LenetMnistExample.java
@@ -152,77 +300,11 @@ public class Main {
         mlnet.init();
         mlnet.setListeners(new ScoreIterationListener(1));
 
-        /*while(iterator.hasNext()){
+        while(iterator.hasNext()){
             DataSet next = iterator.next();
             mlnet.fit(next);
-        }*/
+        }
         //mlnet.fit(arr);
         training(ds, mlnet);
         evalModel(ds, mlnet);
-
-
-    }
-
-    public static void training(INDArrayDataSetIterator iterator, MultiLayerNetwork mlnet) {
-        log.info("***** Training Model *****");
-        while (iterator.hasNext()) {
-            DataSet next = iterator.next();
-            mlnet.fit(next);
-        }
-    }
-
-    public static void evalModel(INDArrayDataSetIterator iterator, MultiLayerNetwork mlnet){
-        log.info("***** Evaluating Model *****");
-        iterator.reset();
-        Evaluation eval = new Evaluation();
-        while(iterator.hasNext()){
-            DataSet next = iterator.next();
-            INDArray predict = mlnet.output(next.getFeatureMatrix());
-            eval.eval(next.getLabels(), predict);
-        }
-        System.out.println(eval.stats());
-    }
-
-    public static void testWithDataSet(){
-        int nRows = 9;
-        int nColumns = 3;
-        int nbChannels = 1;
-
-        DataTestGenerator dtg = new DataTestGenerator();
-        INDArrayDataSetIterator ds = dtg.generateDataSet(1000);
-
-        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
-        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
-
-        training(ds, mlnet);
-        evalModel(ds, mlnet);
-    }
-
-    public static void test(){
-        //Test la fonction fit avec des INDArray
-        int nRows = 9;
-        int nColumns = 3;
-        int nbChannels = 1;
-        int nIn = nRows * nColumns * nbChannels;
-
-        log.info("Generate INDArray");
-        INDArray dataPos = getGeneratedINDArray(0);
-        INDArray dataNeg = getGeneratedINDArray(1);
-
-        log.info("Setup the Neural Network...");
-        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
-        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
-
-        log.info("Train model");
-        mlnet.fit(dataPos.reshape(9, 3));
-        mlnet.fit(dataNeg.reshape(9, 3));
-    }
-
-    public static INDArray getGeneratedINDArray(int choice){
-        DataTestGenerator dtg = new DataTestGenerator();
-        if(choice != 1){
-            return dtg.generateINDArray();
-        }
-        return dtg.generateNegativeINDArray();
-    }
-}
+        }*/
