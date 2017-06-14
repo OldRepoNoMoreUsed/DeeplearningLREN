@@ -81,7 +81,7 @@ public class Main {
     }
 
     private static MultiLayerConfiguration getCNNConf(){
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(10, 2304)
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(11, 11)
                 .nIn(16)
                 .nOut(20)
                 .stride(1, 1)
