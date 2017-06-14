@@ -81,8 +81,13 @@ public class DataInput {
                     }
                 }
             }
+            System.out.println("Size " + tab.length);
+            float[] test = new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
 
-            return Nd4j.create(tab, new int []{1, 16, 160, 36864}, 'c');
+            INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
+            System.out.println("Array: " + array);
+            return array;
+            //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
         }catch(IOException e){
             e.printStackTrace();
@@ -92,8 +97,8 @@ public class DataInput {
     }
 
     public INDArrayDataSetIterator getDataSetIterator(){
-        INDArray negLabel = Nd4j.rand(2, 2);
-        INDArray posLabel = Nd4j.rand(2, 2);
+        INDArray negLabel = Nd4j.rand(1, 2);
+        INDArray posLabel = Nd4j.rand(1, 2);
 
         List<INDArray> labels = new ArrayList<INDArray>();
         List<INDArray> datas = new ArrayList<INDArray>();

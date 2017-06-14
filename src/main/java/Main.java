@@ -81,11 +81,11 @@ public class Main {
     }
 
     private static MultiLayerConfiguration getCNNConf(){
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(11, 11)
-                .nIn(16)
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3, 3)
+                .nIn(1)
                 .nOut(20)
                 .stride(1, 1)
-                .padding(10, 2304)
+                .padding(2, 2)
                 .weightInit(WeightInit.XAVIER)
                 .name("Convolution layer")
                 .activation(Activation.RELU)
@@ -99,7 +99,7 @@ public class Main {
 
         DenseLayer layer2 = new DenseLayer.Builder()
                 .activation(Activation.RELU)
-                .nOut(50)
+                .nOut(180)
                 .build();
 
         OutputLayer layer3 = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
@@ -123,7 +123,7 @@ public class Main {
                     .layer(3, layer3)
                 .pretrain(false)
                 .backprop(true)
-                .setInputType(InputType.convolutional(height, width, nbChannel))
+                .setInputType(InputType.convolutional(5, 5, 1))
                 .build();
         return conf;
 
