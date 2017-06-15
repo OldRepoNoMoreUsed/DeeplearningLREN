@@ -23,6 +23,7 @@ Analyses préliminaires
 Le format NIFTI
 ----------------
 
+
 Le deeplearning et choix d'une bibliotheque
 --------------------------------------------
 

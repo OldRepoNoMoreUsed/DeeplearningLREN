@@ -1,4 +1,3 @@
-import niftijio.NiftiHeader;
 import niftijio.NiftiVolume;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
