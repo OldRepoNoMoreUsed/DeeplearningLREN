@@ -1,0 +1,33 @@
+\select@language {french}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Contexte du travail}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Probl\IeC {\`e}me \IeC {\`a} r\IeC {\'e}soudre et but du projet}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}Rappel des objectifs du projet}{1}{section.1.3}
+\contentsline {chapter}{\numberline {2}Analyses pr\IeC {\'e}liminaires}{2}{chapter.2}
+\contentsline {section}{\numberline {2.1}Le format NIFTI}{2}{section.2.1}
+\contentsline {section}{\numberline {2.2}Le deeplearning et choix d'une bibliotheque}{2}{section.2.2}
+\contentsline {section}{\numberline {2.3}Le calcul distribu\IeC {\'e}}{2}{section.2.3}
+\contentsline {section}{\numberline {2.4}Docker}{2}{section.2.4}
+\contentsline {section}{\numberline {2.5}Choix des technologies}{2}{section.2.5}
+\contentsline {section}{\numberline {2.6}Choix de la topologie du reseau de neurones}{2}{section.2.6}
+\contentsline {chapter}{\numberline {3}Conception}{3}{chapter.3}
+\contentsline {section}{\numberline {3.1}Sch\IeC {\'e}mas conceptuels}{3}{section.3.1}
+\contentsline {section}{\numberline {3.2}Description des classes}{3}{section.3.2}
+\contentsline {section}{\numberline {3.3}Description du workflow}{3}{section.3.3}
+\contentsline {chapter}{\numberline {4}Impl\IeC {\'e}mentation}{4}{chapter.4}
+\contentsline {chapter}{\numberline {5}Exp\IeC {\'e}rience r\IeC {\'e}alis\IeC {\'e}e avec le CHUV}{5}{chapter.5}
+\contentsline {chapter}{\numberline {6}Analyses des r\IeC {\'e}sultats}{6}{chapter.6}
+\contentsline {chapter}{\numberline {7}Gestion de projet}{7}{chapter.7}
+\contentsline {section}{\numberline {7.1}Diagramme de Gantt}{7}{section.7.1}
+\contentsline {section}{\numberline {7.2}Journal de travail}{7}{section.7.2}
+\contentsline {section}{\numberline {7.3}Analyse de la gestion de projet}{7}{section.7.3}
+\contentsline {chapter}{\numberline {8}Conclusion}{8}{chapter.8}
+\contentsline {section}{\numberline {8.1}Am\IeC {\'e}liorations futures}{8}{section.8.1}
+\contentsline {section}{\numberline {8.2}Ressenti personnel}{8}{section.8.2}
+\contentsline {chapter}{\numberline {9}Sources}{9}{chapter.9}
+\contentsline {chapter}{\numberline {10}Annexes}{10}{chapter.10}
+\contentsline {section}{\numberline {10.1}Cahier des charges}{10}{section.10.1}
+\contentsline {section}{\numberline {10.2}Journal de travail}{10}{section.10.2}
+\contentsline {section}{\numberline {10.3}Plannification}{10}{section.10.3}
+\contentsline {section}{\numberline {10.4}Manuel utilisateur}{10}{section.10.4}
+\contentsline {section}{\numberline {10.5}Bibliographie}{10}{section.10.5}
