@@ -1,3 +1,4 @@
+import niftijio.NiftiVolume;
 import org.apache.commons.lang.ArrayUtils;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
@@ -5,6 +6,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,55 @@ public class DataTestGenerator {
         this.l = l;
         this.m = m;
         this.n = n;
+    }
+
+    public void generateNIFTI(int niftiSize, int cubeSize, int offsetX, int offsetY, int offsetZ, String name) throws IOException{
+        int nx = niftiSize;
+        int ny = niftiSize;
+        int nz = niftiSize;
+        int dim = 1;
+
+        NiftiVolume volume = new NiftiVolume(nx, ny ,nz, dim);
+        NiftiVolume rectVol = new NiftiVolume(nx, ny, nz, dim);
+        int count = 0;
+        for(int d = 0; d < dim; d++){
+            for(int z = 0; z < nz; z++){
+                for(int y = 0; y < ny; y++){
+                    for(int x = 0; x < nx; x++){
+                        rectVol.data.set(x, y, z, d, count++);
+                        if(z == offsetZ || z == offsetZ + cubeSize){
+                            if(y == offsetY || y == offsetY + cubeSize){
+                                if(x >= offsetX && x <= offsetX + cubeSize){
+                                    volume.data.set(x, y, z, d, 255.0);
+                                }else{
+                                    volume.data.set(x, y, z, d, 0.0);
+                                }
+                            }
+                            if(y > offsetY && y <= offsetY + cubeSize-1){
+                                if(x == offsetX || x == offsetX + cubeSize){
+                                    volume.data.set(x, y, z, d, 255.0);
+                                }else{
+                                    volume.data.set(x, y, z, d, 0.0);
+                                }
+                            }
+                        }else if(z > offsetZ && z <= offsetZ + cubeSize-1){
+                            if(y > offsetY && y <= offsetY + cubeSize -1){
+                                if(x == offsetX || x == offsetX + cubeSize ){
+                                    volume.data.set(x, y, z, d, 255.0);
+                                }else{
+                                    volume.data.set(x, y, z, d, 0.0);
+                                }
+                            }
+                        }else{
+                            volume.data.set(x, y, z, d, 0.0);
+                        }
+                    }
+                }
+            }
+        }
+        volume.write("generate/not" + name + ".nii.gz");
+        volume.write("generate/" + name + ".nii.gz");
+        System.out.println("NIFTI generated: " + name);
     }
 
     public INDArray generateINDArray(){
@@ -71,5 +122,4 @@ public class DataTestGenerator {
         INDArrayDataSetIterator ds = new INDArrayDataSetIterator(featLab, 1);
         return ds;
     }
-
 }

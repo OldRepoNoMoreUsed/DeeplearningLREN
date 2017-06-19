@@ -2,13 +2,10 @@ import niftijio.NiftiVolume;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,12 +19,23 @@ public class DataInput {
     private int z;
     private float[] voxelDim;
     private NiftiVolume volume;
+    private INDArrayDataSetIterator iteratorTest;
+
+    public INDArrayDataSetIterator getIteratorTest() {
+        return iteratorTest;
+    }
+
+    public INDArrayDataSetIterator getIteratorTrain() {
+        return iteratorTrain;
+    }
+
+    private INDArrayDataSetIterator iteratorTrain;
 
     public DataInput(String path){
         dataPath = path;
         try{
             volume = NiftiVolume.read(dataPath + "1.nii.gz");
-            nbDim = volume.header.dim[0];
+            nbDim = volume.header.dim[4];
             x = volume.header.dim[1];
             y = volume.header.dim[2];
             z = volume.header.dim[3];
@@ -43,6 +51,7 @@ public class DataInput {
         System.out.println("Chemin d'acces aux fichiers: " + dataPath);
         System.out.println("Nombre de dimension des fichiers: " + nbDim);
         System.out.println("Shape du fichier: x = " + volume.header.dim[1] + " y = " + volume.header.dim[2] + " z = " + volume.header.dim[2]);
+        System.out.println("Datatype: " + volume.header.data_type_string);
         System.out.println("Pixdim: " + voxelDim[0] + " " + voxelDim[1] + " " + voxelDim[2] + " " + voxelDim[3] + " " + voxelDim[4]+ " " + voxelDim[5] + " " + voxelDim[6] + " " + voxelDim[7]);
         System.out.println("****************************");
     }
@@ -67,9 +76,11 @@ public class DataInput {
             int nz = volume.header.dim[3];
             int dim = volume.header.dim[4];
 
-            double[] tab = new double[nx * ny * nz * dim];
             int w = 0;
-            if(dim == 0) dim = 1;
+            if(dim == 0){
+                dim = 1;
+            }
+            double[] tab = new double[nx * ny * nz * dim];
             for(int d = 0; d < dim; d++){
                 for(int k = 0; k < nz; k++){
                     for(int j = 0; j < ny; j++){
@@ -80,11 +91,11 @@ public class DataInput {
                     }
                 }
             }
-            System.out.println("Size " + tab.length);
             //float[] test = new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
             //INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
             //System.out.println("Array: " + array);
-            INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
+            //INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
+            INDArray array = Nd4j.create(tab, new int[]{1, 1, 100, 100});
             return array;
             //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
@@ -122,5 +133,61 @@ public class DataInput {
         Iterable featLab = featureAndLabel;
         INDArrayDataSetIterator ds = new INDArrayDataSetIterator(featLab, 1);
         return ds;
+    }
+
+    public void createDataSetCube(){
+        INDArray cubeLabel = Nd4j.ones(1, 2);
+        INDArray notLabel = Nd4j.zeros(1, 2);
+
+        List<INDArray> labelsTrain = new ArrayList<>();
+        List<INDArray> featuresTrain = new ArrayList<>();
+        List<INDArray> labelsTest = new ArrayList<>();
+        List<INDArray> featuresTest = new ArrayList<>();
+
+        //get cube data
+        for(int i = 0; i <= 728; i++){
+            INDArray array = getData("generate/cube" + i + ".nii.gz");
+            if(array != null){
+                if(i < 582){
+                    featuresTrain.add(array);
+                    labelsTrain.add(cubeLabel);
+                }else{
+                    featuresTest.add(array);
+                    labelsTest.add(cubeLabel);
+                }
+
+            }
+        }
+
+        //get void data
+        for(int i = 0; i <= 728; i++){
+            INDArray array = getData("generate/notcube" + i + ".nii.gz");
+            if(array != null){
+                if(i < 582){
+                    featuresTrain.add(array);
+                    labelsTrain.add(notLabel);
+                }else{
+                    featuresTest.add(array);
+                    labelsTest.add(notLabel);
+                }
+
+            }
+        }
+
+        ArrayList<Pair> featureAndLabel = new ArrayList<>();
+        for(int i = 0; i < featuresTrain.size(); i++){
+            featureAndLabel.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
+        }
+        System.out.println("Size dataset train: " + featureAndLabel.size());
+        Iterable featLabel = featureAndLabel;
+        iteratorTrain = new INDArrayDataSetIterator(featLabel, 1);
+
+        ArrayList<Pair> featureAndLabel1 = new ArrayList<>();
+        for(int i = 0; i < featuresTrain.size(); i++){
+            featureAndLabel1.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
+        }
+        System.out.println("Size dataset test: " + featureAndLabel1.size());
+        Iterable featLabel1 = featureAndLabel1;
+        iteratorTest = new INDArrayDataSetIterator(featLabel1, 1);
     }
 }
