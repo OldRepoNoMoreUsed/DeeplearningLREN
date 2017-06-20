@@ -1,3 +1,4 @@
+import org.apache.commons.io.FileUtils;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -11,11 +12,16 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
@@ -34,25 +40,12 @@ public class Main {
 
     private static int niftiSize = 100;
     private static int cubeSize = 10;
-    private static String niftiNamePrefix = "cube";
+    private static String NIFTICubPrefix = "cube";
+    private static String NIFTISpherePrefix = "sphere";
     private static int step = 10;
 
     public static void main(String[] args) {
-        /*DataTestGenerator dtg = new DataTestGenerator();
-        try{
-            int count = 0;
-            for(int offsetZ = 0; offsetZ < niftiSize - cubeSize; offsetZ += step ){
-                for(int offsetY = 0; offsetY < niftiSize -  cubeSize; offsetY += step){
-                    for(int offsetX = 0; offsetX < niftiSize - cubeSize; offsetX += step){
-                        dtg.generateNIFTI(niftiSize, cubeSize, offsetX, offsetY, offsetZ, niftiNamePrefix + count++);
-                    }
-                }
-            }
-            //exemple
-            //dtg.generateNIFTI(niftiSize, cubeSize, 0, 0, 0, niftiNamePrefix);
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
+        //generateData();
 
         log.info("***** Main start *****");
         log.info("***** Get info from datas *****");
@@ -70,11 +63,17 @@ public class Main {
         di.createDataSetCube();
         INDArrayDataSetIterator iteratorTrain = di.getIteratorTrain();
         INDArrayDataSetIterator iteratorTest = di.getIteratorTest();
-        System.out.println("***** Iterator Info *****");
+        System.out.println("***** Train Iterator Info *****");
         System.out.printf("String of iterator: " + iteratorTrain.toString());
         System.out.println("\nTotal example: " + iteratorTrain.totalExamples());
         System.out.println("Labels: " + iteratorTrain.getLabels());
         System.out.println("***************************");
+        System.out.println("***** Test Iterator Info *****");
+        System.out.printf("String of iterator: " + iteratorTest.toString());
+        System.out.println("\nTotal example: " + iteratorTest.totalExamples());
+        System.out.println("Labels: " + iteratorTest.getLabels());
+        System.out.println("***************************");
+
 
         log.info("***** Get CNN model *****");
         MultiLayerConfiguration conf = getCNNConf();
@@ -87,15 +86,50 @@ public class Main {
         log.info("***** Eval model *****");
         evalModel(iteratorTest, model);
 
+        log.info("***** Save model *****");
+        try{
+            FileUtils.write(new File("SaveCNN.json"), model.getLayerWiseConfigurations().toJson());
+            FileUtils.write(new File("SaveCNN.yaml"), model.getLayerWiseConfigurations().toYaml());
+            DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get("SaveCNN.bin")));
+            Nd4j.write(model.params(), dos);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         log.info("***** END MAIN *****");
+
+    }
+
+    private static void generateData(){
+        DataTestGenerator dtg = new DataTestGenerator();
+        try{
+            int count = 0;
+            for(int offsetZ = 0; offsetZ < niftiSize - cubeSize; offsetZ += step ){
+                for(int offsetY = 0; offsetY < niftiSize -  cubeSize; offsetY += step){
+                    for(int offsetX = 0; offsetX < niftiSize - cubeSize; offsetX += step){
+                        dtg.generateNIFTICube(niftiSize, cubeSize, offsetX, offsetY, offsetZ, NIFTICubPrefix + count++);
+                    }
+                }
+            }
+            count = 0;
+            for(int offsetZ = 0; offsetZ < niftiSize - cubeSize; offsetZ += step){
+                for(int offsetY = 0; offsetY < niftiSize - cubeSize; offsetY += step){
+                    for(int offsetX = 0; offsetX < niftiSize - cubeSize; offsetX += step){
+                        dtg.generateNIFTISphere(niftiSize, cubeSize, offsetX, offsetY, offsetZ, NIFTISpherePrefix + count++);
+                    }
+                }
+            }
+            //exemple
+            //dtg.generateNIFTICube(niftiSize, cubeSize, 0, 0, 0, niftiNamePrefix);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     private static MultiLayerConfiguration getCNNConf(){
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(1, 1)
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(5, 5)
                 .nIn(1)
                 .nOut(20)
                 .stride(1, 1)
-                .padding(2, 2)
                 .weightInit(WeightInit.XAVIER)
                 .name("Convolution layer")
                 .activation(Activation.RELU)
@@ -126,7 +160,7 @@ public class Main {
                 .activation(Activation.RELU)
                 .build();
 
-        /*MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iteration)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -148,10 +182,10 @@ public class Main {
                     .layer(9, layer3)
                 .pretrain(false)
                 .backprop(true)
-                .setInputType(InputType.convolutional(2048, 2880, 1))
-                .build();*/
+                .setInputType(InputType.convolutional(1000, 1000, 1))
+                .build();
 
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+        /*MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iteration)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -167,8 +201,8 @@ public class Main {
                     .layer(3, layer3)
                 .pretrain(false)
                 .backprop(true)
-                .setInputType(InputType.convolutional(100, 100, 1))
-                .build();
+                .setInputType(InputType.convolutional(1000, 1000, 1))
+                .build();*/
         return conf;
 
     }

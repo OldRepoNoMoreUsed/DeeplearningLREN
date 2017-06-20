@@ -2,6 +2,7 @@ import niftijio.NiftiVolume;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class DataInput {
     private float[] voxelDim;
     private NiftiVolume volume;
     private INDArrayDataSetIterator iteratorTest;
+    private INDArrayDataSetIterator iteratorTrain;
 
     public INDArrayDataSetIterator getIteratorTest() {
         return iteratorTest;
@@ -28,8 +30,6 @@ public class DataInput {
     public INDArrayDataSetIterator getIteratorTrain() {
         return iteratorTrain;
     }
-
-    private INDArrayDataSetIterator iteratorTrain;
 
     public DataInput(String path){
         dataPath = path;
@@ -68,7 +68,7 @@ public class DataInput {
         return z;
     }
 
-    public INDArray getData(String path){
+    private INDArray getData(String path){
         try{
             NiftiVolume volume = NiftiVolume.read(path);
             int nx = volume.header.dim[1];
@@ -95,7 +95,7 @@ public class DataInput {
             //INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
             //System.out.println("Array: " + array);
             //INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
-            INDArray array = Nd4j.create(tab, new int[]{1, 1, 100, 100});
+            INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
             return array;
             //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
@@ -161,7 +161,7 @@ public class DataInput {
 
         //get void data
         for(int i = 0; i <= 728; i++){
-            INDArray array = getData("generate/notcube" + i + ".nii.gz");
+            INDArray array = getData("generate/sphere" + i + ".nii.gz");
             if(array != null){
                 if(i < 582){
                     featuresTrain.add(array);
@@ -174,20 +174,20 @@ public class DataInput {
             }
         }
 
-        ArrayList<Pair> featureAndLabel = new ArrayList<>();
+        ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
         for(int i = 0; i < featuresTrain.size(); i++){
-            featureAndLabel.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
+            featureAndLabelTrain.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
         }
-        System.out.println("Size dataset train: " + featureAndLabel.size());
-        Iterable featLabel = featureAndLabel;
+        System.out.println("Size dataset train: " + featureAndLabelTrain.size());
+        Iterable featLabel = featureAndLabelTrain;
         iteratorTrain = new INDArrayDataSetIterator(featLabel, 1);
 
-        ArrayList<Pair> featureAndLabel1 = new ArrayList<>();
-        for(int i = 0; i < featuresTrain.size(); i++){
-            featureAndLabel1.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
+        ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
+        for(int i = 0; i < featuresTest.size(); i++){
+            featureAndLabelTest.add(new Pair(featuresTest.get(i), labelsTest.get(i)));
         }
-        System.out.println("Size dataset test: " + featureAndLabel1.size());
-        Iterable featLabel1 = featureAndLabel1;
+        System.out.println("Size dataset test: " + featureAndLabelTest.size());
+        Iterable featLabel1 = featureAndLabelTest;
         iteratorTest = new INDArrayDataSetIterator(featLabel1, 1);
     }
 }

@@ -31,20 +31,47 @@ public class DataTestGenerator {
         this.n = n;
     }
 
-    public void generateNIFTI(int niftiSize, int cubeSize, int offsetX, int offsetY, int offsetZ, String name) throws IOException{
+    public void generateNIFTISphere(int niftiSize, int sphereSize, int offsetX, int offsetY, int offsetZ, String name) throws IOException{
+        int nx = niftiSize;
+        int ny = niftiSize;
+        int nz = niftiSize;
+        int dim = 1;
+
+        int centerX = offsetX + sphereSize/2;
+        int centerY = offsetY + sphereSize/2;
+        int centerZ = offsetZ + sphereSize/2;
+
+        NiftiVolume sphere = new NiftiVolume(nx, ny, nz, dim);
+        for(int d = 0; d < dim; d++){
+            for(int z = 0; z < nz; z++){
+                for(int y = 0; y < ny; y++){
+                    for(int x = 0; x < nx; x++){
+                        int distanceToCentre = (int) Math.abs(Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2) + Math.pow(centerZ - z, 2)));
+                        if(distanceToCentre <= sphereSize){
+                            sphere.data.set(x, y, z, d, 255.0);
+                        }else{
+                            sphere.data.set(x, y, z, d, 0.0);
+                        }
+                    }
+                }
+            }
+        }
+        sphere.write("generate/" + name + ".nii.gz");
+        System.out.println("Sphere NIFTI generate: " + name);
+    }
+
+    public void generateNIFTICube(int niftiSize, int cubeSize, int offsetX, int offsetY, int offsetZ, String name) throws IOException{
         int nx = niftiSize;
         int ny = niftiSize;
         int nz = niftiSize;
         int dim = 1;
 
         NiftiVolume volume = new NiftiVolume(nx, ny ,nz, dim);
-        NiftiVolume rectVol = new NiftiVolume(nx, ny, nz, dim);
-        int count = 0;
+        //Cube generation
         for(int d = 0; d < dim; d++){
             for(int z = 0; z < nz; z++){
                 for(int y = 0; y < ny; y++){
                     for(int x = 0; x < nx; x++){
-                        rectVol.data.set(x, y, z, d, count++);
                         if(z == offsetZ || z == offsetZ + cubeSize){
                             if(y == offsetY || y == offsetY + cubeSize){
                                 if(x >= offsetX && x <= offsetX + cubeSize){
@@ -75,9 +102,8 @@ public class DataTestGenerator {
                 }
             }
         }
-        volume.write("generate/not" + name + ".nii.gz");
         volume.write("generate/" + name + ".nii.gz");
-        System.out.println("NIFTI generated: " + name);
+        System.out.println("Cube NIFTI generated: " + name);
     }
 
     public INDArray generateINDArray(){
