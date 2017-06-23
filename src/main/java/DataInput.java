@@ -81,7 +81,7 @@ public class DataInput {
                 dim = 1;
             }
             double[] tab = new double[nx * ny * nz * dim];
-            for(int d = 0; d < dim; d++){
+            /*for(int d = 0; d < dim; d++){
                 for(int k = 0; k < nz; k++){
                     for(int j = 0; j < ny; j++){
                         for(int i = 0; i < nx; i++){
@@ -90,11 +90,12 @@ public class DataInput {
                         }
                     }
                 }
-            }
+            }*/
             //float[] test = new float[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
             //INDArray array = Nd4j.create(test, new int[]{1, 1, 5, 5}, 'c');
             //System.out.println("Array: " + array);
             //INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
+            //format 4D-Tensor [minibatch, inputDepth, heigth, width]
             INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
             return array;
             //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
@@ -102,7 +103,6 @@ public class DataInput {
         }catch(IOException e){
             e.printStackTrace();
         }
-
         return null;
     }
 

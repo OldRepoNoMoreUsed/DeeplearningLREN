@@ -29,7 +29,8 @@ public class Main {
 
     private static final long seed = 12345;
     //private static String path = "src/main/resources/3D/sub";
-    private static String path = "generate/cube";
+    private static String pathCube = "generate/cube";
+    private static String pathSphere = "generate/sphere";
     private static final Random randGen = new Random(seed);
 
     private static int height;
@@ -45,9 +46,34 @@ public class Main {
     private static int step = 10;
 
     public static void main(String[] args) {
-        //generateData();
+        generateData();
+        ArrayList<String> paths = getPaths();
+        DataReader dr = new DataReader();
+        for(int i = 0; i <= 1456; i++){
+            if(i <= 582){
+                dr.load(paths.get(i), new float[]{0, 1}, new int[]{1, 2}, true);
+            }
+            if(i > 582 && i <= 728){
+                dr.load(paths.get(i), new float[]{0, 1}, new int[]{1, 2}, false);
+            }
+            if(i > 728 && i <= 1410){
+                dr.load(paths.get(i), new float[]{1, 0}, new int[]{1, 2}, true);
+            }
+            else{
+                dr.load(paths.get(i), new float[]{1, 0}, new int[]{1, 2}, false);
+            }
+        }
+        int[] metaData = dr.getMetaData(pathCube + "1.nii.gz");
+        width = metaData[0];
+        height = metaData[1];
+        nbChannel = 1;
+        iteration = 2;
+        nbLabels = 2;
 
-        log.info("***** Main start *****");
+        INDArrayDataSetIterator iteratorTrain = dr.getTrainIterator();
+        INDArrayDataSetIterator iteratorTest = dr.getTestiterator();
+
+        /*log.info("***** Main start *****");
         log.info("***** Get info from datas *****");
         DataInput di = new DataInput(path);
         di.printInfo();
@@ -62,7 +88,7 @@ public class Main {
         log.info("***** Get an INDArrayDataSetIterator *****");
         di.createDataSetCube();
         INDArrayDataSetIterator iteratorTrain = di.getIteratorTrain();
-        INDArrayDataSetIterator iteratorTest = di.getIteratorTest();
+        INDArrayDataSetIterator iteratorTest = di.getIteratorTest();*/
         System.out.println("***** Train Iterator Info *****");
         System.out.printf("String of iterator: " + iteratorTrain.toString());
         System.out.println("\nTotal example: " + iteratorTrain.totalExamples());
@@ -123,6 +149,17 @@ public class Main {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    private static ArrayList<String> getPaths(){
+        ArrayList<String> paths = new ArrayList<>();
+        for(int i = 0; i <= 728; i++){
+            paths.add(pathCube + i + ".nii.gz");
+        }
+        for(int i = 0; i <= 728; i++){
+            paths.add(pathSphere + i + ".nii.gz");
+        }
+        return paths;
     }
 
     private static MultiLayerConfiguration getCNNConf(){
