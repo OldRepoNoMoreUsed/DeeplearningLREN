@@ -5,7 +5,9 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +15,19 @@ import java.util.List;
  * Created by nicolas on 21.06.17.
  */
 public class DataReader {
-    private ArrayList<INDArray> labels = new ArrayList<>();
-    private List<INDArray> labelsTrain = new ArrayList<>();
-    private List<INDArray> labelsTest = new ArrayList<>();
-    private List<INDArray> featuresTrain = new ArrayList<>();
-    private List<INDArray> featuresTest = new ArrayList<>();
+    private INDArrayDataSetIterator trainDataSetIterator;
+    private INDArrayDataSetIterator testDataSetIterator;
 
+    private INDArray cubeLabel = Nd4j.create(new float[]{1, 0, 1, 0}, new int[]{2, 2});
+    private INDArray sphereLabel = Nd4j.create(new float[]{0, 1, 0, 1}, new int[]{2, 2});
+
+    public INDArrayDataSetIterator getTrainDataSetIterator(){
+        return trainDataSetIterator;
+    }
+
+    public INDArrayDataSetIterator getTestDataSetIterator(){
+        return testDataSetIterator;
+    }
 
     public int[] getMetaData(String path){
         try{
@@ -28,42 +37,6 @@ public class DataReader {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void load(String path, float[] label, int[] labelShape, boolean train){
-        double[] tab = readData(path);
-        INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
-        if(train){
-            featuresTrain.add(array);
-            labelsTrain.add(Nd4j.create(label, labelShape));
-        }else{
-            featuresTest.add(array);
-            labelsTest.add(Nd4j.create(tab, labelShape));
-        }
-    }
-
-    public INDArrayDataSetIterator getTrainIterator(){
-        ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
-        for(int i = 0; i < featuresTrain.size(); i++){
-            featureAndLabelTrain.add(new Pair(featuresTrain.get(i), labelsTest.get(i)));
-        }
-        Iterable featureAndLabel = featureAndLabelTrain;
-        return new INDArrayDataSetIterator(featureAndLabel, featureAndLabelTrain.size());
-    }
-
-    public INDArrayDataSetIterator getTestiterator(){
-        ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
-        for(int i = 0; i < featuresTest.size(); i++){
-            featureAndLabelTest.add(new Pair(featuresTest.get(i), labelsTest.get(i)));
-        }
-        Iterable featureAndLabel = featureAndLabelTest;
-        return new INDArrayDataSetIterator(featureAndLabel, featureAndLabelTest.size());
-    }
-
-    private void createLabel(float[] tableau){
-        INDArray label = Nd4j.create(tableau, new int[]{1,2});
-        labels.add(label);
-        System.out.println("Label added: " + label);
     }
 
     private double[] readData(String path){
@@ -96,5 +69,47 @@ public class DataReader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void load(ArrayList<String> paths){
+        ArrayList<String> pathTrain = new ArrayList<>();
+        ArrayList<String> pathTest = new ArrayList<>();
+
+        for(int i = 0; i <= 582; i++){
+            pathTrain.add(paths.get(i));
+        }
+        loadDataSetIterator(pathTrain, trainDataSetIterator);
+
+        for(int i = 583; i < paths.size(); i++){
+            pathTest.add(paths.get(i));
+        }
+        loadDataSetIterator(pathTest, testDataSetIterator);
+    }
+
+    private void loadDataSetIterator(ArrayList<String> paths, INDArrayDataSetIterator dataSetIterator){
+        System.out.println("************************************************************");
+        ArrayList<INDArray> features = new ArrayList<>();
+        ArrayList<INDArray> labels = new ArrayList<>();
+
+        for(int i = 0; i < paths.size(); i++){
+            INDArray array = Nd4j.create(readData(paths.get(i)), new int[]{1, 1, 1000, 1000});
+            features.add(array);
+            if(paths.get(i).contains("cube")){
+                labels.add(cubeLabel);
+            }
+            else{
+                labels.add(sphereLabel);
+            }
+        }
+        ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
+        for(int i = 0; i < features.size(); i++){
+            featureAndLabelTrain.add(new Pair(features.get(i), labels.get(i)));
+        }
+        Iterable featLabel = featureAndLabelTrain;
+        trainDataSetIterator = new INDArrayDataSetIterator(featLabel, features.size());
+        System.out.println("Paths size: " + paths.size());
+        System.out.println("Features size: " + features.size());
+        System.out.println("Labels size: " + labels.size());
+
     }
 }

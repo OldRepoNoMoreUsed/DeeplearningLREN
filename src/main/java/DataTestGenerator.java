@@ -19,6 +19,13 @@ public class DataTestGenerator {
     private static int m;
     private static int n;
 
+    private int niftiSize;
+    private int cubeSize;
+    private int sphereSize;
+    private int step;
+
+    private String NIFTICubePrefix;
+    private String NIFTISpherePrefix;
     public DataTestGenerator(){
         this.l = 3;
         this.m = 3;
@@ -29,6 +36,15 @@ public class DataTestGenerator {
         this.l = l;
         this.m = m;
         this.n = n;
+    }
+
+    public DataTestGenerator(int niftiSize, int cubeSize, String NIFTICubePrefix, int sphereSize, String NIFTISpherePrefix, int step){
+        this.niftiSize = niftiSize;
+        this.cubeSize = cubeSize;
+        this.NIFTICubePrefix = NIFTICubePrefix;
+        this.sphereSize = sphereSize;
+        this.NIFTISpherePrefix = NIFTISpherePrefix;
+        this.step = step;
     }
 
     public void generateNIFTISphere(int niftiSize, int sphereSize, int offsetX, int offsetY, int offsetZ, String name) throws IOException{
@@ -147,5 +163,28 @@ public class DataTestGenerator {
         Iterable featLab = featuresAndLabels;
         INDArrayDataSetIterator ds = new INDArrayDataSetIterator(featLab, 1);
         return ds;
+    }
+
+    public void generateSphereAndCube(){
+        try{
+            int count = 0;
+            for(int offsetZ = 0; offsetZ < niftiSize - cubeSize; offsetZ += step ){
+                for(int offsetY = 0; offsetY < niftiSize -  cubeSize; offsetY += step){
+                    for(int offsetX = 0; offsetX < niftiSize - cubeSize; offsetX += step){
+                        generateNIFTICube(niftiSize, cubeSize, offsetX, offsetY, offsetZ, NIFTICubePrefix + count++);
+                    }
+                }
+            }
+            count = 0;
+            for(int offsetZ = 0; offsetZ < niftiSize - sphereSize; offsetZ += step){
+                for(int offsetY = 0; offsetY < niftiSize - sphereSize; offsetY += step){
+                    for(int offsetX = 0; offsetX < niftiSize - sphereSize; offsetX += step){
+                        generateNIFTISphere(niftiSize, sphereSize, offsetX, offsetY, offsetZ, NIFTISpherePrefix + count++);
+                    }
+                }
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }

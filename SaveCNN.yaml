@@ -14,7 +14,7 @@ confs:
     adamMeanDecay: NaN
     adamVarDecay: NaN
     biasInit: 0.0
-    biasLearningRate: 0.001
+    biasLearningRate: 0.1
     convolutionMode: "Truncate"
     cudnnAlgoMode: "PREFER_FASTEST"
     dist: null
@@ -30,7 +30,7 @@ confs:
     l2: 4.0E-4
     l2Bias: 0.0
     layerName: "Convolution layer"
-    learningRate: 0.001
+    learningRate: 0.1
     learningRateSchedule: null
     momentum: 0.9
     momentumSchedule: {}
@@ -42,14 +42,14 @@ confs:
     rho: NaN
     rmsDecay: NaN
     stride:
-    - 1
-    - 1
+    - 5
+    - 5
     updater: "NESTEROVS"
     weightInit: "XAVIER"
   leakyreluAlpha: 0.0
   learningRateByParam:
-    b: 0.001
-    W: 0.001
+    b: 0.1
+    W: 0.1
   learningRatePolicy: "None"
   lrPolicyDecayRate: NaN
   lrPolicyPower: NaN
@@ -75,7 +75,7 @@ confs:
     adamMeanDecay: NaN
     adamVarDecay: NaN
     biasInit: 0.0
-    biasLearningRate: 0.001
+    biasLearningRate: 0.1
     convolutionMode: "Truncate"
     dist: null
     dropOut: 0.0
@@ -91,373 +91,7 @@ confs:
     l2: 4.0E-4
     l2Bias: 0.0
     layerName: "Max pooling layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    padding:
-    - 0
-    - 0
-    pnorm: 0
-    poolingType: "MAX"
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 2
-    - 2
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam: {}
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables: []
-- iterationCount: 0
-  l1ByParam:
-    b: 0.0
-    W: 0.0
-  l2ByParam:
-    b: 0.0
-    W: 4.0E-4
-  layer: !<convolution>
-    activationFn: !<ReLU> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    cudnnAlgoMode: "PREFER_FASTEST"
-    dist: null
-    dropOut: 0.0
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 1
-    - 1
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Convolution layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    nin: 20
-    nout: 20
-    padding:
-    - 2
-    - 2
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 1
-    - 1
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam:
-    b: 0.001
-    W: 0.001
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables:
-  - "W"
-  - "b"
-- iterationCount: 0
-  l1ByParam: {}
-  l2ByParam: {}
-  layer: !<subsampling>
-    activationFn: !<Sigmoid> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    dist: null
-    dropOut: 0.0
-    eps: 1.0E-8
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 2
-    - 2
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Max pooling layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    padding:
-    - 0
-    - 0
-    pnorm: 0
-    poolingType: "MAX"
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 2
-    - 2
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam: {}
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables: []
-- iterationCount: 0
-  l1ByParam:
-    b: 0.0
-    W: 0.0
-  l2ByParam:
-    b: 0.0
-    W: 4.0E-4
-  layer: !<convolution>
-    activationFn: !<ReLU> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    cudnnAlgoMode: "PREFER_FASTEST"
-    dist: null
-    dropOut: 0.0
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 1
-    - 1
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Convolution layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    nin: 20
-    nout: 20
-    padding:
-    - 2
-    - 2
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 1
-    - 1
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam:
-    b: 0.001
-    W: 0.001
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables:
-  - "W"
-  - "b"
-- iterationCount: 0
-  l1ByParam: {}
-  l2ByParam: {}
-  layer: !<subsampling>
-    activationFn: !<Sigmoid> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    dist: null
-    dropOut: 0.0
-    eps: 1.0E-8
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 2
-    - 2
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Max pooling layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    padding:
-    - 0
-    - 0
-    pnorm: 0
-    poolingType: "MAX"
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 2
-    - 2
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam: {}
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables: []
-- iterationCount: 0
-  l1ByParam:
-    b: 0.0
-    W: 0.0
-  l2ByParam:
-    b: 0.0
-    W: 4.0E-4
-  layer: !<convolution>
-    activationFn: !<ReLU> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    cudnnAlgoMode: "PREFER_FASTEST"
-    dist: null
-    dropOut: 0.0
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 1
-    - 1
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Convolution layer"
-    learningRate: 0.001
-    learningRateSchedule: null
-    momentum: 0.9
-    momentumSchedule: {}
-    nin: 20
-    nout: 20
-    padding:
-    - 2
-    - 2
-    rho: NaN
-    rmsDecay: NaN
-    stride:
-    - 1
-    - 1
-    updater: "NESTEROVS"
-    weightInit: "XAVIER"
-  leakyreluAlpha: 0.0
-  learningRateByParam:
-    b: 0.001
-    W: 0.001
-  learningRatePolicy: "None"
-  lrPolicyDecayRate: NaN
-  lrPolicyPower: NaN
-  lrPolicySteps: NaN
-  maxNumLineSearchIterations: 5
-  miniBatch: true
-  minimize: true
-  numIterations: 1
-  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
-  pretrain: false
-  seed: 12345
-  stepFunction: null
-  useDropConnect: false
-  useRegularization: true
-  variables:
-  - "W"
-  - "b"
-- iterationCount: 0
-  l1ByParam: {}
-  l2ByParam: {}
-  layer: !<subsampling>
-    activationFn: !<Sigmoid> {}
-    adamMeanDecay: NaN
-    adamVarDecay: NaN
-    biasInit: 0.0
-    biasLearningRate: 0.001
-    convolutionMode: "Truncate"
-    dist: null
-    dropOut: 0.0
-    eps: 1.0E-8
-    epsilon: NaN
-    gradientNormalization: "None"
-    gradientNormalizationThreshold: 1.0
-    kernelSize:
-    - 2
-    - 2
-    l1: 0.0
-    l1Bias: 0.0
-    l2: 4.0E-4
-    l2Bias: 0.0
-    layerName: "Max pooling layer"
-    learningRate: 0.001
+    learningRate: 0.1
     learningRateSchedule: null
     momentum: 0.9
     momentumSchedule: {}
@@ -502,7 +136,7 @@ confs:
     adamMeanDecay: NaN
     adamVarDecay: NaN
     biasInit: 0.0
-    biasLearningRate: 0.001
+    biasLearningRate: 0.1
     dist: null
     dropOut: 0.0
     epsilon: NaN
@@ -512,21 +146,21 @@ confs:
     l1Bias: 0.0
     l2: 4.0E-4
     l2Bias: 0.0
-    layerName: "layer8"
-    learningRate: 0.001
+    layerName: "Dense Layer"
+    learningRate: 0.1
     learningRateSchedule: null
     momentum: 0.9
     momentumSchedule: {}
-    nin: 84500
-    nout: 180
+    nin: 200000
+    nout: 100
     rho: NaN
     rmsDecay: NaN
     updater: "NESTEROVS"
     weightInit: "XAVIER"
   leakyreluAlpha: 0.0
   learningRateByParam:
-    b: 0.001
-    W: 0.001
+    b: 0.1
+    W: 0.1
   learningRatePolicy: "None"
   lrPolicyDecayRate: NaN
   lrPolicyPower: NaN
@@ -556,7 +190,7 @@ confs:
     adamMeanDecay: NaN
     adamVarDecay: NaN
     biasInit: 0.0
-    biasLearningRate: 0.001
+    biasLearningRate: 0.1
     dist: null
     dropOut: 0.0
     epsilon: NaN
@@ -566,14 +200,14 @@ confs:
     l1Bias: 0.0
     l2: 4.0E-4
     l2Bias: 0.0
-    layerName: "layer9"
-    learningRate: 0.001
+    layerName: "Output Layer"
+    learningRate: 0.1
     learningRateSchedule: null
     lossFn: !<NegativeLogLikelihood> {}
     lossFunction: "NEGATIVELOGLIKELIHOOD"
     momentum: 0.9
     momentumSchedule: {}
-    nin: 180
+    nin: 100
     nout: 2
     rho: NaN
     rmsDecay: NaN
@@ -581,8 +215,8 @@ confs:
     weightInit: "XAVIER"
   leakyreluAlpha: 0.0
   learningRateByParam:
-    b: 0.001
-    W: 0.001
+    b: 0.1
+    W: 0.1
   learningRatePolicy: "None"
   lrPolicyDecayRate: NaN
   lrPolicyPower: NaN
@@ -601,9 +235,9 @@ confs:
   - "W"
   - "b"
 inputPreProcessors:
-  8: !<cnnToFeedForward>
-    inputHeight: 65
-    inputWidth: 65
+  2: !<cnnToFeedForward>
+    inputHeight: 100
+    inputWidth: 100
     numChannels: 20
 iterationCount: 1164
 pretrain: false
