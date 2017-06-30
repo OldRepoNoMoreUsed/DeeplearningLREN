@@ -70,26 +70,68 @@ public class DataInput {
                 dim = 1;
             }
 
-            PrintWriter out = new PrintWriter("nifti.txt");
+            //PrintWriter out = new PrintWriter("nifti.txt");
             double[] tab = new double[nx * ny * nz * dim];
             for(int d = 0; d < dim; d++){
                 for(int k = 0; k < nz; k++){
                     for(int j = 0; j < ny; j++){
                         for(int i = 0; i < nx; i++){
                             tab[w] = volume.data.get(i, j, k, d);
-                            out.print(tab[w]);
+                            //out.print(tab[w]);
                             w++;
                         }
                     }
                 }
             }
-            out.println("*******************************");
+            //out.println("*******************************");
 
             //System.out.println("tab size: " + tab.length);
             //System.out.println("Array: " + array);
             //INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
             //format 4D-Tensor [minibatch, inputDepth, heigth, width]
             INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
+            return array;
+            //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private INDArray getData2(String path){
+        try{
+            NiftiVolume volume = NiftiVolume.read(path);
+            int nx = volume.header.dim[1];
+            int ny = volume.header.dim[2];
+            int nz = volume.header.dim[3];
+            int dim = volume.header.dim[4];
+
+            int w = 0;
+            if(dim == 0){
+                dim = 1;
+            }
+
+            //PrintWriter out = new PrintWriter("nifti.txt");
+            double[] tab = new double[nx * ny * nz * dim];
+            for(int d = 0; d < dim; d++){
+                for(int k = 0; k < nz; k++){
+                    for(int j = 0; j < ny; j++){
+                        for(int i = 0; i < nx; i++){
+                            tab[w] = volume.data.get(i, j, k, d);
+                            //out.print(tab[w]);
+                            w++;
+                        }
+                    }
+                }
+            }
+            //out.println("*******************************");
+
+            //System.out.println("tab size: " + tab.length);
+            //System.out.println("Array: " + array);
+            INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
+            //format 4D-Tensor [minibatch, inputDepth, heigth, width]
+            //INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
             return array;
             //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
@@ -128,8 +170,8 @@ public class DataInput {
         return ds;
     }
 
-    public void createDataSetCube(){
-        System.out.println("Create dataset");
+    public void createDataSet(){
+        System.out.println("Create dataset...");
         INDArray cubeLabel = Nd4j.create(new float[]{0, 1}, new int[]{1, 2});
         INDArray sphereLabel = Nd4j.create(new float[]{1, 0}, new int[]{1, 2});
         System.out.println("cubeLabel: " + cubeLabel.toString());
@@ -142,7 +184,8 @@ public class DataInput {
 
         //get cube data
         for(int i = 0; i <= 728; i++){
-            INDArray array = getData("generate/cube" + i + ".nii.gz");
+            //INDArray array = getData("generate/cube" + i + ".nii.gz");
+            INDArray array = getData2("generate/cube" + i + ".nii.gz");
             if(array != null){
                 if(i < 582){
                     featuresTrain.add(array);
@@ -159,7 +202,8 @@ public class DataInput {
 
         //get void data
         for(int i = 0; i <= 728; i++){
-            INDArray array = getData("generate/sphere" + i + ".nii.gz");
+            //INDArray array = getData("generate/sphere" + i + ".nii.gz");
+            INDArray array = getData2("generate/sphere" + i + ".nii.gz");
             if(array != null){
                 if(i < 582){
                     featuresTrain.add(array);
@@ -181,8 +225,8 @@ public class DataInput {
         }
         Collections.shuffle(featureAndLabelTrain);
         System.out.println("Size dataset train: " + featureAndLabelTrain.size());
-        Iterable featLabel = featureAndLabelTrain;
-        iteratorTrain = new INDArrayDataSetIterator(featLabel, 1);
+        Iterable featLabel1 = featureAndLabelTrain;
+        iteratorTrain = new INDArrayDataSetIterator(featLabel1, 256);
 
         ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
         for(int i = 0; i < featuresTest.size(); i++){
@@ -190,9 +234,78 @@ public class DataInput {
         }
         Collections.shuffle(featureAndLabelTest);
         System.out.println("Size dataset test: " + featureAndLabelTest.size());
-        Iterable featLabel1 = featureAndLabelTest;
-        iteratorTest = new INDArrayDataSetIterator(featLabel1, 1);
-        System.out.println("dataset created !!!");
+        Iterable featLabel2 = featureAndLabelTest;
+        iteratorTest = new INDArrayDataSetIterator(featLabel2, 1);
+        System.out.println("dataset created !");
+    }
+
+    public void createDataSet2(){
+        System.out.println("Create dataset...");
+        INDArray cubeLabel = Nd4j.create(new float[]{0, 1}, new int[]{1, 2});
+        INDArray sphereLabel = Nd4j.create(new float[]{1, 0}, new int[]{1, 2});
+        System.out.println("cubeLabel: " + cubeLabel.toString());
+        System.out.println("sphere Label: " + sphereLabel.toString());
+
+        List<INDArray> labelsTrain = new ArrayList<>();
+        List<INDArray> featuresTrain = new ArrayList<>();
+        List<INDArray> labelsTest = new ArrayList<>();
+        List<INDArray> featuresTest = new ArrayList<>();
+
+        //get cube data
+        for(int i = 0; i <= 250; i++){
+            //INDArray array = getData("generate/cube" + i + ".nii.gz");
+            INDArray array = getData2("generate/cube" + i + ".nii.gz");
+            if(array != null){
+                if(i < 200){
+                    featuresTrain.add(array);
+                    labelsTrain.add(cubeLabel);
+                }else{
+                    featuresTest.add(array);
+                    labelsTest.add(cubeLabel);
+                }
+            }
+        }
+        /*INDArray array = getData("generate/cube1.nii.gz");
+        featuresTrain.add(array);
+        labelsTrain.add(cubeLabel);*/
+
+        //get void data
+        for(int i = 0; i <= 250; i++){
+            //INDArray array = getData("generate/sphere" + i + ".nii.gz");
+            INDArray array = getData2("generate/sphere" + i + ".nii.gz");
+            if(array != null){
+                if(i < 200){
+                    featuresTrain.add(array);
+                    labelsTrain.add(sphereLabel);
+                }else{
+                    featuresTest.add(array);
+                    labelsTest.add(sphereLabel);
+                }
+            }
+        }
+
+        /*INDArray array1 = getData("generate/sphere1.nii.gz");
+        featuresTrain.add(array1);
+        labelsTrain.add(sphereLabel);*/
+
+        ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
+        for(int i = 0; i < featuresTrain.size(); i++){
+            featureAndLabelTrain.add(new Pair(featuresTrain.get(i), labelsTrain.get(i)));
+        }
+        Collections.shuffle(featureAndLabelTrain);
+        System.out.println("Size dataset train: " + featureAndLabelTrain.size());
+        Iterable featLabel1 = featureAndLabelTrain;
+        iteratorTrain = new INDArrayDataSetIterator(featLabel1, 56);
+
+        ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
+        for(int i = 0; i < featuresTest.size(); i++){
+            featureAndLabelTest.add(new Pair(featuresTest.get(i), labelsTest.get(i)));
+        }
+        Collections.shuffle(featureAndLabelTest);
+        System.out.println("Size dataset test: " + featureAndLabelTest.size());
+        Iterable featLabel2 = featureAndLabelTest;
+        iteratorTest = new INDArrayDataSetIterator(featLabel2, 1);
+        System.out.println("dataset created !");
     }
 
     public int getX() {
@@ -207,3 +320,17 @@ public class DataInput {
         return z;
     }
 }
+
+/*
+-Départ en Arabie Saoudite
+-Insectes 1 dès le début
+-Eruptions cutanées, transpiration, lésions cutanées
+-Air1 + Piafs1
+-Médocs1 + Genetic Hardening 1 + Froid 1 & 2
+-Bétail 1, Eau1 & 2, Rats 1, Piafs 2 s'ils ont pas muté
+-Médocs 2
+-Nécrose + Choc hémorrhagique
+-Eternuements, Abscès, Hyper sensitivité, vomissements, diarrhée, bref du symptôme infectieux pour finir le Canada qui est le pire pays dans ce scénario
+-Arrêt total des organes + Coma + les symptômes de tueur habituels
+-Rassemblement génétique 1 quand le remède atteint les 85%, un deuxième juste pour le fun si on veut mais il est pas nécessaire.
+ */

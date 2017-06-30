@@ -1,34 +1,18 @@
-import org.apache.commons.io.FileUtils;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.api.OptimizationAlgorithm;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.Updater;
-import org.deeplearning4j.nn.conf.inputs.InputType;
-import org.deeplearning4j.nn.conf.layers.*;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
+/*
+Il peut etre utile de faire un "ulimit -c unlimited" avant de lancer le programme.
+ */
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
 
@@ -56,6 +40,7 @@ public class Main {
         log.info("***** Generate Data *****");
         DataTestGenerator dtg = new DataTestGenerator(niftiSize, cubeSize, NIFTICubePrefix, sphereSize, NIFTISpherePrefix, step);
         //dtg.generateSphereAndCube();
+        //dtg.generateSphereAndCubeSize(300, 190, 190, 160);
 
         log.info("***** Setup UI Server *****");
         UIServer uiServer = UIServer.getInstance();
@@ -70,9 +55,9 @@ public class Main {
         width =di.getX();
         height = di.getY();
         nbChannel = 1; //di.getZ(); //Surement a modifier getZ() par 1
-        iteration = 1;
+        iteration = 100;
         nbLabels = 2;
-        System.out.println("****************************");
+        System.out.println("***** Hyper parameter *****");
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
         System.out.println("Nb channel: " + nbChannel);
@@ -81,7 +66,7 @@ public class Main {
         System.out.println("****************************");
 
         log.info("***** Get an INDArrayDataSetIterator *****");
-        di.createDataSetCube();
+        di.createDataSet2();
         INDArrayDataSetIterator iteratorTrain = di.getIteratorTrain();
         INDArrayDataSetIterator iteratorTest = di.getIteratorTest();
 
@@ -98,27 +83,21 @@ public class Main {
 
         log.info("***** Get CNN model *****");
         WrapperDL4J network = new WrapperDL4J(seed, iteration, statsStorage);
-        network.loadSimpleCNN();
+        //network.loadSimpleCNN();
+        network.loadSimpleCNN2();
         network.init();
 
-        //verification labelisation
-        try{
-            log.info("***** Print iterator train *****");
-            PrintWriter printer = new PrintWriter("Nifti.txt");
-            while(iteratorTrain.hasNext()){
-                DataSet ds = iteratorTrain.next();
-                printer.print(ds.getFeatureMatrix());
-                printer.println("************************************************************************************");
-            }
-            iteratorTrain.reset();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
+        System.out.println("***** Normalize data train *****");
+        DataNormalization scaler = new NormalizerMinMaxScaler();
+        scaler.fit(iteratorTrain);
+        iteratorTrain.setPreProcessor(scaler);
 
         log.info("***** Train model *****");
         network.train(iteratorTrain);
 
+        System.out.println("Normalize data test");
+        scaler.fit(iteratorTest);
+        iteratorTest.setPreProcessor(scaler);
         log.info("***** Eval model *****");
         network.evalModel(iteratorTest);
 
@@ -130,49 +109,4 @@ public class Main {
 
         log.info("***** END MAIN *****");
     }
-
-
-    /*private static INDArray getGeneratedINDArray(int choice){
-        DataTestGenerator dtg = new DataTestGenerator();
-        if(choice != 1){
-            return dtg.generateINDArray();
-        }
-        return dtg.generateNegativeINDArray();
-    }
-
-    public static void testWithDataSet(){
-        int nRows = 9;
-        int nColumns = 3;
-        int nbChannels = 1;
-
-        DataTestGenerator dtg = new DataTestGenerator();
-        INDArrayDataSetIterator ds = dtg.generateDataSet(1000);
-
-        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
-        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
-
-        training(ds, mlnet);
-        evalModel(ds, mlnet);
-    }
-
-    public static void test(){
-        //Test la fonction fit avec des INDArray
-        int nRows = 9;
-        int nColumns = 3;
-        int nbChannels = 1;
-        int nIn = nRows * nColumns * nbChannels;
-
-        log.info("Generate INDArray");
-        INDArray dataPos = getGeneratedINDArray(0);
-        INDArray dataNeg = getGeneratedINDArray(1);
-
-        log.info("Setup the Neural Network...");
-        NeuralNetwork neuralNetwork = new NeuralNetwork(1, seed, 1, nRows, nColumns, nbChannels, 2);
-        MultiLayerNetwork mlnet = neuralNetwork.getNetwork();
-
-        log.info("Train model");
-        mlnet.fit(dataPos.reshape(9, 3));
-        mlnet.fit(dataNeg.reshape(9, 3));
-    }*/
-
 }

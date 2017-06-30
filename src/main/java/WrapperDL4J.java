@@ -40,32 +40,40 @@ public class WrapperDL4J {
     }
 
     public void loadSimpleCNN(){
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(5, 5)
-                .nIn(1)
-                .nOut(20)
-                .stride(5, 5)
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(20, 20)
+                .nIn(1) //Nb channel
+                .nOut(10) //Nb filtre
+                .stride(20, 20)
                 .weightInit(WeightInit.XAVIER)
                 .name("Convolution layer")
                 .activation(Activation.RELU)
                 .build();
 
         SubsamplingLayer layer1 = new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-                .kernelSize(2, 2)
-                .stride(2, 2)
+                .kernelSize(20, 20)
+                .stride(20, 20)
                 .name("Max pooling layer")
                 .build();
 
         DenseLayer layer2 = new DenseLayer.Builder()
                 .activation(Activation.RELU)
                 .name("Dense Layer")
-                .nIn(200000)
-                .nOut(100)
+                //.nIn(1562500)
+                .nOut(50)
                 .build();
 
         OutputLayer layer3 = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                .nOut(2)
+                .nOut(2)//Nb Classe
                 .name("Output Layer")
                 .activation(Activation.SOFTMAX)
+                .build();
+
+        ConvolutionLayer layer4 = new ConvolutionLayer.Builder(5, 5)
+                .nIn(1)
+                .nOut(400)
+                .stride(5, 5)
+                .name("Convolution 2 layer")
+                .activation(Activation.RELU)
                 .build();
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -75,12 +83,13 @@ public class WrapperDL4J {
                 .learningRate(0.1)
                 .regularization(true)
                 .l2(0.0004)
-                .updater(Updater.NESTEROVS)
-                .momentum(0.9)
+                .updater(Updater.RMSPROP)
                 .list()
                 .layer(0, layer0)
                 .layer(1, layer1)
                 .layer(2, layer2)
+                //.layer(3, layer1)
+                //.layer(4, layer2)
                 .layer(3, layer3)
                 .pretrain(false)
                 .backprop(true)
@@ -102,6 +111,66 @@ public class WrapperDL4J {
         row vector format (i.e., 1x784 vectors), hence the "convolutionalFlat" input type used here.
         Source: https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/org/deeplearning4j/examples/convolution/LenetMnistExample.java
         */
+    }
+
+    public void loadSimpleCNN2(){
+        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(20, 20)
+                .nIn(1) //Nb channel
+                .nOut(10) //Nb filtre
+                .stride(20, 20)
+                .weightInit(WeightInit.XAVIER)
+                .name("Convolution layer")
+                .activation(Activation.RELU)
+                .build();
+
+        SubsamplingLayer layer1 = new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                .kernelSize(20, 20)
+                .stride(20, 20)
+                .name("Max pooling layer")
+                .build();
+
+        DenseLayer layer2 = new DenseLayer.Builder()
+                .activation(Activation.RELU)
+                .name("Dense Layer")
+                //.nIn(1562500)
+                .nOut(50)
+                .build();
+
+        OutputLayer layer3 = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .nOut(2)//Nb Classe
+                .name("Output Layer")
+                .activation(Activation.SOFTMAX)
+                .build();
+
+        ConvolutionLayer layer4 = new ConvolutionLayer.Builder(5, 5)
+                .nIn(1)
+                .nOut(400)
+                .stride(5, 5)
+                .name("Convolution 2 layer")
+                .activation(Activation.RELU)
+                .build();
+
+        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .iterations(iteration)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .learningRate(0.2)
+                .regularization(true)
+                .l2(0.0004)
+                .updater(Updater.RMSPROP)
+                .list()
+                .layer(0, layer0)
+                .layer(1, layer1)
+                .layer(2, layer2)
+                //.layer(3, layer1)
+                //.layer(4, layer2)
+                .layer(3, layer3)
+                .pretrain(false)
+                .backprop(true)
+                .setInputType(InputType.convolutional(2880, 2048, 1))
+                .build();
+        this.conf = conf;
+        System.out.println("Configuration done !");
     }
 
     public void init(){
