@@ -1,5 +1,13 @@
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.spark.api.TrainingMaster;
+import org.deeplearning4j.spark.impl.multilayer.SparkDl4jMultiLayer;
+import org.deeplearning4j.spark.impl.paramavg.ParameterAveragingTrainingMaster;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.linalg.dataset.DataSet;
@@ -19,12 +27,14 @@ public class Main {
     private static final long seed = 12345;
     private static String path = "generate/";
     private static final Random randGen = new Random(seed);
+    private static final boolean useSparkLocal = false;
+    private static final boolean useSpark = true;
 
     //Variable utile pour la création du réseau de neurones
     private static int height;
     private static int width;
     private static int nbChannel;
-    private static int iteration;
+    private static int numEpochs;
     private static int nbLabels;
 
     //Variable utile a la generation des données de test
@@ -39,13 +49,16 @@ public class Main {
         log.info("***** Main start *****");
         log.info("***** Generate Data *****");
         DataTestGenerator dtg = new DataTestGenerator(niftiSize, cubeSize, NIFTICubePrefix, sphereSize, NIFTISpherePrefix, step);
-        //dtg.generateSphereAndCube();
+        dtg.generateSphereAndCube();
         //dtg.generateSphereAndCubeSize(300, 190, 190, 160);
 
         log.info("***** Setup UI Server *****");
-        UIServer uiServer = UIServer.getInstance();
+
         StatsStorage statsStorage = new InMemoryStatsStorage();
-        uiServer.attach(statsStorage);
+        /*if(!useSparkLocal){
+            UIServer uiServer = UIServer.getInstance();
+            uiServer.attach(statsStorage);
+        }*/
 
         log.info("***** Get info from datas *****");
         DataInput di = new DataInput(path);
@@ -55,58 +68,45 @@ public class Main {
         width =di.getX();
         height = di.getY();
         nbChannel = 1; //di.getZ(); //Surement a modifier getZ() par 1
-        iteration = 100;
+        numEpochs = 100;
         nbLabels = 2;
         System.out.println("***** Hyper parameter *****");
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
         System.out.println("Nb channel: " + nbChannel);
-        System.out.println("Nb iteration: " + iteration);
+        System.out.println("Nb epochs: " + numEpochs);
         System.out.println("Nb label: " + nbLabels);
         System.out.println("****************************");
 
         log.info("***** Get an INDArrayDataSetIterator *****");
-        di.createDataSet2();
-        INDArrayDataSetIterator iteratorTrain = di.getIteratorTrain();
-        INDArrayDataSetIterator iteratorTest = di.getIteratorTest();
+        di.createDataSet2(200, 56);
+        INDArrayDataSetIterator iteratorTrain = di.getIteratorTrainNormalized();
+        INDArrayDataSetIterator iteratorTest = di.getIteratorTestNormalized();
+        //List<DataSet> trainDataList = di.getTrainDataListNormalized();
+        //List<DataSet> testDataList = di.getTestDataListNormalized();
 
-        System.out.println("***** Train Iterator Info *****");
-        System.out.printf("String of iterator: " + iteratorTrain.toString());
-        System.out.println("\nTotal example: " + iteratorTrain.totalExamples());
-        System.out.println("Labels: " + iteratorTrain.getLabels());
-        System.out.println("***************************");
-        System.out.println("***** Test Iterator Info *****");
-        System.out.printf("String of iterator: " + iteratorTest.toString());
-        System.out.println("\nTotal example: " + iteratorTest.totalExamples());
-        System.out.println("Labels: " + iteratorTest.getLabels());
-        System.out.println("***************************");
-
-        log.info("***** Get CNN model *****");
-        WrapperDL4J network = new WrapperDL4J(seed, iteration, statsStorage);
+        log.info("***** Create network *****");
+        WrapperDL4J network = new WrapperDL4J(seed, numEpochs, statsStorage);
         //network.loadSimpleCNN();
         network.loadSimpleCNN2();
         network.init();
+        //network.initSpark(useSparkLocal);
+        //network.initTrainingMaster();
+        //network.initSparkNet();
 
-        System.out.println("***** Normalize data train *****");
-        DataNormalization scaler = new NormalizerMinMaxScaler();
-        scaler.fit(iteratorTrain);
-        iteratorTrain.setPreProcessor(scaler);
+        //network.sparkTrain(trainDataList);
+        //network.sparkEval(testDataList);
+
 
         log.info("***** Train model *****");
         network.train(iteratorTrain);
 
-        System.out.println("Normalize data test");
-        scaler.fit(iteratorTest);
-        iteratorTest.setPreProcessor(scaler);
         log.info("***** Eval model *****");
         network.evalModel(iteratorTest);
-
-        /*log.info("***** Multiple epochs *****");
-        network.multipleEpochTrain(3, iteratorTrain, iteratorTest);*/
 
         log.info("***** Save model *****");
         network.saveModelToYAML();
 
-        log.info("***** END MAIN *****");
+        //log.info("***** END MAIN *****");
     }
 }

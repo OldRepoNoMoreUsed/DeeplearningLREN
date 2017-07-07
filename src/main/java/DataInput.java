@@ -2,10 +2,12 @@ import niftijio.NiftiVolume;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +34,36 @@ public class DataInput {
         return iteratorTrain;
     }
 
+    public INDArrayDataSetIterator getIteratorTrainNormalized(){
+        System.out.println("***** Normalize data train *****");
+        normalize(iteratorTrain);
+        return iteratorTrain;
+    }
+
+    public INDArrayDataSetIterator getIteratorTestNormalized(){
+        System.out.println("***** Normalize data test *****");
+        normalize(iteratorTest);
+        return iteratorTest;
+    }
+
+    public List<DataSet> getTrainDataList(){
+        return asList(iteratorTrain);
+    }
+
+    public List<DataSet> getTestDataList(){
+        return asList(iteratorTest);
+    }
+
+    public List<DataSet> getTrainDataListNormalized(){
+        normalize(iteratorTrain);
+        return asList(iteratorTrain);
+    }
+
+    public List<DataSet> getTestDataListNormalized(){
+        normalize(iteratorTest);
+        return asList(iteratorTest);
+    }
+
     public DataInput(String path){
         dataPath = path;
         try{
@@ -51,7 +83,7 @@ public class DataInput {
         System.out.println("***** Datas Input Info *****");
         System.out.println("Chemin d'acces aux fichiers: " + dataPath);
         System.out.println("Nombre de dimension des fichiers: " + nbDim);
-        System.out.println("Shape du fichier: x = " + volume.header.dim[1] + " y = " + volume.header.dim[2] + " z = " + volume.header.dim[2]);
+        System.out.println("Shape du fichier: x = " + volume.header.dim[1] + " y = " + volume.header.dim[2] + " z = " + volume.header.dim[3]);
         System.out.println("Datatype: " + volume.header.data_type_string);
         System.out.println("Pixdim: " + voxelDim[0] + " " + voxelDim[1] + " " + voxelDim[2] + " " + voxelDim[3] + " " + voxelDim[4]+ " " + voxelDim[5] + " " + voxelDim[6] + " " + voxelDim[7]);
         System.out.println("****************************");
@@ -83,15 +115,9 @@ public class DataInput {
                     }
                 }
             }
-            //out.println("*******************************");
-
-            //System.out.println("tab size: " + tab.length);
-            //System.out.println("Array: " + array);
-            //INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
             //format 4D-Tensor [minibatch, inputDepth, heigth, width]
             INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
             return array;
-            //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
         }catch(IOException e){
             e.printStackTrace();
@@ -125,15 +151,10 @@ public class DataInput {
                     }
                 }
             }
-            //out.println("*******************************");
 
-            //System.out.println("tab size: " + tab.length);
-            //System.out.println("Array: " + array);
             INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
             //format 4D-Tensor [minibatch, inputDepth, heigth, width]
-            //INDArray array = Nd4j.create(tab, new int[]{1, 1, 1000, 1000});
             return array;
-            //return Nd4j.create(tab, new int []{1, 1, 160, 36864}, 'c');
 
         }catch(IOException e){
             e.printStackTrace();
@@ -196,11 +217,7 @@ public class DataInput {
                 }
             }
         }
-        /*INDArray array = getData("generate/cube1.nii.gz");
-        featuresTrain.add(array);
-        labelsTrain.add(cubeLabel);*/
 
-        //get void data
         for(int i = 0; i <= 728; i++){
             //INDArray array = getData("generate/sphere" + i + ".nii.gz");
             INDArray array = getData2("generate/sphere" + i + ".nii.gz");
@@ -214,10 +231,6 @@ public class DataInput {
                 }
             }
         }
-
-        /*INDArray array1 = getData("generate/sphere1.nii.gz");
-        featuresTrain.add(array1);
-        labelsTrain.add(sphereLabel);*/
 
         ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
         for(int i = 0; i < featuresTrain.size(); i++){
@@ -239,7 +252,7 @@ public class DataInput {
         System.out.println("dataset created !");
     }
 
-    public void createDataSet2(){
+    public void createDataSet2(int batchSize, int miniBatchSize){
         System.out.println("Create dataset...");
         INDArray cubeLabel = Nd4j.create(new float[]{0, 1}, new int[]{1, 2});
         INDArray sphereLabel = Nd4j.create(new float[]{1, 0}, new int[]{1, 2});
@@ -252,41 +265,38 @@ public class DataInput {
         List<INDArray> featuresTest = new ArrayList<>();
 
         //get cube data
-        for(int i = 0; i <= 250; i++){
+        for(int i = 0; i < batchSize; i++){
             //INDArray array = getData("generate/cube" + i + ".nii.gz");
             INDArray array = getData2("generate/cube" + i + ".nii.gz");
             if(array != null){
-                if(i < 200){
+                if(i < ((float)batchSize/100)*80){
                     featuresTrain.add(array);
                     labelsTrain.add(cubeLabel);
+                    System.out.println("cube" + i + " added train");
                 }else{
                     featuresTest.add(array);
                     labelsTest.add(cubeLabel);
+                    System.out.println("cube" + i + " added test");
                 }
             }
         }
-        /*INDArray array = getData("generate/cube1.nii.gz");
-        featuresTrain.add(array);
-        labelsTrain.add(cubeLabel);*/
 
-        //get void data
-        for(int i = 0; i <= 250; i++){
+        for(int i = 0; i < batchSize; i++){
             //INDArray array = getData("generate/sphere" + i + ".nii.gz");
             INDArray array = getData2("generate/sphere" + i + ".nii.gz");
             if(array != null){
-                if(i < 200){
+                if(i < ((float)batchSize/100)*80){
                     featuresTrain.add(array);
                     labelsTrain.add(sphereLabel);
+                    System.out.println("sphere" + i + " added train");
                 }else{
                     featuresTest.add(array);
                     labelsTest.add(sphereLabel);
+                    System.out.println("sphere" + i + " added test");
                 }
+
             }
         }
-
-        /*INDArray array1 = getData("generate/sphere1.nii.gz");
-        featuresTrain.add(array1);
-        labelsTrain.add(sphereLabel);*/
 
         ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
         for(int i = 0; i < featuresTrain.size(); i++){
@@ -295,7 +305,7 @@ public class DataInput {
         Collections.shuffle(featureAndLabelTrain);
         System.out.println("Size dataset train: " + featureAndLabelTrain.size());
         Iterable featLabel1 = featureAndLabelTrain;
-        iteratorTrain = new INDArrayDataSetIterator(featLabel1, 56);
+        iteratorTrain = new INDArrayDataSetIterator(featLabel1, miniBatchSize);
 
         ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
         for(int i = 0; i < featuresTest.size(); i++){
@@ -319,18 +329,19 @@ public class DataInput {
     public int getZ() {
         return z;
     }
-}
 
-/*
--Départ en Arabie Saoudite
--Insectes 1 dès le début
--Eruptions cutanées, transpiration, lésions cutanées
--Air1 + Piafs1
--Médocs1 + Genetic Hardening 1 + Froid 1 & 2
--Bétail 1, Eau1 & 2, Rats 1, Piafs 2 s'ils ont pas muté
--Médocs 2
--Nécrose + Choc hémorrhagique
--Eternuements, Abscès, Hyper sensitivité, vomissements, diarrhée, bref du symptôme infectieux pour finir le Canada qui est le pire pays dans ce scénario
--Arrêt total des organes + Coma + les symptômes de tueur habituels
--Rassemblement génétique 1 quand le remède atteint les 85%, un deuxième juste pour le fun si on veut mais il est pas nécessaire.
- */
+    private void normalize(INDArrayDataSetIterator iterator){
+        System.out.println("***** Normalize data *****");
+        DataNormalization scaler = new NormalizerMinMaxScaler();
+        scaler.fit(iterator);
+        iterator.setPreProcessor(scaler);
+    }
+
+    private List<DataSet> asList(INDArrayDataSetIterator iterator){
+        List<DataSet> listData = new ArrayList<>();
+        while(iterator.hasNext()){
+            listData.add(iterator.next());
+        }
+        return listData;
+    }
+}

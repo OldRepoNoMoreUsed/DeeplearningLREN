@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LREN.iml" filepath="$PROJECT_DIR$/LREN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LREN-Deeplearning.iml" filepath="$PROJECT_DIR$/LREN-Deeplearning.iml" />
     </modules>
   </component>
 </project>

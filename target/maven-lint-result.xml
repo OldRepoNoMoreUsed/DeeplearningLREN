@@ -1,0 +1,12 @@
+<results status="FAIL" violations="2">
+  <violation rule="DuplicateDep">
+    <message>Dependency &apos;org.deeplearning4j:deeplearning4j-nn:jar&apos; is declared multiple times with different versions (${project.version}, 0.8.0)</message>
+    <description>Multiple dependencies, in &lt;dependencies&gt; or &lt;managedDependencies&gt;, with the same co-ordinates are reduntant, and can be confusing.  If they have different versions, they can lead to unexpected behaviour.</description>
+    <location file="/home/nicolas/Documents/Cours/Bachelor/LREN/pom.xml" line="81" column="21"/>
+  </violation>
+  <violation rule="DuplicateDep">
+    <message>Dependency &apos;org.deeplearning4j:deeplearning4j-modelimport:jar&apos; is declared multiple times with different versions (0.8.0, 0.8.0-2)</message>
+    <description>Multiple dependencies, in &lt;dependencies&gt; or &lt;managedDependencies&gt;, with the same co-ordinates are reduntant, and can be confusing.  If they have different versions, they can lead to unexpected behaviour.</description>
+    <location file="/home/nicolas/Documents/Cours/Bachelor/LREN/pom.xml" line="87" column="21"/>
+  </violation>
+</results>

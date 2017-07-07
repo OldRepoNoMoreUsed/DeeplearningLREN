@@ -1,4 +1,8 @@
 import org.apache.commons.io.FileUtils;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.storage.StorageLevel;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
@@ -10,6 +14,9 @@ import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.spark.api.TrainingMaster;
+import org.deeplearning4j.spark.impl.multilayer.SparkDl4jMultiLayer;
+import org.deeplearning4j.spark.impl.paramavg.ParameterAveragingTrainingMaster;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -21,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by nicolas on 27.06.17.
@@ -33,10 +41,22 @@ public class WrapperDL4J {
     private MultiLayerConfiguration conf;
     private MultiLayerNetwork network;
 
+    private TrainingMaster trainingMaster;
+    private SparkConf sparkConf;
+    private JavaSparkContext sc;
+    private SparkDl4jMultiLayer sparkNet;
+
     public WrapperDL4J(long seed, int iteration, StatsStorage statsStorage){
         this.seed = seed;
         this.iteration = iteration;
         this.statsStorage = statsStorage;
+    }
+
+    public MultiLayerConfiguration getConf(){
+        return this.conf;
+    }
+    public MultiLayerNetwork getNetwork(){
+        return this.network;
     }
 
     public void loadSimpleCNN(){
@@ -114,6 +134,7 @@ public class WrapperDL4J {
     }
 
     public void loadSimpleCNN2(){
+        System.out.println("***** Load CNN model *****");
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(20, 20)
                 .nIn(1) //Nb channel
                 .nOut(10) //Nb filtre
@@ -179,6 +200,54 @@ public class WrapperDL4J {
         network.init();
     }
 
+    public void initSpark(boolean useSparkLocal){
+        System.out.println("***** Spark configuration *****");
+        SparkConf sparkConf = new SparkConf();
+        sparkConf.set("spark.network.timeout", "600s");
+        sparkConf.set("spark.executor.heartbeatInterval", "600s");
+        if(useSparkLocal){
+            sparkConf.setMaster("local[*]");
+        }
+        sparkConf.setAppName("Deeplearning LREN");
+        sc = new JavaSparkContext(sparkConf);
+    }
+
+    public void initTrainingMaster(){
+        System.out.println("***** Init training Master *****");
+        trainingMaster = new ParameterAveragingTrainingMaster.Builder(56)
+                .averagingFrequency(5)
+                .workerPrefetchNumBatches(2)
+                .batchSizePerWorker(56)
+                .build();
+
+    }
+
+    public void initSparkNet(){
+        System.out.println("***** Init Spark Network *****");
+        sparkNet = new SparkDl4jMultiLayer(sc, conf, trainingMaster);
+    }
+
+    public void sparkTrain(List<DataSet> listTrainData){
+        System.out.println("***** Spark training *****");
+        JavaRDD<DataSet> trainData = sc.parallelize(listTrainData);
+        //Test
+        trainData.persist(StorageLevel.DISK_ONLY());
+        for(int i = 0; i < iteration; i++){
+            sparkNet.fit(trainData);
+        }
+
+    }
+
+    public void sparkEval(List<DataSet> listTestData){
+        System.out.println("***** Spark Evaluation *****");
+        JavaRDD<DataSet> testData = sc.parallelize(listTestData);
+        //test
+        testData.persist(StorageLevel.DISK_ONLY());
+        Evaluation eval = sparkNet.evaluate(testData);
+        System.out.println(eval.stats());
+        trainingMaster.deleteTempFiles(sc);
+    }
+
     public void train(INDArrayDataSetIterator iterator){
         int z = 0;
         while(iterator.hasNext()){
@@ -188,11 +257,6 @@ public class WrapperDL4J {
         System.out.println("iterator size: " + z);
         iterator.reset();
         network.fit(iterator);
-        /*while(iterator.hasNext()){
-            DataSet next = iterator.next();
-            System.out.println("Labels: " + next.getLabels());
-            network.fit(next);
-        }*/
     }
 
     public void evalModel(INDArrayDataSetIterator iterator){
