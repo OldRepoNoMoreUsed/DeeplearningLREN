@@ -269,7 +269,8 @@ public class DataInput {
             //INDArray array = getData("generate/cube" + i + ".nii.gz");
             INDArray array = getData2("generate/cube" + i + ".nii.gz");
             if(array != null){
-                if(i < ((float)batchSize/100)*80){
+                //if(i < ((float)batchSize/100)*80){
+                if(i <= 200){
                     featuresTrain.add(array);
                     labelsTrain.add(cubeLabel);
                     System.out.println("cube" + i + " added train");
@@ -285,7 +286,8 @@ public class DataInput {
             //INDArray array = getData("generate/sphere" + i + ".nii.gz");
             INDArray array = getData2("generate/sphere" + i + ".nii.gz");
             if(array != null){
-                if(i < ((float)batchSize/100)*80){
+                //if(i < ((float)batchSize/100)*80){
+                if(i <= 200){
                     featuresTrain.add(array);
                     labelsTrain.add(sphereLabel);
                     System.out.println("sphere" + i + " added train");
@@ -305,7 +307,8 @@ public class DataInput {
         Collections.shuffle(featureAndLabelTrain);
         System.out.println("Size dataset train: " + featureAndLabelTrain.size());
         Iterable featLabel1 = featureAndLabelTrain;
-        iteratorTrain = new INDArrayDataSetIterator(featLabel1, miniBatchSize);
+        //iteratorTrain = new INDArrayDataSetIterator(featLabel1, miniBatchSize);
+        iteratorTrain = new INDArrayDataSetIterator(featLabel1, 56);
 
         ArrayList<Pair> featureAndLabelTest = new ArrayList<>();
         for(int i = 0; i < featuresTest.size(); i++){

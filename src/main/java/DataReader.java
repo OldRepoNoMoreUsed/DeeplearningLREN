@@ -3,113 +3,184 @@ import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.factory.Nd4j;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Created by nicolas on 21.06.17.
  */
 public class DataReader {
-    private INDArrayDataSetIterator trainDataSetIterator;
-    private INDArrayDataSetIterator testDataSetIterator;
+    private String workFolder;
+    private List<String> filenames;
+    private int batchSize;
+    private INDArrayDataSetIterator iteratorTrain;
+    private INDArrayDataSetIterator iteratorTest;
+    private int trainRatio;
 
-    private INDArray cubeLabel = Nd4j.create(new float[]{1, 0, 1, 0}, new int[]{2, 2});
-    private INDArray sphereLabel = Nd4j.create(new float[]{0, 1, 0, 1}, new int[]{2, 2});
-
-    public INDArrayDataSetIterator getTrainDataSetIterator(){
-        return trainDataSetIterator;
+    public INDArrayDataSetIterator getIteratorTest() {
+        return iteratorTest;
     }
 
-    public INDArrayDataSetIterator getTestDataSetIterator(){
-        return testDataSetIterator;
+    public INDArrayDataSetIterator getIteratorTrain() {
+        return iteratorTrain;
     }
 
-    public int[] getMetaData(String path){
-        try{
-            NiftiVolume volume = NiftiVolume.read(path);
-            return new int[]{volume.header.dim[1], volume.header.dim[2], volume.header.dim[3], volume.header.dim[4]};
-        }catch(IOException e){
-            e.printStackTrace();
+    public INDArrayDataSetIterator getIteratorTrainNormalized(){
+        System.out.println("***** Normalize data train *****");
+        normalize(iteratorTrain);
+        return iteratorTrain;
+    }
+
+    public INDArrayDataSetIterator getIteratorTestNormalized(){
+        System.out.println("***** Normalize data test *****");
+        normalize(iteratorTest);
+        return iteratorTest;
+    }
+
+    public List<DataSet> getTrainDataList(){
+        return asList(iteratorTrain);
+    }
+
+    public List<DataSet> getTestDataList(){
+        return asList(iteratorTest);
+    }
+
+    public List<DataSet> getTrainDataListNormalized(){
+        normalize(iteratorTrain);
+        return asList(iteratorTrain);
+    }
+
+    public List<DataSet> getTestDataListNormalized(){
+        normalize(iteratorTest);
+        return asList(iteratorTest);
+    }
+
+    public DataReader(String workFolder, int trainRatio){
+        this.workFolder = workFolder;
+        this.trainRatio = trainRatio;
+        File folder = new File("IRM_Experience");
+        File[] listOfFiles = folder.listFiles();
+        List<String> fileNames = new ArrayList<>();
+        for(File file : listOfFiles){
+            try{
+                fileNames.add(file.getCanonicalPath());
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
-        return null;
+        this.filenames = fileNames;
+        this.batchSize = listOfFiles.length;
+        System.out.println("Nombre de fichier d'exemple dans la liste: " + fileNames.size());
     }
 
-    private double[] readData(String path){
+    private INDArray getData(String path){
         try{
             NiftiVolume volume = NiftiVolume.read(path);
             int nx = volume.header.dim[1];
             int ny = volume.header.dim[2];
             int nz = volume.header.dim[3];
             int dim = volume.header.dim[4];
-
+            int w = 0;
             if(dim == 0){
                 dim = 1;
             }
-
-            int w = 0;
-            double[] tab = new double[nx * ny * nz * dim];
-
+            double[] tab = new double[nx*ny*nz*dim];
             for(int d = 0; d < dim; d++){
                 for(int k = 0; k < nz; k++){
                     for(int j = 0; j < ny; j++){
                         for(int i = 0; i < nx; i++){
-                            tab[w] = volume.data.get(i, j, k, d);
+                            tab[w] = volume.data.get(i,j,k,d);
                             w++;
                         }
                     }
                 }
             }
-            return tab;
+            INDArray array = Nd4j.create(tab, new int[]{1, 1, 2880, 2048});
+            return array;
+
         }catch(IOException e){
             e.printStackTrace();
         }
         return null;
     }
 
-    public void load(ArrayList<String> paths){
-        ArrayList<String> pathTrain = new ArrayList<>();
-        ArrayList<String> pathTest = new ArrayList<>();
+    public void createDataSet(int minibatchSize, Hashtable<String, INDArray> regLabel){
+        System.out.println("Create dataset...");
 
-        for(int i = 0; i <= 582; i++){
-            pathTrain.add(paths.get(i));
-        }
-        loadDataSetIterator(pathTrain, trainDataSetIterator);
+        int nbTrain = 0;
+        List<INDArray> labelsTrain = new ArrayList<>();
+        List<INDArray> labelsTest = new ArrayList<>();
+        List<INDArray> featuresTrain = new ArrayList<>();
+        List<INDArray> featuresTest = new ArrayList<>();
 
-        for(int i = 583; i < paths.size(); i++){
-            pathTest.add(paths.get(i));
+        for(String path : filenames){
+            Enumeration e = regLabel.keys();
+            while(e.hasMoreElements()){
+                String key = (String) e.nextElement();
+                Pattern pattern = Pattern.compile(key);
+                Matcher matcher = pattern.matcher(path);
+                if(matcher.find()){
+                    /*System.out.println("***********************************************************");
+                    System.out.println("Chemin: " + path);
+                    System.out.println("Clé: " + key + " - Valeurs: " + regLabel.get(key));*/
+                    INDArray array = getData(path);
+                    if(array != null){
+                        if(nbTrain < trainRatio/10){
+                            featuresTrain.add(array);
+                            labelsTrain.add(regLabel.get(key));
+                            nbTrain++;
+                        }else if(nbTrain >= trainRatio/10 && nbTrain < 10){
+                            featuresTest.add(array);
+                            labelsTest.add(regLabel.get(key));
+                            nbTrain++;
+                            if(nbTrain == 10){
+                                nbTrain = 0;
+                            }
+                        }
+
+                    }
+                }
+            }
         }
-        loadDataSetIterator(pathTest, testDataSetIterator);
+        System.out.println("Taille du train set: " + featuresTrain.size());
+        System.out.println("Taille du test set: " + featuresTest.size());
+
+        System.out.println(labelsTest.get(1));
+
+        iteratorTrain = createIterator(featuresTrain, labelsTrain, minibatchSize);
+        iteratorTest = createIterator(featuresTest, labelsTest, 1);
     }
 
-    private void loadDataSetIterator(ArrayList<String> paths, INDArrayDataSetIterator dataSetIterator){
-        System.out.println("************************************************************");
-        ArrayList<INDArray> features = new ArrayList<>();
-        ArrayList<INDArray> labels = new ArrayList<>();
-
-        for(int i = 0; i < paths.size(); i++){
-            INDArray array = Nd4j.create(readData(paths.get(i)), new int[]{1, 1, 1000, 1000});
-            features.add(array);
-            if(paths.get(i).contains("cube")){
-                labels.add(cubeLabel);
-            }
-            else{
-                labels.add(sphereLabel);
-            }
-        }
+    private INDArrayDataSetIterator createIterator(List<INDArray> features, List<INDArray> labels, int batchSize){
         ArrayList<Pair> featureAndLabelTrain = new ArrayList<>();
         for(int i = 0; i < features.size(); i++){
             featureAndLabelTrain.add(new Pair(features.get(i), labels.get(i)));
         }
+        Collections.shuffle(featureAndLabelTrain);
         Iterable featLabel = featureAndLabelTrain;
-        trainDataSetIterator = new INDArrayDataSetIterator(featLabel, features.size());
-        System.out.println("Paths size: " + paths.size());
-        System.out.println("Features size: " + features.size());
-        System.out.println("Labels size: " + labels.size());
+        return new INDArrayDataSetIterator(featLabel, batchSize);
+    }
 
+    private void normalize(INDArrayDataSetIterator iterator){
+        System.out.println("***** Normalize data *****");
+        DataNormalization scaler = new NormalizerMinMaxScaler();
+        scaler.fit(iterator);
+        iterator.setPreProcessor(scaler);
+    }
+
+    private List<DataSet> asList(INDArrayDataSetIterator iterator){
+        List<DataSet> listData = new ArrayList<>();
+        while(iterator.hasNext()){
+            listData.add(iterator.next());
+        }
+        return listData;
     }
 }

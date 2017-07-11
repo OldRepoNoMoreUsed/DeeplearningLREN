@@ -82,6 +82,7 @@ public class WrapperDL4J {
                 .nOut(50)
                 .build();
 
+
         OutputLayer layer3 = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                 .nOut(2)//Nb Classe
                 .name("Output Layer")
@@ -263,8 +264,10 @@ public class WrapperDL4J {
         Evaluation eval = new Evaluation();
         while(iterator.hasNext()){
             DataSet next = iterator.next();
-            System.out.println("labels: " + next.getLabels());
             INDArray predict = network.output(next.getFeatureMatrix());
+            INDArray denseVector = network.activate(2);
+            System.out.println("Sortie de la couche dense: " + denseVector);
+            System.out.println("Prediction final: " + predict);
             eval.eval(next.getLabels(), predict);
         }
         System.out.println(eval.stats());

@@ -1,0 +1,245 @@
+---
+backprop: true
+backpropType: "Standard"
+confs:
+- iterationCount: 0
+  l1ByParam:
+    b: 0.0
+    W: 0.0
+  l2ByParam:
+    b: 0.0
+    W: 4.0E-4
+  layer: !<convolution>
+    activationFn: !<ReLU> {}
+    adamMeanDecay: NaN
+    adamVarDecay: NaN
+    biasInit: 0.0
+    biasLearningRate: 0.2
+    convolutionMode: "Truncate"
+    cudnnAlgoMode: "PREFER_FASTEST"
+    dist: null
+    dropOut: 0.0
+    epsilon: 1.0E-8
+    gradientNormalization: "None"
+    gradientNormalizationThreshold: 1.0
+    kernelSize:
+    - 20
+    - 20
+    l1: 0.0
+    l1Bias: 0.0
+    l2: 4.0E-4
+    l2Bias: 0.0
+    layerName: "Convolution layer"
+    learningRate: 0.2
+    learningRateSchedule: null
+    momentum: NaN
+    momentumSchedule: null
+    nin: 1
+    nout: 10
+    padding:
+    - 0
+    - 0
+    rho: NaN
+    rmsDecay: 0.95
+    stride:
+    - 20
+    - 20
+    updater: "RMSPROP"
+    weightInit: "XAVIER"
+  leakyreluAlpha: 0.0
+  learningRateByParam:
+    b: 0.2
+    W: 0.2
+  learningRatePolicy: "None"
+  lrPolicyDecayRate: NaN
+  lrPolicyPower: NaN
+  lrPolicySteps: NaN
+  maxNumLineSearchIterations: 5
+  miniBatch: true
+  minimize: true
+  numIterations: 100
+  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
+  pretrain: false
+  seed: 12345
+  stepFunction: null
+  useDropConnect: false
+  useRegularization: true
+  variables:
+  - "W"
+  - "b"
+- iterationCount: 0
+  l1ByParam: {}
+  l2ByParam: {}
+  layer: !<subsampling>
+    activationFn: !<Sigmoid> {}
+    adamMeanDecay: NaN
+    adamVarDecay: NaN
+    biasInit: 0.0
+    biasLearningRate: 0.2
+    convolutionMode: "Truncate"
+    dist: null
+    dropOut: 0.0
+    eps: 1.0E-8
+    epsilon: 1.0E-8
+    gradientNormalization: "None"
+    gradientNormalizationThreshold: 1.0
+    kernelSize:
+    - 20
+    - 20
+    l1: 0.0
+    l1Bias: 0.0
+    l2: 4.0E-4
+    l2Bias: 0.0
+    layerName: "Max pooling layer"
+    learningRate: 0.2
+    learningRateSchedule: null
+    momentum: NaN
+    momentumSchedule: null
+    padding:
+    - 0
+    - 0
+    pnorm: 0
+    poolingType: "MAX"
+    rho: NaN
+    rmsDecay: 0.95
+    stride:
+    - 20
+    - 20
+    updater: "RMSPROP"
+    weightInit: "XAVIER"
+  leakyreluAlpha: 0.0
+  learningRateByParam: {}
+  learningRatePolicy: "None"
+  lrPolicyDecayRate: NaN
+  lrPolicyPower: NaN
+  lrPolicySteps: NaN
+  maxNumLineSearchIterations: 5
+  miniBatch: true
+  minimize: true
+  numIterations: 100
+  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
+  pretrain: false
+  seed: 12345
+  stepFunction: null
+  useDropConnect: false
+  useRegularization: true
+  variables: []
+- iterationCount: 0
+  l1ByParam:
+    b: 0.0
+    W: 0.0
+  l2ByParam:
+    b: 0.0
+    W: 4.0E-4
+  layer: !<dense>
+    activationFn: !<ReLU> {}
+    adamMeanDecay: NaN
+    adamVarDecay: NaN
+    biasInit: 0.0
+    biasLearningRate: 0.2
+    dist: null
+    dropOut: 0.0
+    epsilon: 1.0E-8
+    gradientNormalization: "None"
+    gradientNormalizationThreshold: 1.0
+    l1: 0.0
+    l1Bias: 0.0
+    l2: 4.0E-4
+    l2Bias: 0.0
+    layerName: "Dense Layer"
+    learningRate: 0.2
+    learningRateSchedule: null
+    momentum: NaN
+    momentumSchedule: null
+    nin: 350
+    nout: 50
+    rho: NaN
+    rmsDecay: 0.95
+    updater: "RMSPROP"
+    weightInit: "XAVIER"
+  leakyreluAlpha: 0.0
+  learningRateByParam:
+    b: 0.2
+    W: 0.2
+  learningRatePolicy: "None"
+  lrPolicyDecayRate: NaN
+  lrPolicyPower: NaN
+  lrPolicySteps: NaN
+  maxNumLineSearchIterations: 5
+  miniBatch: true
+  minimize: true
+  numIterations: 100
+  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
+  pretrain: false
+  seed: 12345
+  stepFunction: null
+  useDropConnect: false
+  useRegularization: true
+  variables:
+  - "W"
+  - "b"
+- iterationCount: 0
+  l1ByParam:
+    b: 0.0
+    W: 0.0
+  l2ByParam:
+    b: 0.0
+    W: 4.0E-4
+  layer: !<output>
+    activationFn: !<Softmax> {}
+    adamMeanDecay: NaN
+    adamVarDecay: NaN
+    biasInit: 0.0
+    biasLearningRate: 0.2
+    dist: null
+    dropOut: 0.0
+    epsilon: 1.0E-8
+    gradientNormalization: "None"
+    gradientNormalizationThreshold: 1.0
+    l1: 0.0
+    l1Bias: 0.0
+    l2: 4.0E-4
+    l2Bias: 0.0
+    layerName: "Output Layer"
+    learningRate: 0.2
+    learningRateSchedule: null
+    lossFn: !<NegativeLogLikelihood> {}
+    lossFunction: "NEGATIVELOGLIKELIHOOD"
+    momentum: NaN
+    momentumSchedule: null
+    nin: 50
+    nout: 2
+    rho: NaN
+    rmsDecay: 0.95
+    updater: "RMSPROP"
+    weightInit: "XAVIER"
+  leakyreluAlpha: 0.0
+  learningRateByParam:
+    b: 0.2
+    W: 0.2
+  learningRatePolicy: "None"
+  lrPolicyDecayRate: NaN
+  lrPolicyPower: NaN
+  lrPolicySteps: NaN
+  maxNumLineSearchIterations: 5
+  miniBatch: true
+  minimize: true
+  numIterations: 100
+  optimizationAlgo: "STOCHASTIC_GRADIENT_DESCENT"
+  pretrain: false
+  seed: 12345
+  stepFunction: null
+  useDropConnect: false
+  useRegularization: true
+  variables:
+  - "W"
+  - "b"
+inputPreProcessors:
+  2: !<cnnToFeedForward>
+    inputHeight: 7
+    inputWidth: 5
+    numChannels: 10
+iterationCount: 500
+pretrain: false
+tbpttBackLength: 20
+tbpttFwdLength: 20

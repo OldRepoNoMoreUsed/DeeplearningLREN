@@ -16,7 +16,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="niftijio" level="project" />
     <orderEntry type="library" name="Maven: org.nd4j:nd4j-api:0.8.0" level="project" />
     <orderEntry type="library" name="Maven: org.nd4j:jackson:0.8.0" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
@@ -406,5 +405,6 @@
     <orderEntry type="library" name="Maven: org.tachyonproject:tachyon-underfs-local:0.8.2" level="project" />
     <orderEntry type="library" name="Maven: net.razorvine:pyrolite:4.9" level="project" />
     <orderEntry type="library" name="Maven: net.sf.py4j:py4j:0.9" level="project" />
+    <orderEntry type="library" name="niftijio" level="project" />
   </component>
 </module>

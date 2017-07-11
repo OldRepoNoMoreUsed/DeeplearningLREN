@@ -22,10 +22,13 @@ Analyses préliminaires
 ======================
 Le format NIFTI
 ----------------
-Ce projet ayant pour but de classifier des images issues d'IRM du cerveau, il parait important de comprendre les fichiers qui nous sont fournis par ce systeme de neuro-imagerie.
-Plusieurs formats sont possible mais celui qui est utilisé au sein du CHUV est le format NIFTI. Ce chapitre va donc chercher à expliquer ce format et son fonctionnement.
+Ce travail est un projet de neuro-imagerie, il est donc naturel de devoir travailler avec des images IRM
+du cerveau. Le format utilisé par le CHUV pour les images est le format NIFTI, un format d'image très
+spécialisé. 
 
-Nous explorerons donc les origines du format, ces spécifités et nous aborderons les outils utilisés lors de ce projet pour se familiariser avec ce format. 
+Ce chapitre va donc présenté ce format afin de mieux le comprendre. Pour faire celà, nous allons voir
+l'origine du format, une vue d'ensemble des principales caractéristiques du format et quelques outils
+qui ont été utiles à la réalisation de ce travail.
 
 Origine du format NIFTI
 ***********************
