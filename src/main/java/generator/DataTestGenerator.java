@@ -1,9 +1,10 @@
+package generator;
+
 import niftijio.NiftiVolume;
 import org.apache.commons.lang.ArrayUtils;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.IOException;
