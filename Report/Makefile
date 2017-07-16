@@ -94,8 +94,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/Rapport"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Rapport"
+	@echo "# mkdir -p $$HOME/.wrapper.spark.local/share/devhelp/Rapport"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.wrapper.spark.local/share/devhelp/Rapport"
 	@echo "# devhelp"
 
 epub:

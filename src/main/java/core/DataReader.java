@@ -1,3 +1,5 @@
+package core;
+
 import niftijio.NiftiVolume;
 import org.deeplearning4j.berkeley.Pair;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
@@ -8,7 +10,6 @@ import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.factory.Nd4j;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +67,7 @@ public class DataReader {
     public DataReader(String workFolder, int trainRatio){
         this.workFolder = workFolder;
         this.trainRatio = trainRatio;
-        File folder = new File("IRM_Experience");
+        File folder = new File(workFolder);
         File[] listOfFiles = folder.listFiles();
         List<String> fileNames = new ArrayList<>();
         for(File file : listOfFiles){
@@ -120,6 +121,12 @@ public class DataReader {
         List<INDArray> labelsTest = new ArrayList<>();
         List<INDArray> featuresTrain = new ArrayList<>();
         List<INDArray> featuresTest = new ArrayList<>();
+        Enumeration<String> a = regLabel.keys();
+
+        int hctrain = 0;
+        int adtrain = 0;
+        int adTest = 0;
+        int hcTest = 0;
 
         for(String path : filenames){
             Enumeration e = regLabel.keys();
@@ -128,28 +135,38 @@ public class DataReader {
                 Pattern pattern = Pattern.compile(key);
                 Matcher matcher = pattern.matcher(path);
                 if(matcher.find()){
-                    /*System.out.println("***********************************************************");
-                    System.out.println("Chemin: " + path);
-                    System.out.println("Clé: " + key + " - Valeurs: " + regLabel.get(key));*/
                     INDArray array = getData(path);
                     if(array != null){
                         if(nbTrain < trainRatio/10){
                             featuresTrain.add(array);
                             labelsTrain.add(regLabel.get(key));
                             nbTrain++;
+                            if(key.equals("HC")){
+                                hctrain++;
+                            }else if (key.equals("AD")){
+                                adtrain++;
+                            }
                         }else if(nbTrain >= trainRatio/10 && nbTrain < 10){
                             featuresTest.add(array);
                             labelsTest.add(regLabel.get(key));
                             nbTrain++;
+                            if(key.equals("HC")){
+                                hcTest++;
+                            }else if (key.equals("AD")){
+                                adTest++;
+                            }
                             if(nbTrain == 10){
                                 nbTrain = 0;
                             }
                         }
-
                     }
                 }
             }
         }
+        System.out.println("HC train: " + hctrain);
+        System.out.println("AD train: " + adtrain);
+        System.out.println("HC Test: " + hcTest);
+        System.out.println("Ad test: " + adTest);
         System.out.println("Taille du train set: " + featuresTrain.size());
         System.out.println("Taille du test set: " + featuresTest.size());
 

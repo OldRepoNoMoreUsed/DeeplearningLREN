@@ -154,7 +154,6 @@ public class WrapperDL4J {
         DenseLayer layer2 = new DenseLayer.Builder()
                 .activation(Activation.RELU)
                 .name("Dense Layer")
-                //.nIn(1562500)
                 .nOut(50)
                 .build();
 
@@ -164,15 +163,7 @@ public class WrapperDL4J {
                 .activation(Activation.SOFTMAX)
                 .build();
 
-        ConvolutionLayer layer4 = new ConvolutionLayer.Builder(5, 5)
-                .nIn(1)
-                .nOut(400)
-                .stride(5, 5)
-                .name("Convolution 2 layer")
-                .activation(Activation.RELU)
-                .build();
-
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+        this.conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(iteration)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -184,14 +175,11 @@ public class WrapperDL4J {
                 .layer(0, layer0)
                 .layer(1, layer1)
                 .layer(2, layer2)
-                //.layer(3, layer1)
-                //.layer(4, layer2)
                 .layer(3, layer3)
                 .pretrain(false)
                 .backprop(true)
                 .setInputType(InputType.convolutional(2880, 2048, 1))
                 .build();
-        this.conf = conf;
         System.out.println("Configuration done !");
     }
 
@@ -204,10 +192,10 @@ public class WrapperDL4J {
     public void initSpark(boolean useSparkLocal){
         System.out.println("***** Spark configuration *****");
         SparkConf sparkConf = new SparkConf();
-        sparkConf.set("spark.network.timeout", "600s");
-        sparkConf.set("spark.executor.heartbeatInterval", "600s");
+        sparkConf.set("wrapper.spark.network.timeout", "600s");
+        sparkConf.set("wrapper.spark.executor.heartbeatInterval", "600s");
         if(useSparkLocal){
-            sparkConf.setMaster("local[*]");
+            sparkConf.setMaster("wrapper.spark.local[*]");
         }
         sparkConf.setAppName("Deeplearning LREN");
         sc = new JavaSparkContext(sparkConf);
@@ -265,8 +253,7 @@ public class WrapperDL4J {
         while(iterator.hasNext()){
             DataSet next = iterator.next();
             INDArray predict = network.output(next.getFeatureMatrix());
-            INDArray denseVector = network.activate(2);
-            System.out.println("Sortie de la couche dense: " + denseVector);
+            System.out.println("Valeur du label: " + next.getLabels());
             System.out.println("Prediction final: " + predict);
             eval.eval(next.getLabels(), predict);
         }
