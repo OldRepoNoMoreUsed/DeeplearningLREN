@@ -3,7 +3,6 @@ package core;
 import config.Configuration;
 import generator.DataTestGenerator;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
-import org.deeplearning4j.ui.api.UIServer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
@@ -22,6 +21,7 @@ public class Main {
     private static DataTestGenerator dtg;
 
     public static void main(String[] args) {
+        log.info("Poil");
         System.out.println(args.length);
         switch (args.length){
             case 0:

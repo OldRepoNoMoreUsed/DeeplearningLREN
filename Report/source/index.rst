@@ -83,20 +83,31 @@ tableau contenant les données sur les dimensions du fichier. Ce tableau contien
 Outils pratique
 ***************
 
+Le calcul distribué
+-------------------
+(Ce chapitre présente le calcul distribué et spark, il est placé la afin de mettre en avant dans un
+premier temps les contraintes du projet. Il devient alors plus simple au choix suivant d'expliquer le
+choix de dl4j comme bibliotheque de deeplearning)
+
+Qu'est ce que le calcul distribué ?
+***********************************
+Spark
+*****
+
 Le deeplearning et choix d'une bibliotheque
 --------------------------------------------
+(Ce chapitre va résumer les avancés sur le deeplearning (avantage et inconvénient), puis il va expliquer le fonctionnement des réseaux de convolution (reseau employe durant le projet), puis on va faire un état
+de l'art des bibliothèques et defendre le choix de dl4j)
 
-Le calcul distribué
---------------------
+Considération générale
+**********************
+Réseaux de convolution
+**********************
+Bibliothèque disponible et choix
+********************************
 
 Docker
 -------
-
-Choix des technologies
------------------------
-
-Choix de la topologie du reseau de neurones
---------------------------------------------
 
 Conception
 ===========
@@ -105,28 +116,66 @@ Schémas conceptuels
 
 Description des classes
 -------------------------
-
+Package "Core"
+**************
+La classe "Main"
+++++++++++++++++
+La classe "DataReader"
+++++++++++++++++++++++
+Package "Config"
+****************
+La classe "Configuration"
++++++++++++++++++++++++++
+Package "Generator"
+*******************
+La classe "DataTestGenerator"
++++++++++++++++++++++++++++++
+Package "Wrapper"
+*****************
+La classe "WrapperDl4j"
++++++++++++++++++++++++
+La classe "LocalWrapperDl4j"
+++++++++++++++++++++++++++++
+La classe "SparkWrapperDl4j"
+++++++++++++++++++++++++++++
+Choix de la topologie du/des reseaux de neurones
+--------------------------------------------
 Description du workflow
 -------------------------
 
 Implémentation
 ================
-..A completer en expliquant les détails d'implémentation
+Configuration d'une expérience
+------------------------------
+Lecture des données
+-------------------
+Configuration du/des réseaux
+----------------------------
+Entraînement et évaluation sans Spark
+-------------------------------------
+Entraînement et évaluation avec Spark local
+-------------------------------------------
+Entraînement et évaluation avec Spark sur un cluster
+----------------------------------------------------
 
 Expérience réalisée avec le CHUV
 =================================
+Donnée de l'expérience
+----------------------
+Préparation et exécution de l'expérience
+----------------------------------------
+Résultats
+---------
 
-Analyses des résultats
-=======================
+Analyses des résultats du projet
+================================
 
 Gestion de projet
 ==================
 Diagramme de Gantt
 -------------------
-
 Journal de travail
 -------------------
-
 Analyse de la gestion de projet
 -------------------------------
 
@@ -134,7 +183,6 @@ Conclusion
 ============
 Améliorations futures
 ----------------------
-
 Ressenti personnel
 -------------------
 

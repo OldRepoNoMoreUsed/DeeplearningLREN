@@ -5,29 +5,20 @@
 \DeclareUnicodeCharacter{00A0}{\nobreakspace}
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
-
 \usepackage[french]{babel}
 \usepackage{times}
 \usepackage[Sonny]{fncychap}
 \usepackage{longtable}
 \usepackage{sphinx}
 \usepackage{multirow}
-\usepackage{eqparbox}
-
-
-\addto\captionsfrench{\renewcommand{\figurename}{Fig. }}
-\addto\captionsfrench{\renewcommand{\tablename}{Tableau }}
-\SetupFloatingEnvironment{literal-block}{name=Code source }
-
 
 
 \title{Rapport du travail de bachelor}
-\date{12 July 2017}
+\date{16 July 2017}
 \release{1.0}
 \author{Sommer Nicolas}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Version}
-
 \makeindex
 
 \makeatletter
@@ -48,7 +39,7 @@
 \expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
 \expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
 \expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
@@ -70,18 +61,16 @@
 \expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
 \expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
 \expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
 \expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\expandafter\def\csname PYG@tok@ch\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
 \expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
@@ -93,7 +82,7 @@
 \expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\expandafter\def\csname PYG@tok@cpf\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
 \expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
@@ -153,38 +142,100 @@
 
 \section{Le format NIFTI}
 \label{index:le-format-nifti}
-Ce travail est un projet de neuro-imagerie, il est donc naturel de devoir travailler avec des images IRM
-du cerveau. Le format utilisé par le CHUV pour les images est le format NIFTI, un format d'image très
-spécialisé.
+Ce travail est un projet de neuro-imagerie, il est donc naturel de devoir travailler avec des
+images IRM du cerveau. Le format utilisé par le CHUV pour les images est le format NIFTI
+(Neuroimaging Informatics Technology Initiative), un format d'image très spécialisé mais
+également très répandu dans ce domaine.
 
-Ce chapitre va donc présenté ce format afin de mieux le comprendre. Pour faire celà, nous allons voir
-l'origine du format, une vue d'ensemble des principales caractéristiques du format et quelques outils
-qui ont été utiles à la réalisation de ce travail.
+Ce chapitre va donc présenté ce format afin de mieux le comprendre. Pour faire celà, nous
+allons voir l'origine du format, une vue d'ensemble des principales caractéristiques du format
+et quelques outils qui ont été utiles à la réalisation de ce travail.
 
 
 \subsection{Origine du format NIFTI}
 \label{index:origine-du-format-nifti}
+(maybe add info sur les fichiers .mat qui accompagnait les fichiers analyze, parler de l'orientation
+radiologique ou neurologique).
+
+NIFTI est un format de fichier pour sauvegarder des données d'IRM volumétrique. Il fonctionne
+sur le principe des voxels et est multidimensionnel.
+
+Ce format a été imaginé il y a une dizaine d'année pour remplacer le format ANALYZE 7.5.
+Ce format était très utilisé mais était également très problématique. Le soucis principal de
+ce format étant le manque d'information sur l'orientation dans l'espace de l'élément scanné.
+Les données enregistrées ne pouvaient donc pas être lu et interprêté sans ambiguité. A cause
+de ce manque d'information il existait principalement une confusion entre le côté droit et le
+côté gauche du cerveau.
+
+Deux conférences furent alors mises en place part quelques-uns des concepteurs des plus grands
+logiciels de neuroimagerie. Ces deux conférences, le Data Format Working Group (DFWG), se sont
+réunit au ``National Institue of Health'' (NIH) pour trouver un format de remplacement. Dec ces
+réunions naquit le format NIFTI. Celui-ci veut intégrer de nouvelles informations et devenir
+un nouveau standard de neuroimagerie.
+
 
 \subsection{Vue d'ensemble du format NIFTI}
 \label{index:vue-d-ensemble-du-format-nifti}
+Le format ANALYZE 7.5 avait besoin de deux fichiers pour fonctionner. Un fichier {\color{red}\bfseries{}*}.hdr contenant
+le header pour stocker les méta-données et un fichier {\color{red}\bfseries{}*}.img contenant les données de l'image.
+Le format NIFTI a conservé cette manière de faire afin de préserver la compatibilité avec les
+systèmes déjà en place. Toutefois, des améliorations ont été apportés et pour évité de faire
+l'erreur d'oublier l'un des deux fichiers du format, il a été décidé de permettre le stockage
+dans un seul fichier avec l'extension {\color{red}\bfseries{}*}.nii. Ces images contenant de grandes zones d'image
+noires, elles sont donc parfaites pour être compressées avec gzip. Il n'est donc absolument
+pas rare de trouver des fichiers NIFTI au format {\color{red}\bfseries{}*}.nii.gz. Pour ce travail nous avons utilisé
+les formats {\color{red}\bfseries{}*}.nii et {\color{red}\bfseries{}*}.nii.gz.
+
+Le format NIFTI est un format de fichier sur plusieurs dimensions. Au total, il peut compter
+jusqu'à 7 dimensions. Dans tous les cas, les 3 premières dimensions sont des dimensions spatiales
+(x, y, z) et la quatrième est une dimension temporelle. Les dimensions suivantes (5-7) sont des
+dimensions reservées à d'autre usage et sont plus ou moins libre. Dans le cadre de ce projet,
+les images utilisées ne possède que 3 dimensions (les 3 dimensions spatiales). On peut donc voir
+les images comme étant un instantané du cerveau en 3 dimensions.
+
+Les dimensions et d'autres informations importantes sur le fichier sont stocké dans un fichier
+header. Ce dernier est d'une taille de 348 octets. (Il y a un tableau de toutes les valeurs sur
+brainder.org il doit venir etre collé ici.)
+
+Le champs principalement utilisé lors de ce projet est le champs short dim{[}8{]}. Ce champs est un
+tableau contenant les données sur les dimensions du fichier. Ce tableau contient pour:
+- Dim{[}0{]}: Le nombre de dimensions
+- Dim{[}1 -7{]}: Est un nombre positif contenant la longueur de la dimension en question.
+
 
 \subsection{Outils pratique}
 \label{index:outils-pratique}
 
-\section{Le deeplearning et choix d'une bibliotheque}
-\label{index:le-deeplearning-et-choix-d-une-bibliotheque}
-
 \section{Le calcul distribué}
 \label{index:le-calcul-distribue}
+(Ce chapitre présente le calcul distribué et spark, il est placé la afin de mettre en avant dans un
+premier temps les contraintes du projet. Il devient alors plus simple au choix suivant d'expliquer le
+choix de dl4j comme bibliotheque de deeplearning)
+
+
+\subsection{Qu'est ce que le calcul distribué ?}
+\label{index:qu-est-ce-que-le-calcul-distribue}
+
+\subsection{Spark}
+\label{index:spark}
+
+\section{Le deeplearning et choix d'une bibliotheque}
+\label{index:le-deeplearning-et-choix-d-une-bibliotheque}
+(Ce chapitre va résumer les avancés sur le deeplearning (avantage et inconvénient), puis il va expliquer le fonctionnement des réseaux de convolution (reseau employe durant le projet), puis on va faire un état
+de l'art des bibliothèques et defendre le choix de dl4j)
+
+
+\subsection{Considération générale}
+\label{index:consideration-generale}
+
+\subsection{Réseaux de convolution}
+\label{index:reseaux-de-convolution}
+
+\subsection{Bibliothèque disponible et choix}
+\label{index:bibliotheque-disponible-et-choix}
 
 \section{Docker}
 \label{index:docker}
-
-\section{Choix des technologies}
-\label{index:choix-des-technologies}
-
-\section{Choix de la topologie du reseau de neurones}
-\label{index:choix-de-la-topologie-du-reseau-de-neurones}
 
 \chapter{Conception}
 \label{index:conception}
@@ -195,19 +246,80 @@ qui ont été utiles à la réalisation de ce travail.
 \section{Description des classes}
 \label{index:description-des-classes}
 
+\subsection{Package ``Core''}
+\label{index:package-core}
+
+\subsubsection{La classe ``Main''}
+\label{index:la-classe-main}
+
+\subsubsection{La classe ``DataReader''}
+\label{index:la-classe-datareader}
+
+\subsection{Package ``Config''}
+\label{index:package-config}
+
+\subsubsection{La classe ``Configuration''}
+\label{index:la-classe-configuration}
+
+\subsection{Package ``Generator''}
+\label{index:package-generator}
+
+\subsubsection{La classe ``DataTestGenerator''}
+\label{index:la-classe-datatestgenerator}
+
+\subsection{Package ``Wrapper''}
+\label{index:package-wrapper}
+
+\subsubsection{La classe ``WrapperDl4j''}
+\label{index:la-classe-wrapperdl4j}
+
+\subsubsection{La classe ``LocalWrapperDl4j''}
+\label{index:la-classe-localwrapperdl4j}
+
+\subsubsection{La classe ``SparkWrapperDl4j''}
+\label{index:la-classe-sparkwrapperdl4j}
+
+\section{Choix de la topologie du/des reseaux de neurones}
+\label{index:choix-de-la-topologie-du-des-reseaux-de-neurones}
+
 \section{Description du workflow}
 \label{index:description-du-workflow}
 
 \chapter{Implémentation}
 \label{index:implementation}
-..A completer en expliquant les détails d'implémentation
 
+\section{Configuration d'une expérience}
+\label{index:configuration-d-une-experience}
+
+\section{Lecture des données}
+\label{index:lecture-des-donnees}
+
+\section{Configuration du/des réseaux}
+\label{index:configuration-du-des-reseaux}
+
+\section{Entraînement et évaluation sans Spark}
+\label{index:entrainement-et-evaluation-sans-spark}
+
+\section{Entraînement et évaluation avec Spark local}
+\label{index:entrainement-et-evaluation-avec-spark-local}
+
+\section{Entraînement et évaluation avec Spark sur un cluster}
+\label{index:entrainement-et-evaluation-avec-spark-sur-un-cluster}
 
 \chapter{Expérience réalisée avec le CHUV}
 \label{index:experience-realisee-avec-le-chuv}
 
-\chapter{Analyses des résultats}
-\label{index:analyses-des-resultats}
+\section{Donnée de l'expérience}
+\label{index:donnee-de-l-experience}
+
+\section{Préparation et exécution de l'expérience}
+\label{index:preparation-et-execution-de-l-experience}
+
+\section{Résultats}
+\label{index:resultats}
+
+\chapter{Analyses des résultats du projet}
+\label{index:analyses-des-resultats-du-projet}
 
 \chapter{Gestion de projet}
 \label{index:gestion-de-projet}
@@ -240,7 +352,7 @@ qui ont été utiles à la réalisation de ce travail.
 \label{index:cahier-des-charges}
 
 \section{Journal de travail}
-\label{index:id1}
+\label{index:id13}
 
 \section{Plannification}
 \label{index:plannification}

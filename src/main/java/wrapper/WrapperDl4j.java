@@ -66,7 +66,7 @@ public class WrapperDl4j {
         OutputLayer outputLayer = new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                 .nOut(nbClasse)
                 .name("Output layer")
-                .activation(Activation.SOFTMAX)
+                .activation(Activation.RELU)
                 .build();
         this.conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)

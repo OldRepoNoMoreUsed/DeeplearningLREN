@@ -185,7 +185,7 @@ public class WrapperDL4J {
 
     public void init(){
         network = new MultiLayerNetwork(conf);
-        network.setListeners(new StatsListener(statsStorage));
+        //network.setListeners(new StatsListener(statsStorage));
         network.init();
     }
 

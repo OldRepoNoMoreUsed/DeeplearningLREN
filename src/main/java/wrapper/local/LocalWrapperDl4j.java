@@ -28,7 +28,7 @@ public class LocalWrapperDl4j extends WrapperDl4j{
     public void init(){
         System.out.println("Init local network");
         network = new MultiLayerNetwork(conf);
-        network.setListeners(new StatsListener(statsStorage));
+        //network.setListeners(new StatsListener(statsStorage));
         network.init();
     }
 

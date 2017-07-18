@@ -11,14 +11,9 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
+                    <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <useDefaultManifestFile>true</useDefaultManifestFile>
-                        <archive>
-                            <manifest>
-                                <mainClass>core.Main</mainClass>
-                            </manifest>
-                        </archive>
+                        <argLine>-Ddtype=double</argLine>
                     </configuration>
                 </plugin>
             </plugins>
@@ -33,29 +28,103 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/niftijio.jar</systemPath>
         </dependency>
-
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-jblas</artifactId>
-            <version>0.4-rc3.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-native</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-
         <dependency>
             <groupId>org.nd4j</groupId>
             <artifactId>nd4j-api</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-jblas</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-modelimport</artifactId>
             <version>0.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-spark_2.11</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commonsio.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commonslang.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.datavec</groupId>
             <artifactId>datavec-nd4j-common</artifactId>
-            <version>LATEST</version>
+            <version>${datavec.version}</version>
         </dependency>
 
         <dependency>
@@ -65,27 +134,37 @@
         </dependency>
 
         <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-core</artifactId>
-            <version>0.8.0</version>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-data-image</artifactId>
+            <version>${datavec.version}</version>
         </dependency>
 
+        <!--For running parallel on Hadoop or Spark-->
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>dl4j-spark_2.11</artifactId>
-            <version>0.8.0_spark_2</version>
+            <artifactId>deeplearning4j-scaleout</artifactId>
+            <version>LATEST</version>
         </dependency>
 
+        <!-- deeplearning4j-ui-components: Used for generating HTML for export (ROC curves and the like) -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui-components</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-ui_2.10</artifactId>
-            <version>0.8.0</version>
+            <version>LATEST</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-play_2.10</artifactId>
-            <version>0.8.1-SNAPSHOT</version>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>0.8.0</version>
         </dependency>
 
         <dependency>
@@ -93,34 +172,24 @@
             <artifactId>deeplearning4j-modelimport</artifactId>
             <version>0.8.0-2</version>
         </dependency>
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.25</version>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId></artifactId>
-                </exclusion>
-            </exclusions>-->
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>arbiter-examples</artifactId>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-examples</artifactId>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
     </dependencies>
+
 </project>
 
 <!--
+
+
+
     <dependencies>
         <dependency>
             <groupId>org.nd4j</groupId>
@@ -155,7 +224,7 @@
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-modelimport</artifactId>
-            <version>0.8.0</version>
+            <version>0.6.0</version>
         </dependency>
 
         <dependency>
@@ -225,7 +294,7 @@
 <dependency>
 <groupId>org.deeplearning4j</groupId>
 <artifactId>deeplearning4j-scaleout</artifactId>
-<version>0.8.0</version>
+<version>0.6.0</version>
 </dependency>
 
 <dependency>
@@ -262,5 +331,98 @@
 <artifactId>dl4j-test-resources</artifactId>
 <version>LATEST</version>
 </dependency>
-        </dependencies>-->
+</dependencies>-->
+
+
+<!--
+<dependencies>
+        <dependency>
+            <groupId>sample</groupId>
+            <artifactId>org.sample</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/niftijio.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-jblas</artifactId>
+            <version>0.4-rc3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-api</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-nd4j-common</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-api</artifactId>
+            <version>${datavec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-spark_2.11</artifactId>
+            <version>0.6.0_spark_1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui_2.10</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-play_2.10</artifactId>
+            <version>0.8.1-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-modelimport</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.12.2</version>
+        </dependency>
+
+    </dependencies>
+-->
 

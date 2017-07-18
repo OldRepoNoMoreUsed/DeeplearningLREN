@@ -1,0 +1,9 @@
+core/Main.class
+wrapper/local/LocalWrapperDl4j.class
+generator/DataTestGenerator.class
+config/Configuration.class
+WrapperDL4J.class
+wrapper/spark/SparkWrapperDl4j.class
+core/DataInput.class
+core/DataReader.class
+wrapper/WrapperDl4j.class
