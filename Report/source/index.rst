@@ -82,6 +82,11 @@ tableau contenant les données sur les dimensions du fichier. Ce tableau contien
 
 Outils pratique
 ***************
+Le format NIFTI est un format très spécifique au domaine de la neuro-imagerie. Il fallait donc, au début
+du projet, pouvoir visualiser et manipuler ce genre de fichier. Pour faire celà, il existe de nombreux outils.
+Ce chapitre va donc présenter de manière suscinte les outils qui ont été employé pour la réalisation du projet.
+
+ 
 
 Le deeplearning et choix d'une bibliotheque
 --------------------------------------------
