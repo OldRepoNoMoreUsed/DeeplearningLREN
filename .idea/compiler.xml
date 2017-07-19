@@ -9,7 +9,7 @@
         <module name="LREN-Deeplearning" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="LREN-Deeplearning" target="1.7" />
     </bytecodeTargetLevel>
   </component>
