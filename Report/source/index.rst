@@ -9,14 +9,118 @@ Rapport du travail de bachelor
 
 Introduction
 ==================
+Ce rapport présente un projet développé dans le cadre du Travail de Bachelor, au sein de la HES de Neuchâtel
+et en collaboration avec le Human Brain Project et le Laboratoire de Recherche en Neuro-imagerie (LREN)
+du CHUV de Lausanne. Il a été développé par Monsieur Nicolas Sommer sous la supervision de Monsieur
+Fabrizio Albertetti. Ce travail étant un mandat de la Medical Informatics Platform du Human Brain Project,
+la personne de contact et mandant était Arnaud Jutzeler.
+
+Ce travail était d'une durée de 450h et c'est déroulé sur 10 semaines durant le semestre de 
+printemps 2017 à raison de 4h par semaine puis sur une durée de 8 semaines a raison de 8h par
+jour.
+
+Les premières semaines furent donc consacré à l'analyse préliminaire du projet, aux choix et à
+l'apprentissage des technologies qui seront employés. Le seconde partie fut consacré à l'implémentation
+et aux expériences.
+
+Le reste de ce rapport présente les contraintes et les analyses préliminaires effectuées pour préparer
+la suite du projet, la conception et l'implémentation du programme lié au projet ainsi qu'une expérience
+qui a été réalisé à l'aide de ce dernier. 
+
+La suite de ce chapitre expose le contexte du travail, les buts de ce projet et les objectifs qui fixés pour
+celui-ci et une note sur la confidentialité liée à ce projet.
+
 Contexte du travail
--------------------
+--------------------
+Le Human Brain Project (HBP) a pour but d'enrichir les connaissances humaines en matière de neuro-science
+en cherchant à mieux comprendre les mécanismes du cerveau humain. Ce projet s'inscrit dans le cadre du
+programme européen pour la recherche et l'innonvation Horizon 2020 et vise a accélerer les domaines des neuro-
+sciences, de l'informatique et de la médecine liée au cerveau. La première étape du Human Brain Project veut
+mettre à disposition des chercheurs un portail web. Ce portail web sera constitué d'un total de 6 plateformes
+de recherche. Celles-ci porteront sur la neuro-informatique, la simulation du cerveau, le calcul à haute performance,
+l'informatique médicale, l'informatique neuromorphique et la neuro-robotique.
+
+Le département des Neuro-sciences Clinique du CHUV est chargé de la plateforme d'Informatique Médicale. Celle-ci
+est une plateforme open-source permettant aux hôpitaux et aux centre de recherche de partager des données médicales.
+Elle permettra aux utilisateurs d'avoir accès à des informations précises et pertinentes sur les maladies liées au
+cerveau en préservant la confidentialité des patients. Cette plateforme servira donc de pont entre la recherche en
+neuro-sciences, la recherche clinique et les soins aux patients. Elle pourrait également permettre la découverte de
+mécanisme à différentes échelles qui expliquerait l'apparition et le développement de maladies cérébrales.
+
+C'est dans ce cadre que l'équipe du Laboratoire de Recherche En Neuro-imagerie cherche à développer un ensemble d'
+outils pour l'acquisition, le traitement et l'analyse des données. Elle cherche, entre autre chose, à pouvoir automatiser
+aussi efficacement que possible les diagnostiques de maladie pouvant atteindre le cerveau, tel que les maladies
+d'Alzheimer ou de Parkinson. Dans l'état actuel cette analyse peut se faire avec des méthodes de machine learning.
+Toutefois, il n'existe pas encore de méthode d'apprentissage profond disponible sur la plateforme et le LREN aimerait
+pouvoir proposé cette option aux utilisateurs de la plateforme.
+
+C'est dans ce but que la Haute-Ecole Arc de Neuchâtel a été contacté et ce projet proposé comme travail de diplôme à
+un étudiant de troisième année.  
 
 Problème à résoudre et but du projet
 ------------------------------------
+Actuellement, la plateforme rassemble un certain nombre d'images d'IRM. Celles-ci sont stockés sous la forme de DICOM ou
+de fichier au format NIFTI. Le DICOM est une norme standard pour la gestion informatique des données issues de l'imagerie
+médicale. N'étant pas employé dans le reste du projet, il ne sera pas plus détaillé ici. Le format NIFTI est un format d'
+image IRM mis en place par quelques uns des acteurs les plus influents de la neuro-imagerie. Etant le format principalement
+employé dans ce projet, il fera l'objet d'une description détaillé dans la partie consacré aux analyses préliminaires.
+
+Afin d'être employé par les outils d'automatisation de diagnostique mis en place par la plateforme d'informatique médicale,
+les images ont besoin d'être pré-traité. En effet, les outils de machine learning utilisé pour le diagnostique fonctionne
+en se basant sur un certain nombre de caractéristiques du cerveau. Ces caractéristiques peuvent être le volume de matière
+grise ou de matière blanche d'une zone spécifique du cerveau, la quantité de liquide cérébro-spinal, le volume du cerveau, etc.
+Il faut donc extraire ces informations des images à disposition. Ceci se fait à l'aide du framework SPM. Ce framework permet
+grâce à la segmentation de récupérer des images d'une de ces caractéristique. La segmentation permet, par exemple, de récupérer
+une image IRM de la matière grise du cerveau au format NIFTI. SPM utilise la segmentation afin de créer un atlas des caractéristiques.
+Ainsi l'atlas fait correspondre, sous la forme de tableau, un certain nombre de quantité caractéristique à chaque région du cerveau.
+
+(Insérer image du dataflow)
+
+Une fois ce pré-traitement effectué, les données sont prêtes pour être utilisé par l'"algorithm factory". Cette dernière correspond
+à l'ensemble des outils de diagnostique de la plateforme. 
+
+Le problème principal de cette manière de faire est qu'il existe une quantité non-négligeable d'information qui sont perdu au cours
+du pré-traitement. L'idée du LREN est donc de trouver une solution pour traiter directement les images entières avec des outils de
+diagnostique automatique.
+
+Pour se faire, ils proposent de mettre en place une extension de l'"algorithm factory". Cette extension permettra d'appliquer des algorithmes
+pour l'apprentissage de modèles et de faire valider ces derniers directement sur les images d'IRM.
+
+Ce projet vise donc à explorer la possibilité de mettre en place cette extension. Il mettra en place un workflow alternatif à celui
+existant dans l'"algorithm factory". Cette alternative a pour contrainte de permettre de lancer de nouveaux algorithmes travaillant
+directement sur les images en utilisant le framework de calcul distribué Apache-Spark. Cette nouvelle fonctionnalitée sera illustrée
+par l'intégration d'une bibliothèque de deep-learning et fera l'objet d'une expérience avec de véritable image d'IRM.
 
 Rappel des objectifs du projet
 ------------------------------
+Les premières semaines du projet ont été utilisé afin de fixer les objectifs principaux et secondaires de ce projet. Ainsi, les objectifs
+principaux de ce travail sont: 
+- L'installation et la prise en main d'Apache-Spark
+- L'intégration d'Apache-Spark à l'"algorithm factory"
+- L'interfaçage des bases de données d'image de la plateforme à Apache-Spark. Ces bases de données sont a créer et a améliorer si besoin
+durant le projet.
+- Faire un état de l'art technique sur les différentes bibliothèques de deeplearning compatible avec Apache-Spark pour obtenir suffisamment
+d'information pour permettre le choix de l'une d'entre elles à intégrer au-dessus de Spark.
+- Traduire la partie prédictive de l'algorithme au format PFA (Portable Format for Analytics).
+- Tester les nouvelles fonctionnalités avec une expérience concrète fournit par le LREN. Cette expérience utilisera des images d'IRM utilisé
+par le laboratoire. Elle consistera en une classification de ces images. 
+
+En plus de ces objectifs principaux, s'ajoute un objectif optionnel. Celui-ci consiste a étendre le portail web de la plateforme pour
+permettre l'utilisation des nouvelles fonctionnalités de l'"algorithm factory".
+
+Note sur la confidentialité au cours du projet
+-----------------------------------------------
+Comme déjà rappelé dans le cahier des charges de ce travail, l’aspect de l’utilisation d’image extraite d’IRM est un aspect sensible du point
+de vue de la confidentialité.
+
+Pour pallier tous soucis de confidentialité, les images employées durant la phase de développement seront des images totalement ouvertes même
+si ces dernières ne sont pas des images issues d’IRM. 
+
+Si des images autres que des données de recherche devaient être utilisées, elles seront anonymisée et ne quitteront jamais le réseau sécurisé des
+hôpitaux dont elles sont originaires. 
+
+Une attention particulière devra également être portée sur la réutilisation de l’existant afin de respecter les directives de plagiat et le droit
+d’auteur (cf. directives générales en matière de plagiat de la HE-ARC).
 
 Analyses préliminaires
 ======================
