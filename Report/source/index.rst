@@ -95,14 +95,14 @@ Rappel des objectifs du projet
 ------------------------------
 Les premières semaines du projet ont été utilisé afin de fixer les objectifs principaux et secondaires de ce projet. Ainsi, les objectifs
 principaux de ce travail sont: 
-- L'installation et la prise en main d'Apache-Spark
-- L'intégration d'Apache-Spark à l'"algorithm factory"
-- L'interfaçage des bases de données d'image de la plateforme à Apache-Spark. Ces bases de données sont a créer et a améliorer si besoin
+1. L'installation et la prise en main d'Apache-Spark
+2. L'intégration d'Apache-Spark à l'"algorithm factory"
+3. L'interfaçage des bases de données d'image de la plateforme à Apache-Spark. Ces bases de données sont a créer et a améliorer si besoin
 durant le projet.
-- Faire un état de l'art technique sur les différentes bibliothèques de deeplearning compatible avec Apache-Spark pour obtenir suffisamment
+4. Faire un état de l'art technique sur les différentes bibliothèques de deeplearning compatible avec Apache-Spark pour obtenir suffisamment
 d'information pour permettre le choix de l'une d'entre elles à intégrer au-dessus de Spark.
-- Traduire la partie prédictive de l'algorithme au format PFA (Portable Format for Analytics).
-- Tester les nouvelles fonctionnalités avec une expérience concrète fournit par le LREN. Cette expérience utilisera des images d'IRM utilisé
+5. Traduire la partie prédictive de l'algorithme au format PFA (Portable Format for Analytics).
+6. Tester les nouvelles fonctionnalités avec une expérience concrète fournit par le LREN. Cette expérience utilisera des images d'IRM utilisé
 par le laboratoire. Elle consistera en une classification de ces images. 
 
 En plus de ces objectifs principaux, s'ajoute un objectif optionnel. Celui-ci consiste a étendre le portail web de la plateforme pour
@@ -131,17 +131,14 @@ images IRM du cerveau. Le format utilisé par le CHUV pour les images est le for
 (Neuroimaging Informatics Technology Initiative), un format d'image très spécialisé mais
 également très répandu dans ce domaine. 
 
-Ce chapitre va donc présenté ce format afin de mieux le comprendre. Pour faire celà, nous
+Ce chapitre présente donc ce format afin de mieux le comprendre. Pour faire celà, nous
 allons voir l'origine du format, une vue d'ensemble des principales caractéristiques du format
 et quelques outils qui ont été utiles à la réalisation de ce travail.
 
 Origine du format NIFTI
 ***********************
-(maybe add info sur les fichiers .mat qui accompagnait les fichiers analyze, parler de l'orientation
-radiologique ou neurologique).
-
-NIFTI est un format de fichier pour sauvegarder des données d'IRM volumétrique. Il fonctionne
-sur le principe des voxels et est multidimensionnel.
+NIFTI est un format de fichier pour sauvegarder des données d'IRM. Il fonctionne
+sur le principe des voxels et est multidimensionnel. Le NIFTI 
 
 Ce format a été imaginé il y a une dizaine d'année pour remplacer le format ANALYZE 7.5.
 Ce format était très utilisé mais était également très problématique. Le soucis principal de
@@ -150,7 +147,7 @@ Les données enregistrées ne pouvaient donc pas être lu et interprêté sans a
 de ce manque d'information il existait principalement une confusion entre le côté droit et le
 côté gauche du cerveau. 
 
-Deux conférences furent alors mises en place part quelques-uns des concepteurs des plus grands
+Deux conférences furent alors mises en place par quelques-uns des concepteurs des plus grands
 logiciels de neuroimagerie. Ces deux conférences, le Data Format Working Group (DFWG), se sont
 réunit au "National Institue of Health" (NIH) pour trouver un format de remplacement. Dec ces
 réunions naquit le format NIFTI. Celui-ci veut intégrer de nouvelles informations et devenir
@@ -160,20 +157,21 @@ Vue d'ensemble du format NIFTI
 ******************************
 Le format ANALYZE 7.5 avait besoin de deux fichiers pour fonctionner. Un fichier *.hdr contenant
 le header pour stocker les méta-données et un fichier *.img contenant les données de l'image.
-Le format NIFTI a conservé cette manière de faire afin de préserver la compatibilité avec les
-systèmes déjà en place. Toutefois, des améliorations ont été apportés et pour évité de faire
+Le format NIFTI a conservé l'idée d'avoir un header et des données afin de préserver la compatibilité
+avec les systèmes déjà en place. Toutefois, des améliorations ont été apportés et pour évité de faire
 l'erreur d'oublier l'un des deux fichiers du format, il a été décidé de permettre le stockage
 dans un seul fichier avec l'extension *.nii. Ces images contenant de grandes zones d'image
 noires, elles sont donc parfaites pour être compressées avec gzip. Il n'est donc absolument
 pas rare de trouver des fichiers NIFTI au format *.nii.gz. Pour ce travail nous avons utilisé
 les formats *.nii et *.nii.gz.
 
-Le format NIFTI est un format de fichier sur plusieurs dimensions. Au total, il peut compter
-jusqu'à 7 dimensions. Dans tous les cas, les 3 premières dimensions sont des dimensions spatiales
-(x, y, z) et la quatrième est une dimension temporelle. Les dimensions suivantes (5-7) sont des
-dimensions reservées à d'autre usage et sont plus ou moins libre. Dans le cadre de ce projet,
-les images utilisées ne possède que 3 dimensions (les 3 dimensions spatiales). On peut donc voir
-les images comme étant un instantané du cerveau en 3 dimensions.
+Le format NIFTI est un format de fichier que l'ont peu représenter par une matrice multidimensionnel.
+Au total, il peut compter jusqu'à 7 dimensions. Dans tous les cas, les 3 premières dimensions sont des
+dimensions spatiales (x, y, z) et la quatrième est une dimension temporelle. Les dimensions suivantes
+(5-7) sont des dimensions reservées à d'autre usage et sont plus ou moins libre. Dans le cadre de ce
+projet, les images utilisées ne possède que 3 dimensions (les 3 dimensions spatiales). On peut donc voir
+les images comme étant un instantané du cerveau en 3 dimensions et chaque case de la matrice de données
+représente un voxel de cette image.
 
 Les dimensions et d'autres informations importantes sur le fichier sont stocké dans un fichier
 header. Ce dernier est d'une taille de 348 octets. (Il y a un tableau de toutes les valeurs sur
@@ -184,34 +182,74 @@ tableau contenant les données sur les dimensions du fichier. Ce tableau contien
 - Dim[0]: Le nombre de dimensions
 - Dim[1 -7]: Est un nombre positif contenant la longueur de la dimension en question.
 
+Pour ce travail deux types de NIFTI ont été employé. Le premier type de NIFTI a avoir été utilisé sont des
+images générés et très simple. Ces images correspondent à des sphères et des cubes. La dimension de ces images
+générées peut être choisi. Au début du projet, de manière a facilité les tests, la taille de ces images étaient
+de 100x100x100. Puis lorsque le projet eut une forme plus concrète la taille fut changer pour correspondre à la
+taille standard utilisé par le CHUV (190x190x160). Le second type de données correspond aux images fournient par
+le LREN. A savoir des images de la matière grise du cerveau avec une taille standard de 190x190x160. 
+
 Outils pratique
 ***************
+(A finir avec inspiration XD)
 Le format NIFTI est un format très spécifique au domaine de la neuro-imagerie. Il fallait donc, au début
 du projet, pouvoir visualiser et manipuler ce genre de fichier. Pour faire celà, il existe de nombreux outils.
 Ce chapitre va donc présenter de manière suscinte les outils qui ont été employé pour la réalisation du projet.
 
- 
-
 Le calcul distribué
 -------------------
-(Ce chapitre présente le calcul distribué et spark, il est placé la afin de mettre en avant dans un
-premier temps les contraintes du projet. Il devient alors plus simple au choix suivant d'expliquer le
-choix de dl4j comme bibliotheque de deeplearning)
+(A revoir)
+Le nombre d'image et la taille de ces dernières font qu'il y a un nombre très important de données et de calcul a effectué.
+Pour le confort de l'utilisateur, le temps de traitement de ces données doit être le plus court possible. La plateforme
+actuellement en place au CHUV tourne donc sur un cluster de machine afin de permettre à l'utilisateur d'obtenir le plus rapidement
+possible les résultats des analyses qu'il demande.
+
+Ce projet doit donc pouvoir se porter sur l'infrastructure en place. De plus, le Laboratoire de Recherche En Neuro-imagerie désire
+intégrer la technologie Spark pour effectuer leur calcul. Ces deux contraintes ont donc fait l'objet d'une analyse et sont exposé
+dans ce chapitre.
 
 Qu'est ce que le calcul distribué ?
 ***********************************
+Ces dernières années la quantité de données disponibles a explosé. Rapidement, les technologies ont du s'adapter à cette quantité
+d'information toujours plus importante à traiter. L'une des solutions trouvé pour résoudre se problème consiste à répartir les tâches
+de traitement (de calcul) sur plusieurs unité de travail. Ainsi, on répartit le besoin en puissance de calcul, pour un projet, en
+petite entités sur autant d'ordinateurs disponible qu'il y en a dans notre réseau distribué.
+
+Celà permet d'exploiter les ressources de chaques machines au profit d'un projet commun. Ce projet dispose alors d'une puissance de
+calcul de la somme de tous les ordinateurs individuels.
+
+Le calcul distribué s'effectue donc au sein d'un cluster de machine. C'est à dire, au sein d'un groupe de machines indépendantes fonctionnant
+comme une seule et même entité. Chacune de ces entités correspond à un noeud. Si une machine est ajouté au cluster, la puissance de calcul est
+directement augmenté contrairement à une machine seule, où si l'on veut augmenter la puissance de calcul, il faut augmenter la puissance des
+processeurs.
+
+Pour le calcul distribué, les noeuds sur lesquels les calculs sont exécuté sont donc distant, autonome et ne partage pas de ressources. Il
+faut donc que chaques noeuds communiquent avec les autres au travers de message qu'il s'envoie au travers du cluster.
+
+Pour pouvoir distribuer son projet, il faut donc diviser le problème initial en sous-problème et assigner à chaque noeud l'un de ces sous-problèmes.
+Chaque noeud effectue la tâche qui lui est assigné. On récupère alors le résultat de chacun des sous-problèmes et on les combine pour obtenir le
+résultat finale du projet initial.
+
+Afin de gérer tout celà il est possible d'utiliser des framework de calcul distribué. Ces framework fournissent un ensemble d'outils pour faciliter
+la création d'application distribuées. Le CHUV à choisi pour ce projet d'utiliser le framework Apache-Spark. La suite de ce chapitre présentera donc
+ce framework et son fonctionnement.
+
 Spark
 *****
 
 Le deeplearning et choix d'une bibliotheque
 --------------------------------------------
-(Ce chapitre va résumer les avancés sur le deeplearning (avantage et inconvénient), puis il va expliquer le fonctionnement des réseaux de convolution (reseau employe durant le projet), puis on va faire un état
+(Ce chapitre va résumer les avancés sur le deeplearning (avantage et inconvénient), 
+puis il va expliquer le fonctionnement des réseaux de convolution (reseau employe durant le projet), 
+puis on va faire un état
 de l'art des bibliothèques et defendre le choix de dl4j)
 
 Considération générale
 **********************
 Réseaux de convolution
 **********************
+Deeplearning et calcul distribué
+********************************
 Bibliothèque disponible et choix
 ********************************
 
