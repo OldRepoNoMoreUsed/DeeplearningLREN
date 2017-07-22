@@ -19,6 +19,7 @@ public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
     private static Configuration config;
     private static DataTestGenerator dtg;
+    private static DataReader dr;
 
     public static void main(String[] args) {
         log.info("Start...");
@@ -28,65 +29,14 @@ public class Main {
                 break;
             case 1:
                 config = new Configuration(args[0], false);
+                dataGeneration();
+                Hashtable<String, INDArray> regLabel = labelGeneration();
+                readData(regLabel);
+                launchExperience();
                 break;
             default:
                 displayHelp();
                 break;
-        }
-        if(args.length > 0){
-            if(config.isGenerateNifti()){
-                if(config.isRandomGeneration()){
-                    dtg = new DataTestGenerator(config.getNiftiSize(), config.getCubeSize(), config.getCubePrefix(), config.getSphereSize(), config.getSpherePrefix(), config.getStep());
-                    dtg.generateSphereAndCubeSize(config.getBatchSize(), config.getNiftiHeight(), config.getNiftiDepth(), config.getNiftiWidth());
-                }else{
-                    dtg = new DataTestGenerator(config.getNiftiSize(), config.getCubeSize(), config.getCubePrefix(), config.getSphereSize(), config.getSpherePrefix(), config.getStep());
-                    dtg.generateSphereAndCube();
-                }
-            }
-
-            Hashtable<String, INDArray> regLabel = new Hashtable<>();
-            int index = 0;
-            Scanner in = new Scanner(System.in);
-            for(int i = 0; i < config.getNbLabel(); i++){
-                float[] labelArray = new float[config.getNbLabel()];
-                for(int j = 0; j < config.getNbLabel(); j++){
-                    if(j == index){
-                        labelArray[j] = 1;
-                    }else{
-                        labelArray[j] = 0;
-                    }
-                }
-                index++;
-                System.out.println("Chaine de caracetere a chercher dans le fichier pour labeliser: ");
-                String regex = in.nextLine();
-                INDArray label = Nd4j.create(labelArray, new int[]{1, config.getNbLabel()});
-                regLabel.put(regex, label);
-            }
-            System.out.println("Labels: " + regLabel.toString());
-
-            DataReader dr = new DataReader(config.getNiftiDirectory(), config.getTrainRatio());
-            dr.createDataSet(config.getMiniBatchSize(), regLabel);
-
-            if(config.isUseSpark()){
-                List<DataSet> trainData = dr.getTrainDataListNormalized();
-                List<DataSet> testData = dr.getTestDataListNormalized();
-                SparkWrapperDl4j network = new SparkWrapperDl4j(config.getSeed(), config.getSpark_timeout(), config.getSpark_heartbeat(), config.getSparkMaster(), "LREN_Deeplearning");
-                network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
-                network.initTrainingMaster(config.getMiniBatchSize(), config.getAveragingFrequency(), config.getWorkerPrefetchNumBatch(), config.getBatchSizePerWorker());
-                network.initSparkNet();
-                network.sparkTrain(trainData);
-                network.sparkEval(testData);
-                network.saveModelToYAML();
-            }else{
-                INDArrayDataSetIterator trainData = dr.getIteratorTrainNormalized();
-                INDArrayDataSetIterator testData = dr.getIteratorTestNormalized();
-                LocalWrapperDl4j network = new LocalWrapperDl4j(config.getSeed());
-                network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
-                network.init();
-                network.localTrain(trainData);
-                network.localEvaluation(testData);
-                network.saveModelToYAML();
-            }
         }
     }
 
@@ -94,5 +44,69 @@ public class Main {
         System.out.println("Ce programme ne peut prendre qu'un seul argument:");
         System.out.println(" - Cet arguement est une string => nom du fichier de configuration a charger (sans extension)");
         System.out.println("S'il est lancé sans cet argument il va genere un fichier de configuration");
+    }
+
+    private static void dataGeneration(){
+        if(config.isGenerateNifti()){
+            if(config.isRandomGeneration()){
+                dtg = new DataTestGenerator(config.getNiftiSize(), config.getCubeSize(), config.getCubePrefix(), config.getSphereSize(), config.getSpherePrefix(), config.getStep());
+                dtg.generateSphereAndCubeSize(config.getBatchSize(), config.getNiftiHeight(), config.getNiftiDepth(), config.getNiftiWidth());
+            }else{
+                dtg = new DataTestGenerator(config.getNiftiSize(), config.getCubeSize(), config.getCubePrefix(), config.getSphereSize(), config.getSpherePrefix(), config.getStep());
+                dtg.generateSphereAndCube();
+            }
+        }
+    }
+
+    private static Hashtable<String, INDArray> labelGeneration(){
+        Hashtable<String, INDArray> regLabel = new Hashtable<>();
+        int index = 0;
+        Scanner in = new Scanner(System.in);
+        for(int i = 0; i < config.getNbLabel(); i++){
+            float[] labelArray = new float[config.getNbLabel()];
+            for(int j = 0; j < config.getNbLabel(); j++){
+                if(j == index){
+                    labelArray[j] = 1;
+                }else{
+                    labelArray[j] = 0;
+                }
+            }
+            index++;
+            System.out.println("Chaine de caracetere a chercher dans le fichier pour labeliser: ");
+            String regex = in.nextLine();
+            INDArray label = Nd4j.create(labelArray, new int[]{1, config.getNbLabel()});
+            regLabel.put(regex, label);
+        }
+        System.out.println("Labels: " + regLabel.toString());
+        return regLabel;
+
+    }
+
+    private static void readData(Hashtable<String, INDArray> regLabel){
+        dr = new DataReader(config.getNiftiDirectory(), config.getTrainRatio());
+        dr.createDataSet(config.getMiniBatchSize(), regLabel);
+    }
+
+    private static void launchExperience(){
+        if(config.isUseSpark()){
+            List<DataSet> trainData = dr.getTrainDataListNormalized();
+            List<DataSet> testData = dr.getTestDataListNormalized();
+            SparkWrapperDl4j network = new SparkWrapperDl4j(config.getSeed(), config.getSpark_timeout(), config.getSpark_heartbeat(), config.getSparkMaster(), "LREN_Deeplearning");
+            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+            network.initTrainingMaster(config.getMiniBatchSize(), config.getAveragingFrequency(), config.getWorkerPrefetchNumBatch(), config.getBatchSizePerWorker());
+            network.initSparkNet();
+            network.sparkTrain(trainData);
+            network.sparkEval(testData);
+            network.saveModelToYAML();
+        }else{
+            INDArrayDataSetIterator trainData = dr.getIteratorTrainNormalized();
+            INDArrayDataSetIterator testData = dr.getIteratorTestNormalized();
+            LocalWrapperDl4j network = new LocalWrapperDl4j(config.getSeed());
+            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+            network.init();
+            network.localTrain(trainData);
+            network.localEvaluation(testData);
+            network.saveModelToYAML();
+        }
     }
 }
