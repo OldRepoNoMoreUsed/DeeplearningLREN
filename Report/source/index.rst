@@ -236,16 +236,102 @@ ce framework et son fonctionnement.
 
 Spark
 *****
+Spark est un framework open-source de calcul distribué écrit en Scala. Il a été conçu en 2009 par Matei Zaharia lors de son doctorat au sein de l'université de Californie
+à Berkley. L'objectif de Matei Zaharia lors de la conception de Spark était de trouver une solution pour accélerer le traitement des systèmes Hadoop. Spark
+est transmis a Apache en 2013 et devient l'un des projets les plus actifs de la firme. Le framework a le vent en poupe (à l'instar de Docker que nous verrons
+plus loin dans ce rapport) et est en train de remplacer Hadoop. En effet, il a été démontré que Spark permet des temps d'exécution jusqu'à 100 fois plus courts
+qu'Hadoop pour les mêmes tâches. La dernière version de Spark est Spark 2.2.0 et est disponible depuis le 11 juillet 2017. Spark fournit une API haut-niveau en
+Java, Scala, Python et R.
+
+Afin de fonctionner aussi rapidement Spark fonctionne directement en mémoire et cherche a avoir un traitement proche du temps-réel. Lorsque Spark execute des tâches,
+il cherche à maintenir les résultats intermédiaires en mémoire plutôt que sur le disque. Cette manière de faire permet de facilement pouvoir travailler à plusieurs
+reprises sur le même jeu de données. Toutefois Spark n'est pas restreint au travail en mémoire. Il peut aussi bien travailler sur le disque. Les opérateurs réalisent
+des opérations externes lorsque les données ne tiennent pas en mémoire. Par défaut, Spark essaie de stocker le plus d'info en mémoire avant de basculer sur le disque.
+Cependant, ce comportement est configurable. Il est possible de demander a Spark de ne travailler que sur le disque ou uniquement en mémoire mais également avec une
+partie des données en mémoire et l'autre partie sur le disque.
+
+Spark possède un écosystème contenant des bibliothèques additionnelles qui permettent de travailler dans les dommaines du "big data" et du machine learning.
+Dans cet écosystème, on trouve notamment: 
+
+* Spark Streaming: Permet le traitement temps-réel des données de flux.
+* Spark SQL: Permet d'exécuter des requêtes SQL pour charger et transformer les données et ce quel que soit le format d'origine de celles-ci.
+* Spark GraphX: Permet le traitement et la parallélisation de graphes. 
+* Spark MLlib: Est une bibliothèque d'apprentissage automatique qui contient tous les algorithmes et utilitaires d'apprentissage classiques, tel que la classification,
+la régression, le clustering, le filtrage collaboratif et la réduction de dimension, en plus des primitives d'optimisation nécessaires à ces tâches.
+
+L'architecture de Spark comprend les trois composants principaux suivants: 
+* Un composant de stockage des données qui utilise le système de fichier HDFS pour le stockage.
+* Une API haut-niveau
+* Un composant de gestion des ressources. Ce composant permet a Spark d'être déployé comme un serveur autonome ou sur un framework de traitements distribués comme Apache-Mesos
+ou Apache-YARN.
+
+L'élément de base principal au coeur de Spark est le "Resilient Distributed Dataset" ou RDD. Un RDD est une abstraction de collection sur laquelle les opérations sont effectué
+de manière distribué et en étant tolérante aux pannes matérielles. On peut donc les voir comme une table dans une base de données. Un RDD peut contenir n'importe quel type de donné
+et est stocké par Spark sur différentes partitions. Ainsi, le traitement que l'on écrit pour un RDD semble s'exécuter sur une JVM mais il sera en fait découpé pour s'exécuter sur plusieurs
+noueds. Si le cluster de machine perd un noeud, le sous-traitement sera automatiquement relancé sur un autre noeud par le framework. Ceci est possible car un RDD sait recréer et recalculer
+son ensemble de données. Les RDD supportent deux types d'opérations:
+* Les transformations(map, filter, flatMap, groupByKey, reducebyKey, etc...): Celles-ci retourne un nouvel RDD. 
+* Les actions(reduce, collect, count, first, take, foreach, etc...): Celles-ci évaluent et retournent une nouvelle valeur. 
+
+L'exécution de Spark peut se faire de plusieurs manière différente. Pour celà il suffit de donner le bon paramètre de connexion au moteur de Spark (Master, chef d'orchestre). Ainsi, la connexion
+au moteur peut se faire de manière local (sur un ou K "worker"), en se connectant à un cluster Spark, Mesos ou Yarn.
+
+(Add tableau)
+
+Spark fournit également une interface web. Pour joindre cette interface, il suffit, une fois Spark en cours d'exécution, de se connecter sur le port 4040 du localhost. Cette interface permet de
+surveiller le stockage, l'environnement, les exécuteurs et les étapes effectué par Spark.
+
+Spark possèdent encore bien des caractéristiques qui font de lui l'un des leaders du domaine. Toutefois, nous avons vu ici ces principales caractéristiques et les principaux outils utilisé durant
+l'élaboration de ce travail de Bachelor. L'utilisation de Spark dans le projet sera détaillé plus loin dans la rédaction de ce rapport. 
 
 Le deeplearning et choix d'une bibliotheque
 --------------------------------------------
-(Ce chapitre va résumer les avancés sur le deeplearning (avantage et inconvénient), 
-puis il va expliquer le fonctionnement des réseaux de convolution (reseau employe durant le projet), 
-puis on va faire un état
-de l'art des bibliothèques et defendre le choix de dl4j)
+La plateforme d'informatique médicale tenue par le LREN aimerait pouvoir donner à ces utilisateurs la possibilité de lancer des expériences de deeplearning. Ce projet a donc pour objectif
+d'ouvrir la voie a ce procéder.
+
+Il est donc important de faire le point sur cette technologie. Cette partie va donc permettre de voir ce que sont les réseaux de neurones et le deeplearning. Puis dans un second temps,
+les réseaux de convolution seront abordé. Dans une troisième partie, ce rapport abordera les différentes manières de mélanger calcul distribué et deeplearning. Ces trois premières parties,
+permettront de se faire une idée de ce concept et d'aborder plus sereinement l'état de l'art des bibliothèques de deeplearning et le choix de l'une d'entre elle pour ce travail.
 
 Considération générale
 **********************
+Le deeplearning est un ensemble de méthodes de machine learning. Le machine learning est l'un des champs d'étude de l'intelligence artificielle et cherche à permettre à une machine à modéliser
+des phénomènes dans le but de prendre des décisions et de résoudre un problème concret. Cette capacité à prendre des déscisions se fait sans être explicitement programmé par le développeur.
+
+Un problème concret peut, par exemple, être d'identifier des fraudes, d'aider aux diagnostiques médicaux, de recommander un article personnalisé à un client, prédire le prix d'un produit, etc.
+L'idée derrière le machine learning est alors de permettre à la machine de se construire une représentation interne du problème sans que le développeur n'ait besoin de la modéliser pour elle.
+A l'aide de cette modélisation, la machine pourra alors effectuer la tâche qui lui est demandé. La tâche demandé au cours de ce projet est une tâche de classification. La classification sert
+à pouvoir ranger une donnée (une image par exemple) dans une classe spécifique. Pouvoir dire d'une image qu'elle représente un chat ou un chien par exemple. Etant la tâche sur laquelle ce travail
+se base la classification sera utilisé comme exemple dans la suite de ce rapport.
+
+Pour que l'algorithme de machine learning puisse se construire une représentation du problème, il faut lui fournir un jeu de données d'exemple. Grâce à ce jeu de données, l'algorithme va pouvoir
+s'entraîner et s'améliorer dans la tâche qui lui a été confié. Nous pourrons par la suite lui fournir des données réels et obtenir un résultat aux problèmes posés.
+
+Il existe différent algorithme de machine learning. Parmis eux nous pouvons noté: 
+* La régression linéaire
+* La classification naïve de Bayes
+* Machine à vecteurs de support (SVM: support vector machine)
+* K-nn
+* Random Forest (Forêt d'arbres décisionnnels)
+* Réseau de neurones
+
+Le deeplearning est une technique qui fonctionne sur la base des réseaux de neurones. Les réseaux de neurones sont construit à partir d'un paradigme biologique. Ce paradigme est celui du neurone formel.
+Un neurone formel est une représentation mathématique et informatique d'un neurone biologique. Le neurone formel possède généralement plusieurs entrées et une sortie. Les entrées correspondent ainsi aux
+dendrites d'un neurone, tandis que la sortie correspond à l'axone de ce dernier. Pour fonctionner, un neurone biologique reçoit des signaux excitateurs et inhibiteurs grâce aux synapses (lien entre deux
+neurones). Ces signaux sont simulés dans un réseau de neurones informatiques par des coefficients numériques associés aux entrées des neurones. Ces coefficients sont appelés les biais. Les valeurs
+numériques de ces coefficients sont ajustées durant la phase d'apprentissage. Le neurone formel fait alors des calculs avec les poids pondérés des entrées reçues, puis applique au résultat de ce calcul
+une fonction d'activation. La valeurs finale obtenue alors se retrouve alors sur la sortie du neurone. Ainsi le neurone formel est donc l'unité élémentaire des réseaux de neurones artificiels.
+
+L'un des éléments les plus important d'un neurones formel est sa fonction d'activation. Il est donc important de bien choisir cette dernière. Il existe en effet plusieurs fonctions d'activations typiques:
+* La fonction sigmoïde
+* La fonction tangente hyperbolique
+* La fonction de base radiale
+* La fonction sigma-pi
+* La fonction RELU
+* La fonction SOFTMAX  
+* etc
+
+
 Réseaux de convolution
 **********************
 Deeplearning et calcul distribué
@@ -255,12 +341,31 @@ Bibliothèque disponible et choix
 
 Docker
 -------
+Le LREN utilise pour sa plateforme un système de container Docker. Ce travail devra donc pouvoir être contenu dans un
+environnement Docker. Cette technologie étant relativement nouvelle, ce chapitre va brièvement exposer ce qu'est Docker.
+
+Docker est un logiciel open-source qui automatise le déploiement d'application dans des conteneurs logiciels.
+Le développement avec Docker permet d'éliminer le problème de la collaboration lors de l'écriture d'un logiciel
+en fournissant à chaques collaborateurs un environnement de travail semblable. Docker permet d'exécuter et de gérer
+des applications fonctionnant côte à côte dans des conteneurs isolés. Il fournit également les outils nécessaires pour
+créer des pipelines de livraison et de partage de logiciel de manière sûre et rapide.
+
+Un conteneur Docker contient tout ce qui est nécessaire pour faire exécuter un logiciel. Au contraire des machines virtuelles,
+les conteneurs ne regroupe pas un système d'exploitation complet. Il ne contient, en effet, que les bibliothèques et les paramètres
+requis pour que le logiciel fonctionne. Cela permet d'avoir des systèmes autonomes, légers et garantit que les logiciels fonctionnent
+de la même manière quel que soit l'endroit où ils sont déployé. Les conteneurs isolent le logiciel de son environnement.
+
+Les conteneurs et les machines virtuelles ont des avantages similaires en matière d'isolation et d'allocation des ressources. Toutefois,
+leurs fonctionnements sont très différents. En effet, les conteneurs préfèrent virtualiser le système d'exploitation plutôt que le matériel.
+Les conteneurs se veulent donc plus portable et efficaces. Toutefois, les conteneurs et les machines virtuelles peuvent être utilisé ensemble.
+
+Docker automatise les tâches répétitives de configuration des environnements de développement. Lorsqu'une application est encapsuler dans un
+conteneur, la difficulté de configurer et installer un système est également encapsulé dans le conteneur.
 
 Conception
 ===========
 Schémas conceptuels
 --------------------
-
 Description des classes
 -------------------------
 Package "Core"
