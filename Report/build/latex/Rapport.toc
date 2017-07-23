@@ -12,51 +12,64 @@
 \contentsline {section}{\numberline {2.2}Le calcul distribu\IeC {\'e}}{5}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}Qu'est ce que le calcul distribu\IeC {\'e} ?}{5}{subsection.2.2.1}
 \contentsline {subsection}{\numberline {2.2.2}Spark}{6}{subsection.2.2.2}
-\contentsline {section}{\numberline {2.3}Le deeplearning et choix d'une bibliotheque}{6}{section.2.3}
-\contentsline {subsection}{\numberline {2.3.1}Consid\IeC {\'e}ration g\IeC {\'e}n\IeC {\'e}rale}{6}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}R\IeC {\'e}seaux de convolution}{6}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}Deeplearning et calcul distribu\IeC {\'e}}{6}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Biblioth\IeC {\`e}que disponible et choix}{6}{subsection.2.3.4}
-\contentsline {section}{\numberline {2.4}Docker}{6}{section.2.4}
-\contentsline {chapter}{\numberline {3}Conception}{7}{chapter.3}
-\contentsline {section}{\numberline {3.1}Sch\IeC {\'e}mas conceptuels}{7}{section.3.1}
-\contentsline {section}{\numberline {3.2}Description des classes}{7}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Package ``Core''}{7}{subsection.3.2.1}
-\contentsline {subsubsection}{La classe ``Main''}{7}{subsubsection*.3}
-\contentsline {subsubsection}{La classe ``DataReader''}{7}{subsubsection*.4}
-\contentsline {subsection}{\numberline {3.2.2}Package ``Config''}{7}{subsection.3.2.2}
-\contentsline {subsubsection}{La classe ``Configuration''}{7}{subsubsection*.5}
-\contentsline {subsection}{\numberline {3.2.3}Package ``Generator''}{7}{subsection.3.2.3}
-\contentsline {subsubsection}{La classe ``DataTestGenerator''}{7}{subsubsection*.6}
-\contentsline {subsection}{\numberline {3.2.4}Package ``Wrapper''}{7}{subsection.3.2.4}
-\contentsline {subsubsection}{La classe ``WrapperDl4j''}{7}{subsubsection*.7}
-\contentsline {subsubsection}{La classe ``LocalWrapperDl4j''}{7}{subsubsection*.8}
-\contentsline {subsubsection}{La classe ``SparkWrapperDl4j''}{7}{subsubsection*.9}
-\contentsline {section}{\numberline {3.3}Choix de la topologie du/des reseaux de neurones}{7}{section.3.3}
-\contentsline {section}{\numberline {3.4}Description du workflow}{7}{section.3.4}
-\contentsline {chapter}{\numberline {4}Impl\IeC {\'e}mentation}{8}{chapter.4}
-\contentsline {section}{\numberline {4.1}Configuration d'une exp\IeC {\'e}rience}{8}{section.4.1}
-\contentsline {section}{\numberline {4.2}Lecture des donn\IeC {\'e}es}{8}{section.4.2}
-\contentsline {section}{\numberline {4.3}Configuration du/des r\IeC {\'e}seaux}{8}{section.4.3}
-\contentsline {section}{\numberline {4.4}Entra\IeC {\^\i }nement et \IeC {\'e}valuation sans Spark}{8}{section.4.4}
-\contentsline {section}{\numberline {4.5}Entra\IeC {\^\i }nement et \IeC {\'e}valuation avec Spark local}{8}{section.4.5}
-\contentsline {section}{\numberline {4.6}Entra\IeC {\^\i }nement et \IeC {\'e}valuation avec Spark sur un cluster}{8}{section.4.6}
-\contentsline {chapter}{\numberline {5}Exp\IeC {\'e}rience r\IeC {\'e}alis\IeC {\'e}e avec le CHUV}{9}{chapter.5}
-\contentsline {section}{\numberline {5.1}Donn\IeC {\'e}e de l'exp\IeC {\'e}rience}{9}{section.5.1}
-\contentsline {section}{\numberline {5.2}Pr\IeC {\'e}paration et ex\IeC {\'e}cution de l'exp\IeC {\'e}rience}{9}{section.5.2}
-\contentsline {section}{\numberline {5.3}R\IeC {\'e}sultats}{9}{section.5.3}
-\contentsline {chapter}{\numberline {6}Analyses des r\IeC {\'e}sultats du projet}{10}{chapter.6}
-\contentsline {chapter}{\numberline {7}Gestion de projet}{11}{chapter.7}
-\contentsline {section}{\numberline {7.1}Diagramme de Gantt}{11}{section.7.1}
-\contentsline {section}{\numberline {7.2}Journal de travail}{11}{section.7.2}
-\contentsline {section}{\numberline {7.3}Analyse de la gestion de projet}{11}{section.7.3}
-\contentsline {chapter}{\numberline {8}Conclusion}{12}{chapter.8}
-\contentsline {section}{\numberline {8.1}Am\IeC {\'e}liorations futures}{12}{section.8.1}
-\contentsline {section}{\numberline {8.2}Ressenti personnel}{12}{section.8.2}
-\contentsline {chapter}{\numberline {9}Sources}{13}{chapter.9}
-\contentsline {chapter}{\numberline {10}Annexes}{14}{chapter.10}
-\contentsline {section}{\numberline {10.1}Cahier des charges}{14}{section.10.1}
-\contentsline {section}{\numberline {10.2}Journal de travail}{14}{section.10.2}
-\contentsline {section}{\numberline {10.3}Plannification}{14}{section.10.3}
-\contentsline {section}{\numberline {10.4}Manuel utilisateur}{14}{section.10.4}
-\contentsline {section}{\numberline {10.5}Bibliographie}{14}{section.10.5}
+\contentsline {section}{\numberline {2.3}Le deeplearning et choix d'une bibliotheque}{7}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Consid\IeC {\'e}ration g\IeC {\'e}n\IeC {\'e}rale}{7}{subsection.2.3.1}
+\contentsline {subsubsection}{Machine learning et bases}{7}{subsubsection*.3}
+\contentsline {subsubsection}{Les neurones formels}{7}{subsubsection*.4}
+\contentsline {subsubsection}{Les r\IeC {\'e}seaux de neurones}{8}{subsubsection*.5}
+\contentsline {subsubsection}{Note sur l'apprentissage d'un r\IeC {\'e}seau de neurones}{9}{subsubsection*.6}
+\contentsline {subsection}{\numberline {2.3.2}R\IeC {\'e}seaux de convolution}{9}{subsection.2.3.2}
+\contentsline {subsubsection}{Notions g\IeC {\'e}n\IeC {\'e}rales}{9}{subsubsection*.7}
+\contentsline {subsection}{\numberline {2.3.3}Deeplearning et calcul distribu\IeC {\'e}}{10}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}Biblioth\IeC {\`e}que disponible et choix}{11}{subsection.2.3.4}
+\contentsline {subsubsection}{Liste de biblioth\IeC {\`e}ques disponible}{11}{subsubsection*.8}
+\contentsline {paragraph}{TensorFlow}{11}{paragraph*.9}
+\contentsline {paragraph}{TensorFrames}{11}{paragraph*.10}
+\contentsline {paragraph}{BigDL}{11}{paragraph*.11}
+\contentsline {paragraph}{Keras}{11}{paragraph*.12}
+\contentsline {paragraph}{Caffe on Spark}{11}{paragraph*.13}
+\contentsline {paragraph}{SparkNet}{12}{paragraph*.14}
+\contentsline {paragraph}{Deeplearning4j}{12}{paragraph*.15}
+\contentsline {section}{\numberline {2.4}Docker}{12}{section.2.4}
+\contentsline {chapter}{\numberline {3}Conception}{13}{chapter.3}
+\contentsline {section}{\numberline {3.1}Sch\IeC {\'e}mas conceptuels}{13}{section.3.1}
+\contentsline {section}{\numberline {3.2}Description des classes}{13}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Package ``Core''}{13}{subsection.3.2.1}
+\contentsline {subsubsection}{La classe ``Main''}{13}{subsubsection*.16}
+\contentsline {subsubsection}{La classe ``DataReader''}{13}{subsubsection*.17}
+\contentsline {subsection}{\numberline {3.2.2}Package ``Config''}{13}{subsection.3.2.2}
+\contentsline {subsubsection}{La classe ``Configuration''}{13}{subsubsection*.18}
+\contentsline {subsection}{\numberline {3.2.3}Package ``Generator''}{13}{subsection.3.2.3}
+\contentsline {subsubsection}{La classe ``DataTestGenerator''}{13}{subsubsection*.19}
+\contentsline {subsection}{\numberline {3.2.4}Package ``Wrapper''}{13}{subsection.3.2.4}
+\contentsline {subsubsection}{La classe ``WrapperDl4j''}{13}{subsubsection*.20}
+\contentsline {subsubsection}{La classe ``LocalWrapperDl4j''}{13}{subsubsection*.21}
+\contentsline {subsubsection}{La classe ``SparkWrapperDl4j''}{13}{subsubsection*.22}
+\contentsline {section}{\numberline {3.3}Choix de la topologie du/des reseaux de neurones}{13}{section.3.3}
+\contentsline {section}{\numberline {3.4}Description du workflow}{13}{section.3.4}
+\contentsline {chapter}{\numberline {4}Impl\IeC {\'e}mentation}{14}{chapter.4}
+\contentsline {section}{\numberline {4.1}Configuration d'une exp\IeC {\'e}rience}{14}{section.4.1}
+\contentsline {section}{\numberline {4.2}Lecture des donn\IeC {\'e}es}{14}{section.4.2}
+\contentsline {section}{\numberline {4.3}Configuration du/des r\IeC {\'e}seaux}{14}{section.4.3}
+\contentsline {section}{\numberline {4.4}Entra\IeC {\^\i }nement et \IeC {\'e}valuation sans Spark}{14}{section.4.4}
+\contentsline {section}{\numberline {4.5}Entra\IeC {\^\i }nement et \IeC {\'e}valuation avec Spark local}{14}{section.4.5}
+\contentsline {section}{\numberline {4.6}Entra\IeC {\^\i }nement et \IeC {\'e}valuation avec Spark sur un cluster}{14}{section.4.6}
+\contentsline {chapter}{\numberline {5}Exp\IeC {\'e}rience r\IeC {\'e}alis\IeC {\'e}e avec le CHUV}{15}{chapter.5}
+\contentsline {section}{\numberline {5.1}Donn\IeC {\'e}e de l'exp\IeC {\'e}rience}{15}{section.5.1}
+\contentsline {section}{\numberline {5.2}Pr\IeC {\'e}paration et ex\IeC {\'e}cution de l'exp\IeC {\'e}rience}{15}{section.5.2}
+\contentsline {section}{\numberline {5.3}R\IeC {\'e}sultats}{15}{section.5.3}
+\contentsline {chapter}{\numberline {6}Analyses des r\IeC {\'e}sultats du projet}{16}{chapter.6}
+\contentsline {chapter}{\numberline {7}Gestion de projet}{17}{chapter.7}
+\contentsline {section}{\numberline {7.1}Diagramme de Gantt}{17}{section.7.1}
+\contentsline {section}{\numberline {7.2}Journal de travail}{17}{section.7.2}
+\contentsline {section}{\numberline {7.3}Analyse de la gestion de projet}{17}{section.7.3}
+\contentsline {chapter}{\numberline {8}Conclusion}{18}{chapter.8}
+\contentsline {section}{\numberline {8.1}Am\IeC {\'e}liorations futures}{18}{section.8.1}
+\contentsline {section}{\numberline {8.2}Ressenti personnel}{18}{section.8.2}
+\contentsline {chapter}{\numberline {9}Sources}{19}{chapter.9}
+\contentsline {chapter}{\numberline {10}Annexes}{20}{chapter.10}
+\contentsline {section}{\numberline {10.1}Cahier des charges}{20}{section.10.1}
+\contentsline {section}{\numberline {10.2}Journal de travail}{20}{section.10.2}
+\contentsline {section}{\numberline {10.3}Plannification}{20}{section.10.3}
+\contentsline {section}{\numberline {10.4}Manuel utilisateur}{20}{section.10.4}
+\contentsline {section}{\numberline {10.5}Bibliographie}{20}{section.10.5}
