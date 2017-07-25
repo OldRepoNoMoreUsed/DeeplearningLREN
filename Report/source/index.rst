@@ -6,7 +6,6 @@
 Rapport du travail de bachelor
 ===================================
 
-
 Introduction
 ==================
 Ce rapport présente un projet développé dans le cadre du Travail de Bachelor, au sein de la HES de Neuchâtel
@@ -524,7 +523,7 @@ celà, la bibliothèque utilise les techniques de moyennes des paramêtres synch
 
 L'approche de la moyenne des paramètres est l'approche la plus simple de la parallélisation des données. En utilisant cette technique,
 l'apprentissage fonctionne ainsi:
-1. Les paramètres du réseau sont inialisé de manière aléatoire en fonction de la configuration du modèle
+1. Les paramètres du réseau sont initialisé de manière aléatoire en fonction de la configuration du modèle
 2. Une copie des paramètres actuel est distribué sur chaque machine 
 3. Chaque machine entraîne son modèle avec les données en sa possession
 4. De nouveaux paramètres globaux sont calculé en fonction de la moyenne des paramètres de chaque machine
@@ -631,40 +630,205 @@ leurs fonctionnements sont très différents. En effet, les conteneurs préfère
 Les conteneurs se veulent donc plus portable et efficaces. Toutefois, les conteneurs et les machines virtuelles peuvent être utilisé ensemble.
 
 Docker automatise les tâches répétitives de configuration des environnements de développement. Lorsqu'une application est encapsuler dans un
-conteneur, la difficulté de configurer et installer un système est également encapsulé dans le conteneur.
+conteneur, la difficulté de configurer et installer un système est également encapsulé dans le conteneur. 
 
 Conception
 ===========
-Schémas conceptuels
---------------------
+Au travers de ce chapitre, la conception de ce projet sera mise en avant. Il va permettre d'expliquer le workflow, l'architecture
+du programme, ainsi que les différents paramètres de configuration de ce projet. Afin de donner les explications le plus clairement possible
+ce chapitre contiendra les schémas utilisés durant la conception. Chacunes des classes créée durant la réalisation de ce projet est décrite
+afin d'en expliquer le concept et l'utilité.
+
+Toutefois, il est a noté que le rendu de ce projet contient deux programmes excécutable. Ces exécutable sont nommés "LREN-Deeplearning.jar"
+et "LREN_Deeplearning_DemoLocal.jar". Ceci est du à un problème de compatibilité de dépendance dans la bibliothèque Deeplearning4j. En
+effet, les dépendances liées à l'emploie de Spark et à l'emploi d'une UI pour la visualisation de l'entraînement ne sont pas compatible
+entre. Ce problème est plus précisément expliqué plus tard dans ce rapport. Cependant, ce qui est décrit dans ce rapport peut se porter
+sur les deux executables fourni. La seule différence entre ces deux exécutables étant que l'exécutable "LREN_Deeplearning_DemoLocal"
+fournit un outil de visualisation de l'entraînement mais ne fournit pas d'outil permettant de lancer l'apprentissage sur Spark.
+
+Description du workflow et schéma de classe
+-------------------------------------------
+(Inserer un schéma du workflow)
+Ce projet peut fonctionner de plusieurs manières différentes. Les différents comportements du programme peuvent être configurer dans un
+fichier *.properties. Un fichier de configuration détaillé avec une brève explication des paramètres est fournit en annexe de ce rapport.
+La suite de ce rapport n'en reprendra que les grandes lignes.
+
+La première chose que fait le programme est donc de créer un objet capabe de créer et de lire un fichier de configuration. Pour créer
+le fichier de configuration il suffit de lancer le fichier jar du projet sans autre paramètre. Le programme générera alors un fichier de
+configuration standard permettant de lancer une expérience de base puis se terminera.
+
+Si l'on donne comme argument au programme un fichier de configuration, ce dernier sera lu et selon ce qu'il contient le programme adoptera
+le comportement adéquat.
+
+La première chose que le programme lira permettra de lui dire s'il doit ou non créer des données de test. Si oui, il pourra généré deux types
+de NIFTI. Ces derniers permettent de lancer une expérience de classification en deux classes distinctes sans avoir à télécharger de données.
+
+Une fois cette génération faite (ou non selon la configuration), le programme va lire le dossier qui lui est stipulé pour chercher les données et
+demander à l'utilisateur d'entrer une chaine de caractère a recherché dans le nom du fichier afin de labeliser les données lues. Il faut donc que
+les fichiers que cherche à lire le programme contiennent une chaîne de caractère unique et permettant d'identifier a quel classe il correspond.
+De cette manière le programme peut généré les labels et étiquetté les images.
+
+Le programme regarde ensuite s'il doit fonctionner sur Spark ou non. Dans les deux cas la marche a suivre ensuite reste très similaire.
+Tout d'abord, le programme va récupérer les données d'entraînement et les données de test. Il charge ensuite la configuration du réseau selon
+ce qui lui est spécifié dans le fichier de configuration. Il peut charger une configuration pré-enregistré dans le code du projet ou une configuration
+sauvegardé plus tôt.
+
+Une fois la configuration chargé et si la configuration demande l'emploi de Spark, le programme se charge d'initialiser le superviseur
+d'entraînement de Spark. 
+
+Puis dans le deux cas le programme termine la création d'un réseau avec la configuration chargé. Si Spark est demandé, le réseau est
+fait pour fonctionner sur cet outil.
+
+Suite à cela le réseau est entrainé avec les données d'apprentissage puis évaluer avec les données de test. Les résultats de l'évaluation
+sont affiché à l'utilisateur et le réseau est sauvegarder dans un fichier selon la méthode demandé par le fichier de configuration, si la
+sauvegarde est demandé.
+
+Une fois le workflow défini, le schéma de classe a pu être conçu. Ce dernier a été imaginé en se focalisant sur les principales tâches
+du programme. Ainsi chaque tâche du programme peut être représenté par une classe.
+
+(Insert schema de classe)
+
+Les classes représentées sur ce schéma sont décrite dans la suite du rapport.
+
+(trouve un endroit ou case la description du partage de donnee avec Spark.)
+
 Description des classes
 -------------------------
-Package "Core"
-**************
-La classe "Main"
-++++++++++++++++
-La classe "DataReader"
-++++++++++++++++++++++
+Dans la suite de ce chapitre, nous allons survolé les différents packages et les différentes classes créées pour ce projet. Une rapide
+description du package expliquera les classes contenues dans le package et pourquoi elles ont été séparé ainsi. Puis, une description plus
+précise des classes sera faîtes pour chaque package.
+
 Package "Config"
 ****************
+Le package "Config" contient tous les outils nécessaire pour créer et lire les fichiers de configuration dont le programme a besoin.
+Il a été conçu à cause du besoin de pouvoir facilement modifier la configuration du programme pour le tester. Ce package ne contient
+qu'une classe: La classe configuration.
+
 La classe "Configuration"
 +++++++++++++++++++++++++
+La classe "Configuration" est une classe très simple. Elle répertorie la liste complète des paramètres dont le programme peut avoir besoin.
+Ces paramètres, comme vu plus haut permettent de choisir le fonctionnement du programme mais également de modifier le comportement du réseau
+de neurones.
+
+Cette classe contient de nombreuses méthodes. Toutefois celle-ci peuvent être classer en trois type de méthode: 
+* Une méthode permettant de générer un fichier de configuration standard. Ce fichier permet de lancer une expérience de test fonctionnelle
+du programme.
+* Une méthode de lecture d'un fichier de configuration. Cette méthode lit le fichier et stock les valeurs des paramètres dans des attributs
+de la classe.
+* Des "getter" qui permettent l'accès à chaque paramètre lu par la classe.
+
+Cette classe est une classe on ne peut plus standard utilisant les outils de Java standard.
+
 Package "Generator"
 *******************
+Ce package fournit les outils nécessaires pour générer des fichiers NIFTI de test. Il a été conçu pour permettre de créer des données permettant
+de tester les réseaux de neurones sans avoir besoin de télécharger un dataset complet. Ce package ne contient qu'une classe: la classe "DataTestGenerator".
+
 La classe "DataTestGenerator"
 +++++++++++++++++++++++++++++
+Cette classe est chargé de créer des fichiers au format NIFTI. Elle permet la création de représentation de cube et de sphère dans ce format.
+La génération de ces fichiers peut être supervisé par le fichier de configuration. Ainsi, il est possible de préciser la taille de la matrice
+de données de ces fichiers. Il ne font que des NIFTI en trois dimensions tels que ceux qui sont utilisé par le CHUV.
+
+Elle permet également de créer de très petit jeu de données totalement aléatoire. Cette fonctionnalitée a été utilisé au début du projet afin
+de pouvoir comprendre le fonctionnement de la bibliothèque deeplearning4j. Toutefois, cette fonctionnalité n'est plus utilisé dans le programme
+finale.
+
+Cette classe possède ainsi: 
+* Des méthodes pour générer des cubes et des sphères dans des fichiers NIFTI selon des paramètres de taille que l'on peut lui spécifier.
+* Une méthode pour générer un dataset complet de sphères et de cubes de tailles fixes dans des fichiers NIFTI de taille également fixe et ce à des positions prédéfinis.
+* Une méthode pour générer un dataset complet de sphères et de cubes de tailles aléatoires dans des fichiers NIFTI de taille fixes et ce à des positions aléatoires.
+* Un lot de méthode pour générer de très petits jeu de données de petites tailes et le tout aléatoirement.
+
+Cette classe utilise les fonctionnalités fournit par la bibliothèque de gestion de NIFTI niftijio. 
+
+Package "Core"
+**************
+Comme le nom de ce package l'indique ce dernier contient le coeur du projet. Il contient la classe principale du projet (la classe "Main") et
+la classe chargée de lire les fichiers NIFTI.
+
+La classe "Main"
+++++++++++++++++
+La classe "Main" centralise le workflow complet du programme. Cette dernière est chargé d'instancier tous les objets utiles au programme
+et de les gérer. Ainsi chaque package est totalement indépendant des autres. Par exemple le package Configuration n'a pas besoin du package
+Wrapper pour fonctionner.
+
+Afin de rendre cette classe la plus lisible possible elle contient quelques fonctions: 
+* La fonction "Main" elle est le squelette du programme et gère le workflow.
+* Une fonction chargée d'afficher une aide à l'utilisateur si l'utilisateur fait une erreur d'utilisation du fichier jar.
+* Une fonction chargée de gérer la génération de données.
+* Une fonction chargée de gérer la création des labels a assigner a chaque image.
+* Une fonction chargée de gérer la lecture des données.
+* Une fonction chargée de gérer la configuration, l'initialisation, l'entraînement et l'évaluation du réseau de neurones.
+
+Elle instancie également toutes les autres classes créées pour ce projet.
+
+La classe "DataReader"
+++++++++++++++++++++++
+La classe "DataReader" fournit les outils nécessaires à la lecture des données et à la préparation de ces dernières pour être comprise
+par le réseau de neurones. 
+
+Elle fournit un certain nombre de méthodes permettant: 
+* de créer un iterateur sur le jeu de données lu. Chacunes des données lues se voit assigner le label nécessaire en fonction de son nom 
+* d'obtenir les itérateurs des jeu de données d'apprentissage et de test sans autre modification (nécessaire si on ne se sert pas de Spark). 
+* d'obtenir les itérateurs des jeu de données d'apprentissage et de test après que ceux-ci aient été normalisés (nécessaire si on ne se sert pas de Spark).
+* d'obtenir les itérateurs des jeu de données d'apprentissage et de test sous forme de liste et sans avoir été normalisés (nécessaire si l'on se sert de Spark). 
+* d'obtenir les itérateurs des jeu de données d'apprentissage et de test sous forme de liste et après avoir été normalisés (nécessaire si l'on se sert de Spark).
+
+Cette classe permet de configuré la taille des minibatchs de chaque itérateurs et gère également de ratio de données d'entraînement et de test.
+Ce ratio est fait de manière stratifié. Le même ratio est appliqué pour les données de chaques classes. Si l'on a 2 classes et un ratio de 80%
+de données d'apprentissage et 20% de données de test, on retrouvera 80% des données de la classe 1 et 80% des données de la classe 2 dans les données
+d'apprentissage. Et ce de la même manière pour les 20% de données de test.
+
 Package "Wrapper"
 *****************
+Ce package réparti en trois classe la gestion de la configuration, de l'initialisation, de l'entrainement et de l'évaluation du réseau de neurones.
+Une classe gère les parties communes de configuration du réseau, tandis que les autres se partage les tâches selon si ces dernières sont liées
+à Spark ou non. 
+
 La classe "WrapperDl4j"
 +++++++++++++++++++++++
+La classe "WrapperDl4j" est la classe mère de la gestion du réseau de neurones. Elle gère principalement la configuration du réseau de neurones.
+En effet, la configuration du réseau est indépendante de la méthode employé ensuite pour l'utilisation (Utilisation de Spark ou non).
+
+Elle fournit donc les méthodes qui permettent de: 
+* créer une configuration de réseau. 
+* charger une configuration de réseau depuis une configuration sauvegardé.
+* sauvegarder le réseau. 
+
+Elle est un wrapper autour de la bilbiothèque deeplearning4j afin d'en simplifier l'emploie. Elle sert également de classe de base pour
+les deux classes que ce rapport va présenter ensuite.
+
 La classe "LocalWrapperDl4j"
 ++++++++++++++++++++++++++++
+Cette classe est une classe héritant de la classe "WrapperDl4j". Elle étend ainsi cette dernière en lui fournissant les méthodes pour
+l'initialisation en local du projet. C'est à dire sans se servir de la plateforme Spark. Elle est contenu dans un sous package nommé
+"local".
+
+Les méthodes qu'elle fournit sont donc chargées:
+* d'initialiser le projet pour fonctionner en local sur la machine.
+* d'entraîner le réseau de neurones en local.
+* d'évaluer le réseau de neurones en local.
+
+Cette classe est elle aussi construite autour de la librairie deeplearning4j.
+
 La classe "SparkWrapperDl4j"
 ++++++++++++++++++++++++++++
-Choix de la topologie du/des reseaux de neurones
---------------------------------------------
-Description du workflow
--------------------------
+Cette classe est conçu pour permettre l'emploi d'un réseau de neurones sur Spark. Elle est contenu dans un sous package nommé "spark".
+Elle étend la classe "WrapperDl4j" en lui fournissant les outils utiles a Spark.
+
+Elle possède ainsi des méthodes pour: 
+* spécifier la configuration de Spark (localisation du moteur de Spark, timeout, heartbeat)
+* initialiser le reseau sur Spark
+* initialiser le "training master" qui est en charge de gérer le processus de calcul des paramètres du réseau à travers Spark.
+* d'entrainer le réseau au travers de Spark.
+* d'évaluer le réseau au travers de Spark.
+
+Cette classe est construite autour de la bibliothèque deeplearning4j.
+
+Choix de la topologie du réseau de neurones
+------------------------------------------------
+Cette partie du chapitre va décrire les différents types de réseaux de neurones régulièrement utilisés dans la littérature. 
 
 Implémentation
 ================
