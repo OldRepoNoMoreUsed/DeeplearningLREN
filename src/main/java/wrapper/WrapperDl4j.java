@@ -12,6 +12,7 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -88,28 +89,49 @@ public class WrapperDl4j {
         System.out.println("***** Configuration done *****");
     }
 
-    public void saveModelToJSON(){
+    public void saveModelToJSON(String modelName){
         try{
-            FileUtils.write(new File("SaveNetwork.json"), network.getLayerWiseConfigurations().toJson());
+            FileUtils.write(new File(modelName + ".json"), network.getLayerWiseConfigurations().toJson());
         }catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    public void saveModelToYAML(){
+    public void saveModelToYAML(String modelName){
         try{
-            FileUtils.write(new File("SaveNetwork.yaml"), network.getLayerWiseConfigurations().toYaml());
+            FileUtils.write(new File(modelName + ".yaml"), network.getLayerWiseConfigurations().toYaml());
         }catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    public void saveModelToBin(){
+    public void saveModelToBin(String modelName){
         try{
-            DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get("SaveNetwork.bin")));
+            DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get(modelName + ".bin")));
             Nd4j.write(network.params(), dos);
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public void saveModel(String modelName){
+        File locationToSave = new File(modelName + ".zip");
+        boolean saveUpdater = true;
+        try{
+            ModelSerializer.writeModel(this.network, locationToSave, saveUpdater);
+        }catch(IOException e){
+            System.out.println("Erreur lors de la sauvegarde du modèle");
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFromModelSaved(String location){
+        try{
+            this.network = ModelSerializer.restoreMultiLayerNetwork(location);
+        }catch(IOException e){
+            System.out.println("Erreur lors du chargement du modèle");
+            e.printStackTrace();
+        }
+
     }
 }

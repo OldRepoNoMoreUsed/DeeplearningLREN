@@ -1,5 +1,7 @@
 package config;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -18,14 +20,12 @@ public class Configuration {
     private int niftiWidth;
     private int niftiHeight;
     private int niftiDepth;
-    private int nbExamples;
     private int cubeSize;
     private int sphereSize;
     private String cubePrefix;
     private String spherePrefix;
     private int step;
     private int niftiSize;
-    private String networkType;
     private int matrixHeight;
     private int matrixWidth;
     private int seed;
@@ -36,8 +36,6 @@ public class Configuration {
     private int miniBatchSize;
     private String niftiDirectory;
     private boolean loadNetworkConfig;
-    private String fileNetworkConfig;
-    private String formatToLoad;
     private String spark_timeout;
     private String spark_heartbeat;
     private int trainRatio;
@@ -47,9 +45,16 @@ public class Configuration {
     private int averagingFrequency;
     private int workerPrefetchNumBatch;
     private int batchSizePerWorker;
+    private String savedFileName;
+    private String saveType;
+    private boolean savingModel;
+    private boolean loadFromSaved;
+    private String fileModelName;
+    private boolean normalize;
+    private boolean useUI;
 
     public Configuration(String filename, boolean generate){
-        this.filename = filename + ".properties";
+        this.filename = filename;
         this.properties = new Properties();
         if(generate){
             generatePropertiesFile();
@@ -62,18 +67,16 @@ public class Configuration {
         System.out.println("Generate configuration file ....");
         try{
             output = new FileOutputStream(filename);
-            properties.setProperty("NIFTI_Directory", "/generate");
+            properties.setProperty("Normalize", "true");
+            properties.setProperty("isUseUI", "false");
+            properties.setProperty("NIFTI_Directory", "generate");
             properties.setProperty("Use_Spark", "false");
             properties.setProperty("Spark_Master", "local[*]");
-            properties.setProperty("isLoadNetworkConfig", "false");
-            properties.setProperty("format_to_load", "yaml");
-            properties.setProperty("file_Network_Config", "CNN.yaml");
             properties.setProperty("Generate_Nifti", "true");
             properties.setProperty("Random_generation", "true");
             properties.setProperty("NIFTI_Width", "160");
             properties.setProperty("NIFTI_Height", "190");
             properties.setProperty("NIFTI_Depth", "190");
-            properties.setProperty("Nb_examples", "300");
             properties.setProperty("CubeSize", "10");
             properties.setProperty("SphereSize", "10");
             properties.setProperty("Cube_prefix", "cube");
@@ -82,7 +85,6 @@ public class Configuration {
             properties.setProperty("Nifti_Size", "100");
             properties.setProperty("Matrix_Height", "2880");
             properties.setProperty("Matrix_Width", "2048");
-            properties.setProperty("NetworkType", "CNN");
             properties.setProperty("Seed", "12345");
             properties.setProperty("Iteration", "100");
             properties.setProperty("Nb_Channel", "1");
@@ -90,14 +92,19 @@ public class Configuration {
             properties.setProperty("BatchSize", "300");
             properties.setProperty("MinibatchSize", "56");
             properties.setProperty("Ratio_TrainTest", "80");
-            properties.setProperty("spark_timeout", "600s");
-            properties.setProperty("spark_heartBeat", "600s");
-            properties.setProperty("learningRate", "0.002");
+            properties.setProperty("Spark_timeout", "600s");
+            properties.setProperty("Spark_heartBeat", "600s");
+            properties.setProperty("LearningRate", "0.2");
             properties.setProperty("Nb_Filter", "10");
             properties.setProperty("Nb_out_denseLayer", "50");
             properties.setProperty("Averaging_Frequency", "5");
             properties.setProperty("WorkerPrefetchNumBatch", "2");
-            properties.setProperty("batchSizePerWorker", "56");
+            properties.setProperty("BatchSizePerWorker", "56");
+            properties.setProperty("SavedFileName", "SavedConfig");
+            properties.setProperty("SaveType", "FULL");
+            properties.setProperty("SavingModel", "true");
+            properties.setProperty("LoadModelFromFile", "true");
+            properties.setProperty("FileModelName", "SavedConfig.zip");
             properties.store(output, "Fichier de configuration genere");
         }catch(IOException io){
             io.printStackTrace();
@@ -119,18 +126,16 @@ public class Configuration {
         try{
             input = new FileInputStream(filename);
             properties.load(input);
+            useUI = Boolean.parseBoolean(properties.getProperty("isUseUI", "false"));
+            normalize = Boolean.parseBoolean(properties.getProperty("Normalize", "true"));
             niftiDirectory= properties.getProperty("NIFTI_Directory", "/generate");
             useSpark = Boolean.parseBoolean(properties.getProperty("Use_Spark", "false"));
             sparkMaster =  properties.getProperty("Spark_Master", "local[*]");
-            loadNetworkConfig = Boolean.parseBoolean(properties.getProperty("isLoadnetworkConfig", "false"));
-            formatToLoad = properties.getProperty("format_to_load", "yaml");
-            fileNetworkConfig = properties.getProperty("file_Network_Config", "CNN.yaml");
             generateNifti = Boolean.parseBoolean(properties.getProperty("Generate_Nifti", "true"));
             randomGeneration = Boolean.parseBoolean(properties.getProperty("Random_generation", "true"));
             niftiWidth = Integer.parseInt(properties.getProperty("NIFTI_Width", "160"));
             niftiHeight = Integer.parseInt(properties.getProperty("NIFTI_Height", "190"));
             niftiDepth = Integer.parseInt(properties.getProperty("NIFTI_Depth", "190"));
-            nbExamples = Integer.parseInt(properties.getProperty("Nb_examples", "300"));
             cubeSize = Integer.parseInt(properties.getProperty("CubeSize", "10"));
             sphereSize = Integer.parseInt(properties.getProperty("SphereSize", "10"));
             cubePrefix = properties.getProperty("Cube_prefix", "cube");
@@ -139,7 +144,6 @@ public class Configuration {
             niftiSize = Integer.parseInt(properties.getProperty("Nifti_Size", "100"));
             matrixHeight = Integer.parseInt(properties.getProperty("Matrix_Height", "2880"));
             matrixWidth = Integer.parseInt(properties.getProperty("Matrix_Width", "2048"));
-            networkType = properties.getProperty("NetworkType", "CNN");
             seed = Integer.parseInt(properties.getProperty("Seed", "12345"));
             iteration = Integer.parseInt(properties.getProperty("Iteration", "100"));
             nbChannel = Integer.parseInt(properties.getProperty("Nb_Channel", "1"));
@@ -147,19 +151,41 @@ public class Configuration {
             batchSize = Integer.parseInt(properties.getProperty("BatchSize", "300"));
             miniBatchSize = Integer.parseInt(properties.getProperty("MinibatchSize", "56"));
             trainRatio = Integer.parseInt(properties.getProperty("Ratio_TrainTest", "80"));
-            spark_timeout = properties.getProperty("spark_timeout", "600s");
-            spark_heartbeat = properties.getProperty("spark_heartBeat", "600s");
-            learningRate = Float.parseFloat(properties.getProperty("learningRate", "0.002"));
+            spark_timeout = properties.getProperty("Spark_timeout", "600s");
+            spark_heartbeat = properties.getProperty("Spark_heartBeat", "600s");
+            learningRate = Float.parseFloat(properties.getProperty("LearningRate", "0.2"));
             nbFilter = Integer.parseInt(properties.getProperty("Nb_Filter", "10"));
             denseOut = Integer.parseInt(properties.getProperty("Nb_out_denseLayer", "50"));
             averagingFrequency = Integer.parseInt(properties.getProperty("Averaging_Frequency", "5"));
             workerPrefetchNumBatch = Integer.parseInt(properties.getProperty("WorkerPrefetchNumBatch", "2"));
-            batchSizePerWorker = Integer.parseInt(properties.getProperty("batchSizePerWorker", "56"));
-
+            batchSizePerWorker = Integer.parseInt(properties.getProperty("BatchSizePerWorker", "56"));
+            savedFileName = properties.getProperty("SavedFileName", "SavedConfig");
+            saveType = properties.getProperty("SaveType", "FULL");
+            savingModel = Boolean.parseBoolean(properties.getProperty("SavingModel", "true"));
+            loadFromSaved = Boolean.parseBoolean(properties.getProperty("LoadModelFromFile", "true"));
+            fileModelName = properties.getProperty("FileModelName", "SavedConfig");
         }catch(IOException e){
             e.printStackTrace();
         }
         System.out.println("Done!");
+    }
+
+    public boolean isUseUI(){ return useUI; }
+
+    public boolean isNormalize(){ return normalize; }
+
+    public boolean isloadFromModel(){
+        return loadFromSaved;
+    }
+
+    public String getFileModelName(){ return fileModelName; }
+
+    public String getSaveType(){ return saveType;}
+
+    public Boolean getSavingModel(){ return savingModel; }
+
+    public String getSavedFileName(){
+        return savedFileName;
     }
 
     public int getBatchSizePerWorker() {
@@ -198,18 +224,6 @@ public class Configuration {
         return spark_heartbeat;
     }
 
-    public boolean isLoadNetworkConfig() {
-        return loadNetworkConfig;
-    }
-
-    public String getFileNetworkConfig() {
-        return fileNetworkConfig;
-    }
-
-    public String getFormatToLoad() {
-        return formatToLoad;
-    }
-
     public int getNiftiSize(){ return niftiSize; }
 
     public String getNiftiDirectory(){ return niftiDirectory; }
@@ -242,10 +256,6 @@ public class Configuration {
         return niftiDepth;
     }
 
-    public int getNbExamples() {
-        return nbExamples;
-    }
-
     public int getCubeSize() {
         return cubeSize;
     }
@@ -264,10 +274,6 @@ public class Configuration {
 
     public int getStep() {
         return step;
-    }
-
-    public String getNetworkType() {
-        return networkType;
     }
 
     public int getMatrixHeight() {

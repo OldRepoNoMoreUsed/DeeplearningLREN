@@ -8,6 +8,7 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wrapper.WrapperDl4j;
 import wrapper.local.LocalWrapperDl4j;
 import wrapper.spark.SparkWrapperDl4j;
 
@@ -89,24 +90,64 @@ public class Main {
 
     private static void launchExperience(){
         if(config.isUseSpark()){
-            List<DataSet> trainData = dr.getTrainDataListNormalized();
-            List<DataSet> testData = dr.getTestDataListNormalized();
+            List<DataSet> trainData;
+            List<DataSet> testData;
+            if(config.isNormalize()){
+                trainData = dr.getTrainDataListNormalized();
+                testData = dr.getTestDataListNormalized();
+            }else{
+                trainData = dr.getTrainDataList();
+                testData = dr.getTestDataList();
+            }
             SparkWrapperDl4j network = new SparkWrapperDl4j(config.getSeed(), config.getSpark_timeout(), config.getSpark_heartbeat(), config.getSparkMaster(), "LREN_Deeplearning");
-            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+            loadModel(network);
             network.initTrainingMaster(config.getMiniBatchSize(), config.getAveragingFrequency(), config.getWorkerPrefetchNumBatch(), config.getBatchSizePerWorker());
             network.initSparkNet();
             network.sparkTrain(trainData);
             network.sparkEval(testData);
-            network.saveModelToYAML();
-        }else{
-            INDArrayDataSetIterator trainData = dr.getIteratorTrainNormalized();
-            INDArrayDataSetIterator testData = dr.getIteratorTestNormalized();
+            saveModel(network);
+        }else {
+            INDArrayDataSetIterator trainData;
+            INDArrayDataSetIterator testData;
+            if(config.isNormalize()){
+                trainData = dr.getIteratorTrainNormalized();
+                testData = dr.getIteratorTestNormalized();
+            }else{
+                trainData = dr.getIteratorTrain();
+                testData = dr.getIteratorTest();
+            }
             LocalWrapperDl4j network = new LocalWrapperDl4j(config.getSeed());
-            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+            loadModel(network);
             network.init();
             network.localTrain(trainData);
             network.localEvaluation(testData);
-            network.saveModelToYAML();
+            saveModel(network);
+        }
+    }
+
+    private static void loadModel(WrapperDl4j network){
+        if(config.isloadFromModel()){
+            network.loadFromModelSaved(config.getFileModelName());
+        }else{
+            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+        }
+    }
+
+    private static void saveModel(WrapperDl4j network){
+        if(config.getSavingModel()){
+            switch(config.getSaveType()){
+                case "YAML":
+                    network.saveModelToYAML(config.getSavedFileName());
+                    break;
+                case "JSON":
+                    network.saveModelToJSON(config.getSavedFileName());
+                    break;
+                case "BIN":
+                    network.saveModelToBin(config.getSavedFileName());
+                    break;
+                case "FULL":
+                    network.saveModel(config.getSavedFileName());
+            }
         }
     }
 }

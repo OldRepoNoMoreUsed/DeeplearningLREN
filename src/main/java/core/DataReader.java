@@ -189,7 +189,12 @@ public class DataReader {
     private void normalize(INDArrayDataSetIterator iterator){
         System.out.println("***** Normalize data *****");
         DataNormalization scaler = new NormalizerMinMaxScaler();
-        scaler.fit(iterator);
+        try{
+            scaler.fit(iterator);
+        }catch(RuntimeException e){
+            System.out.println("[Warning] le nombre de données est trop faible pour pouvoir faire des statistiques utiles");
+        }
+
         iterator.setPreProcessor(scaler);
     }
 
