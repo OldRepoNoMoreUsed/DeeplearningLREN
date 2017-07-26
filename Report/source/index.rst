@@ -107,6 +107,7 @@ principaux de ce travail sont:
 6. Tester les nouvelles fonctionnalités avec une expérience concrète fournit par le LREN. Cette expérience utilisera des images d'IRM utilisé
    par le laboratoire. Elle consistera en une classification de ces images. 
 
+
 En plus de ces objectifs principaux, s'ajoute un objectif optionnel. Celui-ci consiste a étendre le portail web de la plateforme pour
 permettre l'utilisation des nouvelles fonctionnalités de l'*algorithm factory*.
 
@@ -188,6 +189,7 @@ tableau contenant les données sur les dimensions du fichier. Ce tableau contien
 * Dim[0]: Le nombre de dimensions
 * Dim[1 -7]: Un nombre positif contenant la longueur de la dimension en question.
 
+
 Pour ce travail deux types de NIFTI ont été employé. Le premier type de NIFTI a avoir été utilisé sont des
 images générés très simple. Ces images correspondent à des sphères et des cubes. La dimension de ces images
 générées peut être choisi. Au début du projet, de manière a facilité les tests, la taille de ces images étaient
@@ -206,6 +208,7 @@ De toute cette gamme d'outils, deux ont principalement été employé:
 
 * fslinfo: affiche les informations du header du fichier NIFTI ou ANALYZE lu
 * fslsplit: découpe une image IRM 4D en un lot de fichier 3D
+
 
 Une fois le format appréhendé, il faut un outil permettant de les lire dans un programme. La plateforme du CHUV et notre projet
 devant pouvoir tourner sur une JVM, une librairie JAVA a été trouvé. Cet outil est le projet niftijio. Cet outil permet de lire
@@ -273,12 +276,14 @@ Dans cet écosystème, on trouve notamment:
 * Spark MLlib: Est une bibliothèque d'apprentissage automatique qui contient tous les algorithmes et utilitaires d'apprentissage classiques, tel que la classification,
   la régression, le clustering, le filtrage collaboratif et la réduction de dimension, en plus des primitives d'optimisation nécessaires à ces tâches.
 
+
 L'architecture de Spark comprend les trois composants principaux suivants: 
 
 * Un composant de stockage des données qui utilise le système de fichier HDFS pour le stockage.
 * Une API haut-niveau
 * Un composant de gestion des ressources. Ce composant permet a Spark d'être déployé comme un serveur autonome ou sur un framework de traitements distribués comme Apache-Mesos
   ou Apache-YARN.
+
 
 L'élément de base principal au coeur de Spark est le "Resilient Distributed Dataset" ou RDD. Un RDD est une abstraction de collection sur laquelle les opérations sont effectué
 de manière distribué et en étant tolérante aux pannes matérielles. On peut donc les voir comme une table dans une base de données. Un RDD peut contenir n'importe quel type de donné
@@ -288,6 +293,7 @@ son ensemble de données. Les RDD supportent deux types d'opérations:
 
 * Les transformations(map, filter, flatMap, groupByKey, reducebyKey, etc...): Celles-ci retourne un nouvel RDD. 
 * Les actions(reduce, collect, count, first, take, foreach, etc...): Celles-ci évaluent et retournent une nouvelle valeur. 
+
 
 L'exécution de Spark peut se faire de plusieurs manière différente. Pour celà il suffit de donner le bon paramètre de connexion au moteur de Spark (Master, chef d'orchestre). Ainsi, la connexion
 au moteur peut se faire de manière local (sur un ou K "worker"), en se connectant à un cluster Spark, Mesos ou Yarn.
@@ -340,6 +346,7 @@ Il existe différent algorithme de machine learning. Parmis eux nous pouvons not
 * Random Forest (Forêt d'arbres décisionnnels)
 * Réseau de neurones
 
+
 Les neurones formels
 ++++++++++++++++++++
 Le deeplearning est une technique qui fonctionne sur la base des réseaux de neurones. Les réseaux de neurones sont construit à partir d'un
@@ -376,12 +383,14 @@ cette dernière. Il existe en effet plusieurs fonctions d'activations typiques:
 * La fonction SOFTMAX  
 * etc...
 
+
 L'objectif de la fonction d'activation est d'introduire de la non-linéarité dans le fonctionnement du neurone. Les fonctions d'activation
 présente, en règle général, trois intervalles: 
 
 * Sous le seuil d'activation, le neurone est inactif
 * Au alentour du seuil, le neurone est dans une phase de transition
 * Au dessus du seuil, le neurone est actif
+
 
 Le neurone formel est la brique de base des réseaux de neurones que nous allons voir dans la partie suivante.
 
@@ -418,6 +427,7 @@ l'on imagine en entrée du réseau une image de voiture, les couches pourraient 
 3. Couche 3: Ce véhicule motorisé a 4 roues
 4. Couche 4: Ce véhicules motorisé à 4 roues est une voiture
 
+
 Ainsi chaques couches ajoute un contexte de plus en plus précis aux données passées en entrée.
 
 Note sur l'apprentissage d'un réseau de neurones
@@ -449,6 +459,7 @@ perd alors sa capacité à prédire. Il existe des manières simple d'éviter le
   de l'apprentissage diminue alors qu'elle augmente sur les données de validation le réseau est sur-entrainé. On essaie donc d'arrêter l'entraînement
   lorsque l'on constate cette divergence. 
 * Régularisation: consiste a pénaliser les valeurs extrêmes des paramètres.
+
 
 Au terme de l'entraînement, il est possible d'élaguer notre réseau. Cette technique consiste a supprimer les connexions ayant peu d'influence
 sur le reste du réseau. Cela permet de faire gagner du temps pour la tâche a effectuer ensuite.
@@ -484,6 +495,7 @@ Pour concevoire des couches de convolution, il existe trois paramêtres particul
 * Le pas: Le pas contrôle le chevauchement des noyaux de convolution
 * La marge: La marge contrôle la dimension spatiale du volume de sortie. Elle ajoute des 0 à la frontières de l'image en entrée.
 
+
 Après la couche de convolution, on peut trouver une couche de correction. Cette couche semble permettre d'accélerer la vitesse de traitement
 du réseau sans affecté la précision. La fonction d'activation de cette couche peut être: 
 
@@ -491,6 +503,7 @@ du réseau sans affecté la précision. La fonction d'activation de cette couche
 * Correction par tangente hyperbolique
 * Correction par la fonction sigmoide
 * etc...
+
 
 La correction la plus utilisé est la correction RELU.
 
@@ -512,11 +525,13 @@ se situe. Elle peut être activé par différentes fonction d'activation:
 * Fonction d'entropie sigmoide croisé: prédis des valeurs de probabilité indépendante dans [0, 1]
 * Fonction euclidienne: Regression vers des valeurs réelles (contenu entre moins l'infini et plus l'infini)
 
+
 Il existe plusieurs modèles de réseau convolutif devenus des standards. Ces architectures sont les suivantes: 
 
 * INPUT + CONVOLUTION + RELU + FULLY CONNECTED + LOSS
 * INPUT + (CONVOLUTION + RELU +POOLING)\*2 + FULLY CONNECTED + RELU + FULLY CONNECTED + LOSS
 * Input + (CONVOLUTION + RELU + CONVOLUTION + RELU + POOLING)\*3 + (FULLY CONNECTED + RELU)\* 2 + FULLY CONNECTED + LOSS 
+
 
 Deeplearning et calcul distribué
 ********************************
@@ -526,6 +541,7 @@ réseau de deeplearning. Il existe deux modèles principaux:
 
 * La parallélisation des données
 * La parallélisation du modèle
+
 
 Dans la parallélisation du modèle, les différentes machines sur le réseau distribué sont en charge d'une partie du réseau. Par exemple,
 chaque machine peut se voir assigné la gestion d'une couche du réseau de neurones.
@@ -548,6 +564,7 @@ l'apprentissage fonctionne ainsi:
 4. De nouveaux paramètres globaux sont calculés en fonction de la moyenne des paramètres de chaque machine
 5. Tant qu'il y a des données à traiter, on retourne a l'étape 2
 
+
 Bibliothèque disponible et choix
 ********************************
 Cette partie du chapitre va faire un état des biblitothèques de deeplearning actuellement disponible. Puis en ce basant sur les contraintes
@@ -556,6 +573,7 @@ reste du projet. Il faut rappeler que ces contraintes sont:
 
 * L'utilisation du calcul distribué avec Spark
 * Une plateforme qui fonctionne en Scala
+
 
 Liste de bibliothèques disponible
 +++++++++++++++++++++++++++++++++
@@ -572,6 +590,7 @@ Ces principales caractéristiques sont:
 * Qu'elle possède une grosse documentation et est très utilisé
 * Que c'est un projet très solide de Google
 
+
 Toutefois, pour pouvoir être utilisé en scala il est nécessaire d'utiliser un outil comme ScalaPy. Cette biblitothèques a donc été rejeté
 car on ne peut pas se passer de ScalaPy.
 
@@ -581,6 +600,7 @@ TensorFrames est un portage expérimentale en Scala de TensorFlow. Ce portage es
 
 * Que c'est un portage expérimentale ne fonctionnant que sur des plateformes Linux 64 bits
 * Qu'elle est utilisable directement en Scala et en Python
+
 
 Cette bibliothèque étant expérimentale, cette bibliothèque a été écarté.
 
@@ -594,6 +614,7 @@ Ces principales caractéristiques sont:
 * Qu'elle a été conçu pour supporter le calcul distribué
 * Qu'elle ne fonctionne que sur les chips Intel
 
+
 Le fait que cette bibliothèque ne fonctionne que sur les chips Intel a écarté cette bibliothèque.
 
 Keras
@@ -603,6 +624,7 @@ Keras est une API de haut-niveau écrit en python et capable de fonctionner sur 
 * Qu'elle fonctionne en Python et nécessite donc d'être binder à du Java/Scala
 * Qu'elle supporte le CPU et le GPU
 * Qu'elle est conçu pour faire du prototyping rapidement
+
 
 Le fait qu'elle fonctionne en python a permis son élimination.
 
@@ -616,6 +638,7 @@ Caffe on Spark est une bibliothèque mêlant le framework Caffe et Spark ou Hado
 * Qu'elle fonctionne en Java
 * Qu'elle a besoin d'être installé sur chaque noeud du cluster
 
+
 Le fait que cette bibliothèque ait besoin d'être installé sur chaque noeud l'a écarté. En effet, c'est une chose dont le LREN aimerait se passer.
 
 SparkNet
@@ -625,6 +648,7 @@ SparkNet est une bibliothèque de deeplearning conçu en Scala dont les pincipal
 * Qu'elle fonctionne sur Spark
 * Qu'elle est nativement conçu en Scala
 * Qu'elle est supportée que sur Ubuntu (CPU/GPU) et sur CentOS
+
 
 Le nombre de plateforme sur laquelle elle est employable a éliminer cette bilbiothèque.
 
@@ -640,6 +664,7 @@ Ces concepteurs la vende comme un outils pour le deeplearning à échelle indust
 * Que sont intégration à un projet se veut simple en utilisant Maven, Graddle ou encore SBT
 * Qu'elle possède une API Scala (ScalNet)
 * Qu'elle a un support actif
+
 
 Pour tous les avantages qu'elle donne cette librairie a été choisi en concertation avec le LREN. Cette bibliothèque fournit ainsi tous les outils
 demandé pour réaliser le travail demandé par le CHUV.
@@ -729,6 +754,7 @@ Cette classe contient de nombreuses méthodes. Toutefois celle-ci peuvent être 
 * Une méthode de lecture d'un fichier de configuration. Cette méthode lit le fichier et stock les valeurs des paramètres dans des attributs de la classe.
 * Des "getter" qui permettent l'accès à chaque paramètre lu par la classe.
 
+
 Cette classe est une classe on ne peut plus standard utilisant les outils de Java standard.
 
 Package "Generator"
@@ -753,6 +779,7 @@ Cette classe possède ainsi:
 * Une méthode pour générer un dataset complet de sphères et de cubes de tailles aléatoires dans des fichiers NIFTI de taille fixes et ce à des positions aléatoires.
 * Un lot de méthode pour générer de très petits jeu de données de petites tailes et le tout aléatoirement.
 
+
 Cette classe utilise les fonctionnalités fournit par la bibliothèque de gestion de NIFTI niftijio. 
 
 Package "Core"
@@ -775,6 +802,7 @@ Afin de rendre cette classe la plus lisible possible elle contient quelques fonc
 * Une fonction chargée de gérer la lecture des données.
 * Une fonction chargée de gérer la configuration, l'initialisation, l'entraînement et l'évaluation du réseau de neurones.
 
+
 Elle instancie également toutes les autres classes créées pour ce projet.
 
 La classe "DataReader"
@@ -789,6 +817,7 @@ Elle fournit un certain nombre de méthodes permettant:
 * d'obtenir les itérateurs des jeu de données d'apprentissage et de test après que ceux-ci aient été normalisés (nécessaire si on ne se sert pas de Spark).
 * d'obtenir les itérateurs des jeu de données d'apprentissage et de test sous forme de liste et sans avoir été normalisés (nécessaire si l'on se sert de Spark). 
 * d'obtenir les itérateurs des jeu de données d'apprentissage et de test sous forme de liste et après avoir été normalisés (nécessaire si l'on se sert de Spark).
+
 
 Cette classe permet de configuré la taille des minibatchs de chaque itérateurs et gère également de ratio de données d'entraînement et de test.
 Ce ratio est fait de manière stratifié. Le même ratio est appliqué pour les données de chaques classes. Si l'on a 2 classes et un ratio de 80%
@@ -812,6 +841,7 @@ Elle fournit donc les méthodes qui permettent de:
 * charger une configuration de réseau depuis une configuration sauvegardé.
 * sauvegarder le réseau. 
 
+
 Elle est un wrapper autour de la bilbiothèque deeplearning4j afin d'en simplifier l'emploie. Elle sert également de classe de base pour
 les deux classes que ce rapport va présenter ensuite.
 
@@ -827,6 +857,7 @@ Les méthodes qu'elle fournit sont donc chargées:
 * d'entraîner le réseau de neurones en local.
 * d'évaluer le réseau de neurones en local.
 
+
 Cette classe est elle aussi construite autour de la librairie deeplearning4j.
 
 La classe "SparkWrapperDl4j"
@@ -841,6 +872,7 @@ Elle possède ainsi des méthodes pour:
 * initialiser le "training master" qui est en charge de gérer le processus de calcul des paramètres du réseau à travers Spark.
 * d'entrainer le réseau au travers de Spark.
 * d'évaluer le réseau au travers de Spark.
+
 
 Cette classe est construite autour de la bibliothèque deeplearning4j.
 
@@ -1080,6 +1112,7 @@ Il existe différent type de méthode de régularisation dans Deeplearning4j:
 * Il existe une dernière méthode de régularisation. Celle-ci est la méthode dites d'"early stopping". Avec cette méthode, on cherche a arrêter l'entrainement du réseau lorsque le score
   du réseau lors des tests diminue alors que les scores du réseau lors de l'apprentissage continue d'augmenter.
 
+
 (Attention peut etre RMSPROP)
 Le paramètre "update" a pour but de fournir une méthode d'appréciation du learningRate. Elles permettent de modifier le learningRate durant l'entraînement pour le faire converger
 plus vite. Pour ce travail, le choix de la méthode Nesterovs a été fait. Cette méthode est très courammenet utilisé avec la descente de gradient stochastique. Le "momentum" permet
@@ -1121,7 +1154,6 @@ utilisé. Le nombre de sortie de cette couche doit correspondre au nombre de cla
 les expériences il a été utilisé avec une valeur de 2. La fonction d'activation de cette couche est la fonction "SOFTMAX" qui est très souvent conseillé lorsqu'il s'agit de faire un classifier avec 2
 classes.
 
-(Il est à noté qu'un réseau avec cette configuration et pour les données NIFTI standards possède un total de 1'840'162 paramètres.)
 
 Note sur l'apprentissage avec Deeplearning4j
 --------------------------------------------
@@ -1212,29 +1244,108 @@ Il existe bien d'autres paramètres modifiables et sont répertorié dans la doc
 La méthode "setmaster()" utilisé ensuite permet de donner le paramètre de connexion au moteur d'exécution de Spark. Pour une utilisation en local, sa valeur doit être la chaîne de caractère "local[\*]"
 ou la chaîne "local[x]", avec X le nombre de coeur à utiliser.
 
+Au terme de ces lignes de code, on obtient un contexte Spark utilisable en Java. Il ne reste donc plus qu'à créer un réseau de neurone compatible avec Spark. Deeplearning4j fournit alors un objet
+qui s'instancie de cette manière:
 
+.. code-block:: java
+   :linenos:
 
+    SparkDl4jMultiLayer sparkNet = new SparkDl4jMultiLayer(jsc, conf, trainingMaster);
 
+Il prend en paramètre, le "TrainingMaster", le contexte Spark et la configuration du réseau de neurones. Il permet par la suite d'utiliser notre réseau de neurones de la même manière qu'un MutliLayerNetwork simple.
+Ceci à un détail près. Le paramètre que prend la méthode "fit()" du réseau sur Spark n'est pas un itérateur ou un "DataSet". Il s'agit d'un objet "JavaRDD<Dataset>". Ce dernier s'instancie ainsi:
 
+.. code-block:: java
+   :linenos:
 
+    JavaRDD<DataSet> trainData = jsc.parallelize(listTrainData);
 
-
+Le paramètre "listTrainData" est une simple liste de "DataSet". Celle-ci peut être obtenu avec le "dataReader" du projet.
 
 Entraînement et évaluation avec Spark sur un cluster
 ----------------------------------------------------
+(Attention ! Cette partie n'a pas pu être testé. En effet, l'accès à un cluster n'a pas été possible pendant la durée du projet.)
+
+Pour faire fonctionner le "SparkDl4jMultiLayer" non plus en local mais sur un cluster, il faut faire quelques adaptions. 
+
+Au moment de la configuration du "TrainingMaster", il est nécessaire de modifier la chaîne de caractère passée en paramètre. La chaîne de caractère à passer devient:
+
+* "spark://HOST:PORT" si le réseau de neurones doit tourner sur un cluster fonctionnant sur Spark.
+* "mesos://HOST:PORT" si le réseau de neurones doit fonctionner sur un cluster tournant sur Mesos.
+* "yarn-client" si le réseau de neurones doit se connecter sur un cluster Yarn en tant que client. L'adresse du cluster doit se trouver dans le HADOOP_CONF_DIR.
+* "yarn-cluster" si le réseau de neurones doit tourner sur un cluster Yarn en mode cluster. L'adresse du cluster se trouve dans le HADOOP_CONF_DIR.
 
 Sauvegarde et chargement d'un réseau
 ------------------------------------
+Le réseau de neurones du projet peut-être sauvegarder de 4 manières différentes. La manière de sauvegarder un réseau se configure dans le fichier de configuration du projet.
+Ces modes de sauvegarde sont: 
 
-Note sur l'implémentation d'un "Early Stopping"
------------------------------------------------
+* Sauvegarde du modèle dans un fichier binaire. Ce mode de sauvegarde ne sauve que la configuration du réseau.
+* Sauvegarde du modèle dans un fichier JSON. Ce mode de sauvegarde ne sauve que la configuration du réseau.
+* Sauvegarde du modèle dans un fihcier YAML. Ce mode de sauvegarde ne sauve que la configuration du réseau.
+* Sauvegarde du modèle dans un dossier zip. Ce zip contient le modèle du réseau de neurones ainsi que l'état des différents paramètres.
+
+
+Pour la sauvegarde dans un fichier binaire, il faut utiliser la méthode suivante:
+
+.. code-block:: java
+   :linenos:
+
+    DataOutputStream dos = new DataOutputStream(Files.newOutputStream(Paths.get(modelName + ".bin")));
+    Nd4j.write(network.params(), dos);
+
+On écrit ainsi les différents paramètres du réseau dans le fichier binaire.
+
+Pour les sauvegardes en JSON et YAML la méthode est quasiment la même. Il suffit de  d'écrire dans un fichier, à l'extension correspondante,
+le retour de la méthode "getLayerWiseConfiguration()". Cette méthode peut être suivi d'une méthode "toYaml()" ou "toJson()".
+
+Pour la sauvegarde complète, Deeplearning4j fournit un objet "ModelSerializer". Ce dernier permet via sa méthode "writeModel()" de sauvegarder la
+configuration du réseau et les paramètres de ce dernier. Cette méthode prend en paramètre le réseau de neurones à sauvegarder, le chemin ou sauvegarder le réseau et
+un paramètre booléen activant ou non la sauvegarder des paramètres du réseau. Cette sauvegarde permet de recharger le réseau dans son état final.
+
+Pour ce qui est du chargement, celui-ci peut se faire également à l'aide de l'objet "ModelSerializer". Celui-ci offre en effet une méthode
+"restoreMultiLayerNetwork()". Celle-ci permet de charger un MultiLayerNetwork avec le réseau sauvegardé.
 
 Expérience réalisée avec le CHUV
 =================================
-Donnée de l'expérience
+Afin de permettre de vérifier la faisabilité du projet demandé, le LREN a demandé la réalisation d'une expérience de classification sur des images IRM au format NIFTI qu'il utilise
+sur leur plateforme.
+
+Ce chapitre décrire la données de l'expérience, la préparation, le déroulement, l'exécution de l'expérience et les résultats obtenus. Pour des raisons de confidentialité, aucune image
+fournit par le LREN ne pourra être affiché ici en guise d'exemple.
+
+Données de l'expérience
 ----------------------
+L'expérience dont le LREN demande l'exécution a pour but de permettre la classification entre des cerveaux contrôlés et ne portant pas Alzheimer et des cerveaux ayant Alzheimer. 
+
+Pour réaliser cette expérience, le CHUV a fournit un lot de  183 images. Sur ces 183 images, (nb images HC nb image AD). Les images fournies avaient déjà, en partie, été prétraitées.
+Ainsi les images ne représentait que la partie contenant la matière grise du cerveau.
+
+En se servant du réseau de neurones inclut dans le programme et du fichier de configuration, il fallait essayé de les classifier dans ces deux classes.
+
 Préparation et exécution de l'expérience
 ----------------------------------------
+Pour réaliser cette expérience, les images ont été mise dans un dossier IRM_Expérience. Ce dossier contenait en vrac toutes les images NIFTI. Cette expérience a été réalisé en local sur la machine sans Spark puis sur Spark
+en local. Lancer l'expérience en local a permis de de visualiser l'expérience grâce la UI fournit par Deeplearning4j, puis sur Spark pour vérifier que les résultats soient les mêmes. 
+
+(Insérer l'image de la UI)
+
+Cette UI a permis de faire un peu de tunning sur les paramètres du réseau. Au terme de nombreuses tentatives, les meilleurs résultats ont été obtenus avec ces paramètres:
+
+* Ratio d'images d'entraînement 80% et 20% d'images de validation. Ces ratios sont appliquée de manière stratifiée.
+* Taille des minibatchs à 8
+* Normalisation des données activée
+* Nombre de sortie de la couche dense égal à 100
+* Nombre de filtre à appliquer égal à 10
+* Nombre d'itération égal à 100
+* Nombre de label égal à 2
+* Nombre de couleur égal à 1 (donc niveau de gris)
+* LearningRate égal à 0.1
+* Valeur de la régularisation l2 égal à 0.0005
+
+
+
+
 Résultats
 ---------
 
