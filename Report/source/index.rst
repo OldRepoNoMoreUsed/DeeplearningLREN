@@ -108,7 +108,7 @@ principaux de ce travail sont:
    par le laboratoire. Elle consistera en une classification de ces images. 
 
 En plus de ces objectifs principaux, s'ajoute un objectif optionnel. Celui-ci consiste a étendre le portail web de la plateforme pour
-permettre l'utilisation des nouvelles fonctionnalités de l'"algorithm factory".
+permettre l'utilisation des nouvelles fonctionnalités de l'*algorithm factory*.
 
 Il faut tout même signalé que ces objectifs ont évolué au cours du projet. Ces changements seront expliqué durant les chapitres concernant
 la conception et l'implémentation du projet. (Attention a bien les expliquer)
@@ -160,15 +160,15 @@ le nouveau standard de neuroimagerie.
 
 Vue d'ensemble du format NIFTI
 ******************************
-Le format ANALYZE 7.5 avait besoin de deux fichiers pour fonctionner. Un fichier "*.hdr" contenant
-le header pour stocker les méta-données et un fichier "*.img" contenant les données de l'image.
+Le format ANALYZE 7.5 avait besoin de deux fichiers pour fonctionner. Un fichier "\*.hdr" contenant
+le header pour stocker les méta-données et un fichier "\*.img" contenant les données de l'image.
 Le format NIFTI a conservé l'idée d'avoir un header et des données afin de préserver la compatibilité
 avec les systèmes déjà en place. Toutefois, des améliorations ont été apportés et pour évité de faire
 l'erreur d'oublier l'un des deux fichiers du format, il a été décidé de permettre le stockage de ces
-informations dans un seul fichier avec l'extension "*.nii". Ces images contenant de grandes zones d'image
+informations dans un seul fichier avec l'extension "\*.nii". Ces images contenant de grandes zones d'image
 noires, elles sont donc parfaites pour être compressées avec gzip. Il n'est donc absolument
-pas rare de trouver des fichiers NIFTI au format "*.nii.gz". Pour ce travail nous avons utilisé
-les formats "*.nii" et "*.nii.gz".
+pas rare de trouver des fichiers NIFTI au format "\*.nii.gz". Pour ce travail nous avons utilisé
+les formats "\*.nii" et "\*.nii.gz".
 
 Le format NIFTI est un format de fichier que l'on peut représenter par une matrice multidimensionnel.
 Au total, elle peut compter jusqu'à 7 dimensions. Dans tous les cas, les 3 premières dimensions sont des
@@ -185,8 +185,8 @@ brainder.org il doit venir etre collé ici.)
 Le champs principalement utilisé lors de ce projet est le champs short dim[8]. Ce champs est un
 tableau contenant les données sur les dimensions du fichier. Ce tableau contient pour: 
 
-- Dim[0]: Le nombre de dimensions
-- Dim[1 -7]: Un nombre positif contenant la longueur de la dimension en question.
+* Dim[0]: Le nombre de dimensions
+* Dim[1 -7]: Un nombre positif contenant la longueur de la dimension en question.
 
 Pour ce travail deux types de NIFTI ont été employé. Le premier type de NIFTI a avoir été utilisé sont des
 images générés très simple. Ces images correspondent à des sphères et des cubes. La dimension de ces images
@@ -202,7 +202,8 @@ se familiariser avec ce format d'utiliser un certain nombre d'outils de visualis
 de commande existe. Cette dernière s'appelle Fslutils. Il fournit un set complet de ligne de commande utiles pour convertir
 et manipuler les fichiers NIFTI. Une liste complète des outils fournit par Fslutils est fournit sur leur pages Internet.
 
-De toute cette gamme d'outils, deux ont principalement été employé: 
+De toute cette gamme d'outils, deux ont principalement été employé:
+
 * fslinfo: affiche les informations du header du fichier NIFTI ou ANALYZE lu
 * fslsplit: découpe une image IRM 4D en un lot de fichier 3D
 
@@ -270,14 +271,14 @@ Dans cet écosystème, on trouve notamment:
 * Spark SQL: Permet d'exécuter des requêtes SQL pour charger et transformer les données et ce quel que soit le format d'origine de celles-ci.
 * Spark GraphX: Permet le traitement et la parallélisation de graphes. 
 * Spark MLlib: Est une bibliothèque d'apprentissage automatique qui contient tous les algorithmes et utilitaires d'apprentissage classiques, tel que la classification,
-la régression, le clustering, le filtrage collaboratif et la réduction de dimension, en plus des primitives d'optimisation nécessaires à ces tâches.
+  la régression, le clustering, le filtrage collaboratif et la réduction de dimension, en plus des primitives d'optimisation nécessaires à ces tâches.
 
 L'architecture de Spark comprend les trois composants principaux suivants: 
 
 * Un composant de stockage des données qui utilise le système de fichier HDFS pour le stockage.
 * Une API haut-niveau
 * Un composant de gestion des ressources. Ce composant permet a Spark d'être déployé comme un serveur autonome ou sur un framework de traitements distribués comme Apache-Mesos
-ou Apache-YARN.
+  ou Apache-YARN.
 
 L'élément de base principal au coeur de Spark est le "Resilient Distributed Dataset" ou RDD. Un RDD est une abstraction de collection sur laquelle les opérations sont effectué
 de manière distribué et en étant tolérante aux pannes matérielles. On peut donc les voir comme une table dans une base de données. Un RDD peut contenir n'importe quel type de donné
@@ -373,7 +374,7 @@ cette dernière. Il existe en effet plusieurs fonctions d'activations typiques:
 * La fonction sigma-pi
 * La fonction RELU
 * La fonction SOFTMAX  
-* etc
+* etc...
 
 L'objectif de la fonction d'activation est d'introduire de la non-linéarité dans le fonctionnement du neurone. Les fonctions d'activation
 présente, en règle général, trois intervalles: 
@@ -441,11 +442,12 @@ Il est a noté que le temps nécessaire à l'apprentissage augmente très rapide
 neurones peuvent subir un surapprentissage. 
 
 Le surapprentissage (overfitting) est un problème qui empêche le réseau de généraliser les caractéristiques des données. Le réseau
-perd alors sa capacité à prédire. Il existe des manières simple d'éviter le surapprentissage: 
+perd alors sa capacité à prédire. Il existe des manières simple d'éviter le surapprentissage:
+
 * Cross-validation: consiste a créer deux sous-ensembles de données. On créer un sous-ensemble d'entraînement et un sous-ensemble de validation.
-On entraine ensuite le réseau avec le sous-ensemble d'apprentissage et on test son pouvoir prédictif avec l'ensemble de validation. Ainsi si l'erreur lors
-de l'apprentissage diminue alors qu'elle augmente sur les données de validation le réseau est sur-entrainé. On essaie donc d'arrêter l'entraînement
-lorsque l'on constate cette divergence. 
+  On entraine ensuite le réseau avec le sous-ensemble d'apprentissage et on test son pouvoir prédictif avec l'ensemble de validation. Ainsi si l'erreur lors
+  de l'apprentissage diminue alors qu'elle augmente sur les données de validation le réseau est sur-entrainé. On essaie donc d'arrêter l'entraînement
+  lorsque l'on constate cette divergence. 
 * Régularisation: consiste a pénaliser les valeurs extrêmes des paramètres.
 
 Au terme de l'entraînement, il est possible d'élaguer notre réseau. Cette technique consiste a supprimer les connexions ayant peu d'influence
@@ -488,7 +490,7 @@ du réseau sans affecté la précision. La fonction d'activation de cette couche
 * Correction RELU: permet d'augmenter les propriétés non-linéaire du réseau
 * Correction par tangente hyperbolique
 * Correction par la fonction sigmoide
-* etc
+* etc...
 
 La correction la plus utilisé est la correction RELU.
 
@@ -513,8 +515,8 @@ se situe. Elle peut être activé par différentes fonction d'activation:
 Il existe plusieurs modèles de réseau convolutif devenus des standards. Ces architectures sont les suivantes: 
 
 * INPUT + CONVOLUTION + RELU + FULLY CONNECTED + LOSS
-* INPUT + (CONVOLUTION + RELU +POOLING)*2 + FULLY CONNECTED + RELU + FULLY CONNECTED + LOSS
-* Input + (CONVOLUTION + RELU + CONVOLUTION + RELU + POOLING)*3 + (FULLY CONNECTED + RELU)* 2 + FULLY CONNECTED + LOSS 
+* INPUT + (CONVOLUTION + RELU +POOLING)\*2 + FULLY CONNECTED + RELU + FULLY CONNECTED + LOSS
+* Input + (CONVOLUTION + RELU + CONVOLUTION + RELU + POOLING)\*3 + (FULLY CONNECTED + RELU)\* 2 + FULLY CONNECTED + LOSS 
 
 Deeplearning et calcul distribué
 ********************************
@@ -642,29 +644,6 @@ Ces concepteurs la vende comme un outils pour le deeplearning à échelle indust
 Pour tous les avantages qu'elle donne cette librairie a été choisi en concertation avec le LREN. Cette bibliothèque fournit ainsi tous les outils
 demandé pour réaliser le travail demandé par le CHUV.
 
-Docker
--------
-Le LREN utilise pour sa plateforme un système de container Docker. Ce travail devra donc pouvoir être contenu dans un
-environnement Docker. Cette technologie étant relativement nouvelle, ce chapitre va brièvement exposer ce qu'est Docker.
-
-Docker est un logiciel open-source qui automatise le déploiement d'application dans des conteneurs logiciels.
-Le développement avec Docker permet d'éliminer le problème de la collaboration lors de l'écriture d'un logiciel
-en fournissant à chaques collaborateurs un environnement de travail semblable. Docker permet d'exécuter et de gérer
-des applications fonctionnant côte à côte dans des conteneurs isolés. Il fournit également les outils nécessaires pour
-créer des pipelines de livraison et de partage de logiciel de manière sûre et rapide.
-
-Un conteneur Docker contient tout ce qui est nécessaire pour faire exécuter un logiciel. Au contraire des machines virtuelles,
-les conteneurs ne regroupe pas un système d'exploitation complet. Il ne contient, en effet, que les bibliothèques et les paramètres
-requis pour que le logiciel fonctionne. Cela permet d'avoir des systèmes autonomes, légers et garantit que les logiciels fonctionnent
-de la même manière quel que soit l'endroit où ils sont déployé. Les conteneurs isolent le logiciel de son environnement.
-
-Les conteneurs et les machines virtuelles ont des avantages similaires en matière d'isolation et d'allocation des ressources. Toutefois,
-leurs fonctionnements sont très différents. En effet, les conteneurs préfèrent virtualiser le système d'exploitation plutôt que le matériel.
-Les conteneurs se veulent donc plus portable et efficaces. Toutefois, les conteneurs et les machines virtuelles peuvent être utilisé ensemble.
-
-Docker automatise les tâches répétitives de configuration des environnements de développement. Lorsqu'une application est encapsuler dans un
-conteneur, la difficulté de configurer et installer un système est également encapsulé dans le conteneur. 
-
 Conception
 ===========
 Au travers de ce chapitre, la conception de ce projet sera mise en avant. Il va permettre d'expliquer le workflow, l'architecture
@@ -684,7 +663,7 @@ Description du workflow et schéma de classe
 -------------------------------------------
 (Inserer un schéma du workflow)
 Ce projet peut fonctionner de plusieurs manières différentes. Les différents comportements du programme peuvent être configurer dans un
-fichier "*.properties". Un fichier de configuration détaillé avec une brève explication des paramètres est fournit en annexe de ce rapport.
+fichier "\*.properties". Un fichier de configuration détaillé avec une brève explication des paramètres est fournit en annexe de ce rapport.
 La suite de ce rapport n'en reprendra que les grandes lignes.
 
 La première chose que fait le programme est donc de créer un objet capabe de créer et de lire un fichier de configuration. Pour créer
@@ -746,10 +725,8 @@ de neurones.
 
 Cette classe contient de nombreuses méthodes. Toutefois celle-ci peuvent être classer en trois type de méthode:
 
-* Une méthode permettant de générer un fichier de configuration standard. Ce fichier permet de lancer une expérience de test fonctionnelle
-du programme.
-* Une méthode de lecture d'un fichier de configuration. Cette méthode lit le fichier et stock les valeurs des paramètres dans des attributs
-de la classe.
+* Une méthode permettant de générer un fichier de configuration standard. Ce fichier permet de lancer une expérience de test fonctionnelle du programme.
+* Une méthode de lecture d'un fichier de configuration. Cette méthode lit le fichier et stock les valeurs des paramètres dans des attributs de la classe.
 * Des "getter" qui permettent l'accès à chaque paramètre lu par la classe.
 
 Cette classe est une classe on ne peut plus standard utilisant les outils de Java standard.
@@ -880,13 +857,13 @@ des différentes manières d'entraîner et d'évaluer un réseau de neurones ave
 
 Configuration d'une expérience
 ------------------------------
-Une expérience se configure à l'aide d'un fichier "*.properties". Ce fichier contient une série de couple "clé-valeur". Une clé est séparé
+Une expérience se configure à l'aide d'un fichier "\*.properties". Ce fichier contient une série de couple "clé-valeur". Une clé est séparé
 de sa valeur par un signe "=". La classe "Configuration" est chargé de lire ce type de fichier et de stocker les différentes valeurs obtenues
 dans les attributs de la classe. Ces attributs sont tous accessibles de l'extérieur et permettent d'influencer le fonctionnement du programme.
-Un fichier "*.properties" par défaut peut être créer par le programme si ce dernier est lancé sans arguments.
+Un fichier "\*.properties" par défaut peut être créer par le programme si ce dernier est lancé sans arguments.
 
 Pour faire tout cela, la classe "Configuration" instancie un objet de la classe "Properties" contenu dans le package "java.util". Cette classe fournit
-les outils adéquat pour le chargement d'un fichier "*.properties", pour sa génération et pour sa lecture. Ainsi, le constructeur de la classe "Configuration",
+les outils adéquat pour le chargement d'un fichier "\*.properties", pour sa génération et pour sa lecture. Ainsi, le constructeur de la classe "Configuration",
 dont voici la signature:
 
 .. code-block:: java
@@ -1232,7 +1209,7 @@ Il existe bien d'autres paramètres modifiables et sont répertorié dans la doc
 
 .. [#] https://spark.apache.org/docs/latest/configuration.html
 
-La méthode "setmaster()" utilisé ensuite permet de donner le paramètre de connexion au moteur d'exécution de Spark. Pour une utilisation en local, sa valeur doit être la chaîne de caractère "local[*]"
+La méthode "setmaster()" utilisé ensuite permet de donner le paramètre de connexion au moteur d'exécution de Spark. Pour une utilisation en local, sa valeur doit être la chaîne de caractère "local[\*]"
 ou la chaîne "local[x]", avec X le nombre de coeur à utiliser.
 
 
