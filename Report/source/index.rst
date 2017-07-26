@@ -889,45 +889,45 @@ Pour faire tout cela, la classe "Configuration" instancie un objet de la classe 
 les outils adéquat pour le chargement d'un fichier "*.properties", pour sa génération et pour sa lecture. Ainsi, le constructeur de la classe "Configuration",
 dont voici la signature:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public Configuration(String filename, boolean isGenerate)
+    public Configuration(String filename, boolean isGenerate)
 
 prend comme paramètre le nom du fichier dont on va se servir et le paramètre booléen permet de dire si il doit généré ou lire le fichier spécifié. Cette variable booléenne
 est a true si le programme est lancé sans nom de fichier passé en paramètre. Elle est à false si le programme a comme paramètre le nom d'un fichier de configuration. 
 
 Si le programme doit généré un fichier de configuration, le nom de ce dernier sera "default.properties". Il sera généré par la méthode
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public Object setProperty(String key,String value)
+    public Object setProperty(String key,String value)
 
 de la classe "Properties". Cette méthode prend en paramètre le couple "clé-valeur" sous la forme de chaîne de caractère. Une fois toutes les propriétés fixées, il suffit
 d'écrire le fichier avec la méthode:
 
-.. code-blocks:: java 
+.. code-block:: java 
    :linenos:
 
-   public void store(OutputStream out, String comment)
+    public void store(OutputStream out, String comment)
 
 La classe "Configuration" possède une méthode
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public void generatePropertiesFile()
+    public void generatePropertiesFile()
 
 permettant d'encapsuler l'ensemble de la génération du fichier de configuration.
 
 Si le programme doit lire un fichier de configuration, le nom de ce dernier est fournit comme paramètre au programme. La classe "Properties" de Java permet la lecture de ces
 données avec la méthode: 
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public String getProperty(String key, String defaultValue)
+    public String getProperty(String key, String defaultValue)
 
 Le paramètre "key" fournit doit correspondre à l'un des champs se trouvant à gauche du signe "=" dans le fichier lu. La valeur retourné par cette méthode peut alors être convertie dans
 un format informatiquement compréhensible (int, boolean ou encore float). Cette valeur est ainsi stocké dans l'objet sous la forme d'un attribut. Chacun des attributs de la classe
@@ -938,10 +938,10 @@ Génération de données
 La génération des données crée deux types de NIFTI. Ces NIFTI représentent des sphères ou des cubes. Pour générer des données ont utilise l'objet "DataTestGenerator". Celui-ci a
 pour constructeur:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public DataTestGenerator(int niftiSize, int cubeSize, String NIFTICubePrefix, int sphereSize, String NIFTISpherePrefix, int step)
+    public DataTestGenerator(int niftiSize, int cubeSize, String NIFTICubePrefix, int sphereSize, String NIFTISpherePrefix, int step)
 
 Les paramètres numériques ne sont utiles que lorsque l'on demande une génération de NIFTI qui ne soit pas aléatoire. Le paramètre "niftiSize" fournit la taille des dimensions
 spatiales x, y, et z. Elles auront toutes les trois la même tailles. "sphereSize" et "cubeSize" donne respectivement le diamètre d'une sphere et la longueur d'une face d'un cube
@@ -954,17 +954,17 @@ d'un cube auront un nom sous la forme "cube_XXX.nii.gz" avec XXX un nombre corre
 L'objet "DataTestGenerator" fournit donc deux méthodes. L'un permettant de générer des sphères et des cubes de taille fixe à des positions définies (par le paramètre step). Sa
 signature est la suivante: 
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public void generateSphereAndCube()
+    public void generateSphereAndCube()
 
 La seconde méthode de génération permet de créer des représentations de cubes et de sphères dont la taille et la position sont aléatoire. La signature de cette méthode est la suivante:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public void generateSphereAndCubeSize(int batchSize, int nx, int ny, int nz)
+    public void generateSphereAndCubeSize(int batchSize, int nx, int ny, int nz)
 
 Le paramètre batchSize permet de lui donner le nombre d'exemple de chaques formes à créer. Ainsi s'il vaut 300, 300 images de sphère et 300 images de cubes sont créées. Les paramètres
 nx, ny, nz permettend de fixer une taille à chacunes des dimensions spatiales du NIFTI. Ainsi, on peut obtenir des NIFTI dont les dimensions vaudront celle couramment employé par le CHUV,
@@ -986,17 +986,17 @@ L'ensemble de ces outils sera détaillé dans la suite de ce chapitre.
 Le constructeur de cette classe prend comme paramètre la localisation du dossier dans lequel sont contenus les NIFTI nécessaire à l'expérience et le ratio de données à mettre
 dans le lot des images d'entraînement. Le ratio d'image à mettre dans le lot des images de validation est calculé à partir de ce dernier.
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public DataReader(String workFolder, int trainRatio)
+    public DataReader(String workFolder, int trainRatio)
 
 Une fois l'objet instancié, il suffit de lui demander de créer les datasets. Pour faire cela, il faut faire appel à la méthode:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   public void createDataSet(int minibatchSize, Hashtable<String, INDArray> regLabel)
+    public void createDataSet(int minibatchSize, Hashtable<String, INDArray> regLabel)
 
 Cette méthode a comme paramètre une hashtable. Celle-ci fait correspondre à une chaîne de caractère un INDArray. Un INDArray est un tableau a N-dimension. Il est utilisé pour les
 calcul matriciel dans la bibliothèque Deeplearning4j. Le INDArray ici présent représente une matrice d'une ligne et contenant un nombre de colonne égal au nombre de classe que l'on
@@ -1017,10 +1017,10 @@ vient de créée la valeur du voxel que l'on est en train de lire à l'aide de n
 Pour pouvoir être utilisable avec la bibliothèque Deeplearning4j, le tableau des données que l'on vient de construire doit être transformé en INDArray. Cette transformation se
 fait à l'aide de la méthode: 
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   INDArray array = Nd4j.create(tabFlat, tabShape)
+    INDArray array = Nd4j.create(tabFlat, tabShape)
 
 Le paramètre tabFlat correspond au tableau contenant la valeur de chaque case de la matrice que l'on veut créer et le paramètre tabShape correspond a un tableau donnant la forme de
 la matrice que l'on veut créer.
@@ -1052,10 +1052,10 @@ code ci-dessous:
 
 .. [#] https://deeplearning4j.org/neuralnet-configuration
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   this.conf = new NeuralNetConfiguration.builder()
+    this.conf = new NeuralNetConfiguration.builder()
             .seed(seed)
             .iterations(iteration)
             .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -1185,10 +1185,10 @@ Avant de débuter ce chapitre, il est important de rappelé que dans l'implémen
 Comme précédemment, la préparation de la configuration du réseau se fait avant de choisir si l'on travaille sur Spark ou non. Une fois l'objet "NeuralNetConfiguration" préparé, il faut créer un
 "TrainingMaster. Cet objet gère la distribution du travail sur Spark. Dans notre cas, nous avons un "TrainingMaster" configuré comme suit:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   TrainingMaster trainingMaster = new ParameterAveragingTrainingmaster.Builder(rddDataSetNumExamples)
+    TrainingMaster trainingMaster = new ParameterAveragingTrainingmaster.Builder(rddDataSetNumExamples)
         .averagingFrequency(averagingFrequency)
         .workerPrefetchNumBatches(workerNumBatch)
         .batchSizePerWorker(batchSizePerWorker)
@@ -1213,15 +1213,15 @@ Il existe évidemment bien plus de paramètre possible pour la création du "Tra
 
 On doit également configuré le contexte de Spark. Ceci se fait de cette manière:
 
-.. code-blocks:: java
+.. code-block:: java
    :linenos:
 
-   SparkConf sparkConf = new SparkConf();
-   sparkConf.set("wrapper.spark.network.timeout", sparkTimeOut);
-   sparkConf.set("wrapper.spark.executor.heartbeatInterval", sparkHeartBeatInterval);
-   sparkConf.setMaster(sparkMaster);
-   sparkConf.setAppName(appName);
-   JavaSparkContext jsc = new JavaSparkContext(sparkConf);
+    SparkConf sparkConf = new SparkConf();
+    sparkConf.set("wrapper.spark.network.timeout", sparkTimeOut);
+    sparkConf.set("wrapper.spark.executor.heartbeatInterval", sparkHeartBeatInterval);
+    sparkConf.setMaster(sparkMaster);
+    sparkConf.setAppName(appName);
+    JavaSparkContext jsc = new JavaSparkContext(sparkConf);
 
 De cette manière, nous récupérons un objet de configuration d'un contexte Spark. Dans notre cas, nous allons fixé quelques paramètres qui sont apparu comme problématique au cours des essais.
 Ces paramètres sont le "timeout" du réseau de neurones fonctionnant sur Spark et le "heartbeatInterval". Le paramètre de "timeout" est le timeout général pour toutes les intéractions Spark, tandis
