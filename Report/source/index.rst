@@ -100,12 +100,12 @@ principaux de ce travail sont:
 1. L'installation et la prise en main d'Apache-Spark
 2. L'intégration d'Apache-Spark à l'"algorithm factory"
 3. L'interfaçage des bases de données d'image de la plateforme à Apache-Spark. Ces bases de données sont a créer et a améliorer si besoin
-durant le projet.
+   durant le projet.
 4. Faire un état de l'art technique sur les différentes bibliothèques de deeplearning compatible avec Apache-Spark pour obtenir suffisamment
-d'information pour permettre le choix de l'une d'entre elles à intégrer au-dessus de Spark.
+   d'information pour permettre le choix de l'une d'entre elles à intégrer au-dessus de Spark.
 5. Traduire la partie prédictive de l'algorithme au format PFA (Portable Format for Analytics).
 6. Tester les nouvelles fonctionnalités avec une expérience concrète fournit par le LREN. Cette expérience utilisera des images d'IRM utilisé
-par le laboratoire. Elle consistera en une classification de ces images. 
+   par le laboratoire. Elle consistera en une classification de ces images. 
 
 En plus de ces objectifs principaux, s'ajoute un objectif optionnel. Celui-ci consiste a étendre le portail web de la plateforme pour
 permettre l'utilisation des nouvelles fonctionnalités de l'"algorithm factory".
@@ -1094,14 +1094,14 @@ Le paramètre "regularization" permet d'activer ou non la régularisation du ré
 Il existe différent type de méthode de régularisation dans Deeplearning4j:
 
 * La régularisation l1 et l2 sont des méthodes très communes. Elles cherchent a empêcher les poids dont les valeurs sont des extrêmes. Toutefois, il faut faire attention à ne pas
-donner de trop grande valeurs au paramètre de ces méthodes. En effet, cela peut avoir comme effet d'empêcher le réseau d'apprendre correctement. Pour ce travail, la méthode de régularisation
-l2 a été choisie. Cette méthode fonctionne communément bien avec des valeurs comprise entre 0.001 et 0.00001. Cette valeur est configurable dans le fichier de configuration du programme.
+  donner de trop grande valeurs au paramètre de ces méthodes. En effet, cela peut avoir comme effet d'empêcher le réseau d'apprendre correctement. Pour ce travail, la méthode de régularisation
+  l2 a été choisie. Cette méthode fonctionne communément bien avec des valeurs comprise entre 0.001 et 0.00001. Cette valeur est configurable dans le fichier de configuration du programme.
 * La régularisation par "Dropout" est également utilisable. Cette méthode éteint des noeuds dans le réseau de neurones en les mettant à 0. Le réseau doit par conséquent compter sur
-d'autres parties du réseau. 
+  d'autres parties du réseau.
 * "DropConnect" fonctionne sur le même principe que la méthode précédente mais en éteignant des connexions et non pas des noeuds. Cette méthode est moins usuelle.
 * La régularisation peut également se faire en limitant le nombre de couche et la taille de ces dernières. Notre réseau est très simple et respecte donc par défaut cette règle.
 * Il existe une dernière méthode de régularisation. Celle-ci est la méthode dites d'"early stopping". Avec cette méthode, on cherche a arrêter l'entrainement du réseau lorsque le score
-du réseau lors des tests diminue alors que les scores du réseau lors de l'apprentissage continue d'augmenter.
+  du réseau lors des tests diminue alors que les scores du réseau lors de l'apprentissage continue d'augmenter.
 
 (Attention peut etre RMSPROP)
 Le paramètre "update" a pour but de fournir une méthode d'appréciation du learningRate. Elles permettent de modifier le learningRate durant l'entraînement pour le faire converger
@@ -1188,13 +1188,13 @@ Comme précédemment, la préparation de la configuration du réseau se fait ava
 .. code-block:: java
    :linenos:
 
-    TrainingMaster trainingMaster = new ParameterAveragingTrainingmaster.Builder(rddDataSetNumExamples)
+    TrainingMaster trainingMaster = new ParameterAveragingTrainingmaster.Builder(rddDataNbExemple)
         .averagingFrequency(averagingFrequency)
         .workerPrefetchNumBatches(workerNumBatch)
         .batchSizePerWorker(batchSizePerWorker)
         .build();
 
-Le paramètre "rddDataSetNumExamples" placé dans le "Builder" correspond au nombre d'exemple contenu dans le dataset. Il est obligatoire. Dans notre cas, ce paramètre peut être configuré dans le fichier
+Le paramètre "rddDataNbExemple" placé dans le "Builder" correspond au nombre d'exemple contenu dans le dataset. Il est obligatoire. Dans notre cas, ce paramètre peut être configuré dans le fichier
 de configuration, tout comme les autres paramètres de construction d'un "TrainingMaster".
 
 Le paramètre "averagingFrequency" permet de choisir la fréquence à laquelle les poids sont mis à jour. Cette fréquence est un nombre de minibatch. Il faut faire attention a la valeur que l'on veut. Un
