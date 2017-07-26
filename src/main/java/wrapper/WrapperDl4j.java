@@ -44,7 +44,7 @@ public class WrapperDl4j {
         return network;
     }
 
-    public void loadSimpleCNN(int iteration, float learningRate, int nbChannel, int nbFilter, int nbDenseOut, int nbClasse, int height, int width, int depth){
+    public void loadSimpleCNN(int iteration, float learningRate, int nbChannel, int nbFilter, int nbDenseOut, int nbClasse, int height, int width, int depth, float l2Value, double momentum){
         System.out.println("***** Load simple CNN model *****");
         ConvolutionLayer convolutionLayer = new ConvolutionLayer.Builder(20, 20)
                 .nIn(nbChannel)
@@ -75,8 +75,9 @@ public class WrapperDl4j {
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
                 .regularization(true)
-                .l2(0.0004)
+                .l2(l2Value)
                 .updater(Updater.NESTEROVS)
+                .momentum(momentum)
                 .list()
                     .layer(0, convolutionLayer)
                     .layer(1, subsamplingLayer)

@@ -2,7 +2,10 @@ package core;
 
 import config.Configuration;
 import generator.DataTestGenerator;
+import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.iterator.INDArrayDataSetIterator;
+import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
@@ -89,6 +92,9 @@ public class Main {
     }
 
     private static void launchExperience(){
+        UIServer uiServer = UIServer.getInstance();
+        StatsStorage ss = new InMemoryStatsStorage();
+        uiServer.attach(ss);
         if(config.isUseSpark()){
             List<DataSet> trainData;
             List<DataSet> testData;
@@ -116,11 +122,13 @@ public class Main {
                 trainData = dr.getIteratorTrain();
                 testData = dr.getIteratorTest();
             }
-            LocalWrapperDl4j network = new LocalWrapperDl4j(config.getSeed());
+            LocalWrapperDl4j network = new LocalWrapperDl4j(config.getSeed(), config.isUseUI());
             loadModel(network);
-            network.init();
+            network.init(ss);
             network.localTrain(trainData);
             network.localEvaluation(testData);
+            //network.earlyStopTraining(trainData, testData, 30, 5);
+            //network.earlyStopEvaluation(testData);
             saveModel(network);
         }
     }
@@ -129,7 +137,7 @@ public class Main {
         if(config.isloadFromModel()){
             network.loadFromModelSaved(config.getFileModelName());
         }else{
-            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel());
+            network.loadSimpleCNN(config.getIteration(), config.getLearningRate(), config.getNbChannel(), config.getNbFilter(), config.getDenseOut(), config.getNbLabel(), config.getMatrixHeight(), config.getMatrixWidth(), config.getNbChannel(), config.getL2Value(), config.getMomentum());
         }
     }
 

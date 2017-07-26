@@ -52,11 +52,13 @@ public class Configuration {
     private String fileModelName;
     private boolean normalize;
     private boolean useUI;
+    private float l2Value;
+    private double momentum;
 
-    public Configuration(String filename, boolean generate){
+    public Configuration(String filename, boolean isGenerate){
         this.filename = filename;
         this.properties = new Properties();
-        if(generate){
+        if(isGenerate){
             generatePropertiesFile();
         }else{
             loadProperties();
@@ -67,6 +69,8 @@ public class Configuration {
         System.out.println("Generate configuration file ....");
         try{
             output = new FileOutputStream(filename);
+            properties.setProperty("Momentum", "0.9");
+            properties.setProperty("L2Value", "0.0004");
             properties.setProperty("Normalize", "true");
             properties.setProperty("isUseUI", "false");
             properties.setProperty("NIFTI_Directory", "generate");
@@ -126,6 +130,8 @@ public class Configuration {
         try{
             input = new FileInputStream(filename);
             properties.load(input);
+            momentum = Double.parseDouble(properties.getProperty("Momentum", "0.9"));
+            l2Value = Float.parseFloat(properties.getProperty("L2Value", "0.0004"));
             useUI = Boolean.parseBoolean(properties.getProperty("isUseUI", "false"));
             normalize = Boolean.parseBoolean(properties.getProperty("Normalize", "true"));
             niftiDirectory= properties.getProperty("NIFTI_Directory", "/generate");
@@ -169,6 +175,12 @@ public class Configuration {
         }
         System.out.println("Done!");
     }
+
+    public double getMomentum(){
+        return momentum;
+    }
+
+    public float getL2Value(){ return l2Value; }
 
     public boolean isUseUI(){ return useUI; }
 

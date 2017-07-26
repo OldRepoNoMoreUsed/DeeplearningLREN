@@ -123,11 +123,6 @@ public class DataReader {
         List<INDArray> featuresTest = new ArrayList<>();
         Enumeration<String> a = regLabel.keys();
 
-        int hctrain = 0;
-        int adtrain = 0;
-        int adTest = 0;
-        int hcTest = 0;
-
         for(String path : filenames){
             Enumeration e = regLabel.keys();
             while(e.hasMoreElements()){
@@ -141,20 +136,10 @@ public class DataReader {
                             featuresTrain.add(array);
                             labelsTrain.add(regLabel.get(key));
                             nbTrain++;
-                            if(key.equals("HC")){
-                                hctrain++;
-                            }else if (key.equals("AD")){
-                                adtrain++;
-                            }
                         }else if(nbTrain >= trainRatio/10 && nbTrain < 10){
                             featuresTest.add(array);
                             labelsTest.add(regLabel.get(key));
                             nbTrain++;
-                            if(key.equals("HC")){
-                                hcTest++;
-                            }else if (key.equals("AD")){
-                                adTest++;
-                            }
                             if(nbTrain == 10){
                                 nbTrain = 0;
                             }
@@ -163,14 +148,8 @@ public class DataReader {
                 }
             }
         }
-        System.out.println("HC train: " + hctrain);
-        System.out.println("AD train: " + adtrain);
-        System.out.println("HC Test: " + hcTest);
-        System.out.println("Ad test: " + adTest);
         System.out.println("Taille du train set: " + featuresTrain.size());
         System.out.println("Taille du test set: " + featuresTest.size());
-
-        System.out.println(labelsTest.get(1));
 
         iteratorTrain = createIterator(featuresTrain, labelsTrain, minibatchSize);
         iteratorTest = createIterator(featuresTest, labelsTest, 1);
