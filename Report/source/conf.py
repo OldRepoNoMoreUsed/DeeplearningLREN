@@ -45,8 +45,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Rapport'
-copyright = u'2017, Sommer Nicolas'
+project = 'Projet de deeplearning pour la Plateforme d\'Informatique Médical du Human Brain Project'
+copyright = '2017, Sommer Nicolas'
 author = 'Sommer Nicolas'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -194,11 +194,38 @@ latex_elements = {
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+     'pointsize': '12pt',
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+     'preamble': r'''
+       \makeatletter
+       \renewcommand{\maketitle}{
+         \begin{titlepage}
+            \centering
+            	\includegraphics[width=0.5\textwidth]{logoarc}\par\vspace{1cm}
+            	\vspace{1cm}
+            	{\scshape\Large Travail de Bachelor 17INF-TB229\par}
+            	\vspace{1.5cm}
+            	{\huge\bfseries Algorithm Factory\par}
+            	\vspace{1.5cm}
+            	{\itshape Auteur : Sommer Nicolas\par}
+            	\vspace{0.1cm}
+                {\itshape Mandant : Human Brain Project - CHUV-LREN - Arnaud Jutzeler\par}
+            	\vspace{0.1cm}
+            	{\itshape Superviseur : Albertetti Fabrizio\par}
+            	\vspace{0.1cm}
+            	{\itshape Expert : Antognini Diego\par}
+            	\vfill
+            % Bottom of the page
+	     {\large \today\par}
+         \end{titlepage}
+       }
+       \pagestyle{fancy}
+       \fancyhf{}
+       \fancyfoot[LE,RO]{\thepage}
+       \fancyfoot[RE,LO]{HE-Arc - Sommer Nicolas}
+       \makeatother''',
 
     # Latex figure (float) alignment
     #
@@ -209,8 +236,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'Rapport.tex', u'Rapport du travail de bachelor',
-   u'Sommer Nicolas', 'manual'),
+  ('index', 'Rapport.tex', 'Rapport du projet de Bachelor 17INF-TB229 - Algorithm Factory',
+   u'Sommer Nicolas', 'report'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -239,7 +266,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'rapport', u'Rapport du travail de bachelor',
+    ('index', 'rapport', u'Rapport du projet de Bachelor 17INF-TB229 - Algorithm Factory',
      [u'Sommer Nicolas'], 1)
 ]
 
@@ -253,9 +280,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Rapport', u'Rapport du travail de bachelor',
-   u'Sommer Nicolas', 'Rapport', 'One line description of project.',
-   'Miscellaneous'),
+  ('index', 'Algorithm Factory', u'Rapport du projet de Bachelor 17INF-TB229 - Algorithm Factory',
+   'Sommer Nicolas', 'Rapport du projet de Bachelor 17INF-TB229 - Algorithm Factory', 
+   'Deeplearning pour la plateforme d\'informatique médical du Human Brain Project SP8',
+   'Deeplearning'),
 ]
 
 # Documents to append as an appendix to all manuals.

@@ -4,7 +4,30 @@
    contain the root `toctree` directive.
 
 Rapport du travail de bachelor
-===================================
+==============================
+
+.. raw:: latex
+    \begin{abstract}
+
+    Ce rapport présente la mise en place d'un pipeline de deeplearning dédié à la classification
+    d'image IRM du cerveau. Ce travail est une collaboration entre la HES de Neuchâtel et le Laboratoire de Recherche En Neuro-imagerie
+    qui gère la Plateforme d'Informatique Médicale du Human Brain Project. Ce rapport retrace la réalisation de ce pipeline. Ce dernier est
+    capable de classifier des images IRM du cerveau, selon si ils ont ou non la maladie d'Alzheimer, avec un taux de précision de près de 70%.
+    Ce projet pourra être repris et améliorer par le Laboratoire de Recherche En Neuro-imagerie et intégrer à leur plateforme. Il pourrait
+    ouvrir de nouvelle perspective dans la recherche neurologique et le traitement de maladies liées au cerveau.
+
+    \begin{center}
+    \textbf{Abstract}
+    \end{center}
+
+    This report presents the implementation of a deeplearning pipeline dedicated to classification
+    image of the MRI of the brain. This work is a collaboration between the Neuchâtel HES and the Neuroimaging Research Laboratory
+    which manages the Medical Informatics Plateform of the Human Brain Project. This report traces the completion of this pipeline. This last one is
+    capable of classifying MRI images of the brain, depending on whether or not they have Alzheimer's disease, with an accuracy rate of nearly 70%.
+    This project can be taken up and improved by the Neuroimaging Research Laboratory and integrated into their platform. He could
+    Open new perspective in neurological research and treatment of brain related diseases.
+
+    \end{abstract}
 
 Introduction
 ==================
@@ -40,6 +63,13 @@ mettre à disposition des chercheurs un portail web. Ce portail web sera constit
 de recherche. Celles-ci porteront sur la neuro-informatique, la simulation du cerveau, le calcul à haute performance,
 l'informatique médicale, l'informatique neuromorphique et la neuro-robotique.
 
+.. figure:: images/mip4forweb.png
+   :width: 350px
+   :align: center
+   :alt: Vue d'ensemble du Human Brain Project
+
+   Vue d'ensemble du Human Brain Project
+
 Le département des Neuro-sciences Cliniques du CHUV est chargé de la plateforme d'Informatique Médicale. Celle-ci
 est une plateforme open-source permettant aux hôpitaux et aux centre de recherche de partager des données médicales.
 Elle permettra aux utilisateurs d'avoir accès à des informations précises et pertinentes sur les maladies liées au
@@ -54,8 +84,15 @@ d'Alzheimer ou de Parkinson par exemple. Dans l'état actuel, cette analyse peut
 Toutefois, il n'existe pas encore de méthode d'apprentissage profond disponible sur la plateforme et le LREN aimerait
 pouvoir proposé cette option aux utilisateurs de la plateforme.
 
+.. figure:: images/mip_dashboard.png
+   :width: 350px
+   :align: center
+   :alt: Dashboard de la Plateforme d'Informatiques Médical
+
+   Dashboard de la Plateforme d'Informatiques Médical
+
 C'est dans ce but que la Haute-Ecole Arc de Neuchâtel a été contacté et ce projet proposé comme travail de diplôme à
-un étudiant de troisième année.  
+un étudiant de troisième année.
 
 Problème à résoudre et but du projet
 ------------------------------------
@@ -64,6 +101,13 @@ de fichier au format NIFTI. Le DICOM est une norme standard pour la gestion info
 médicale. N'étant pas employé dans le reste du projet, il ne sera pas plus détaillé ici. Le format NIFTI est un format d'
 image IRM mis en place par quelques uns des acteurs les plus influents de la neuro-imagerie. Etant le format principalement
 employé dans ce projet, il fera l'objet d'une description détaillé dans la partie consacré aux analyses préliminaires.
+
+.. figure:: images/brain_IRM.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'une IRM du cerveau au format NIFTI
+
+   Illustration d'une IRM du cerveau au format NIFTI
 
 Afin d'être employé par les outils d'automatisation de diagnostique mis en place par la plateforme d'informatique médicale,
 les images ont besoin d'être pré-traité. En effet, les outils de machine learning utilisé pour le diagnostique fonctionne
@@ -75,7 +119,12 @@ cerveau au format NIFTI. SPM permet également de créer un atlas des caractéri
 sous la forme de tableau, un certain nombre de quantité caractéristique à chaque région du cerveau. Ce prétraitement fonctionne
 à l'intérieur de la "data factory". Cette dernière est connecté à ce que le LREN appelle l'"algorithm factory".
 
-(Insérer image du dataflow + insérer image d'un atlas (tableau))
+.. figure:: images/IMP_ActualDataFlow.png
+   :width: 350px
+   :align: center
+   :alt: Flux des données actuellement en place dans la plateforme d'informatique médicale
+
+   Flux des données actuellement en place dans la plateforme d'informatique médicale
 
 Une fois ce pré-traitement effectué, les données sont prêtes pour être utilisé par l'"algorithm factory". Cette dernière correspond
 à l'ensemble des outils de diagnostique de la plateforme. Ces outils sont un ensemble d'algorithme de machine learning.
@@ -86,6 +135,13 @@ diagnostique automatique.
 
 Pour se faire, ils proposent de mettre en place une extension de l'"algorithm factory". Cette extension permettra d'appliquer des algorithmes
 pour l'apprentissage de modèles de deeplearning et de faire valider ces derniers directement sur les images d'IRM.
+
+.. figure:: images/Extension_MIP.png
+   :width: 350px
+   :align: center
+   :alt: Flux des données avec extension imaginé dans la plateforme d'informatique médicale
+
+   Flux des données avec extension imaginé dans la plateforme d'informatique médicale
 
 Ce projet vise donc à explorer la possibilité de mettre en place cette extension. Il mettra en place un workflow alternatif à celui
 existant dans l'"algorithm factory". Cette alternative a pour contrainte de permettre de lancer de nouveaux algorithmes travaillant
@@ -137,6 +193,13 @@ images IRM du cerveau. Le format utilisé par le CHUV pour les images est le for
 (Neuroimaging Informatics Technology Initiative), un format d'image très spécialisé mais
 également très répandu dans ce domaine. 
 
+.. figure:: images/brain_IRM.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'une image IRM d'un cerveau
+
+   Illustration d'une image IRM d'un cerveau
+
 Ce chapitre présente donc ce format afin de mieux le comprendre. Pour faire celà, nous
 allons voir l'origine du format, une vue d'ensemble des principales caractéristiques du format
 et quelques outils qui ont été utiles à la réalisation de ce travail.
@@ -180,8 +243,9 @@ les images comme étant un instantané du cerveau en 3 dimensions et chaque case
 représente un voxel de cette image.
 
 Les dimensions et d'autres informations importantes sur le fichier sont stocké dans un fichier
-header. Ce dernier est d'une taille de 348 octets. (Il y a un tableau de toutes les valeurs sur
-brainder.org il doit venir etre collé ici.)
+header. Ce dernier est d'une taille de 348 octets. Il existe un tableau de tous les paramètres du header [*]_.
+
+.. [*] https://brainder.org/2012/09/23/the-nifti-file-format/
 
 Le champs principalement utilisé lors de ce projet est le champs short dim[8]. Ce champs est un
 tableau contenant les données sur les dimensions du fichier. Ce tableau contient pour: 
@@ -203,6 +267,13 @@ Le format NIFTI est un format très spécifique au domaine de la neuro-imagerie.
 se familiariser avec ce format d'utiliser un certain nombre d'outils de visualisation. Une gamme d'outils en ligne
 de commande existe. Cette dernière s'appelle Fslutils. Il fournit un set complet de ligne de commande utiles pour convertir
 et manipuler les fichiers NIFTI. Une liste complète des outils fournit par Fslutils est fournit sur leur pages Internet.
+
+.. figure:: images/fsl.jpg
+   :width: 350px
+   :align: center
+   :alt: Logo de FSL
+
+   Logo de FSL
 
 De toute cette gamme d'outils, deux ont principalement été employé:
 
@@ -240,6 +311,13 @@ comme une seule et même entité. Chacune de ces entités correspond à un noeud
 directement augmenté contrairement à une machine seule, où si l'on veut augmenter la puissance de calcul, il faut augmenter la puissance des
 processeurs.
 
+.. figure:: images/SparkRDD.png
+   :width: 350px
+   :align: center
+   :alt: Illustration du calcul distribué
+
+   Illustration du calcul distribué
+
 Pour le calcul distribué, les noeuds sur lesquels les calculs sont exécuté sont donc distant, autonome et ne partage pas de ressources. Il
 faut donc que chaques noeuds communiquent avec les autres au travers de message qu'il s'envoie au travers du cluster.
 
@@ -260,6 +338,13 @@ plus loin dans ce rapport) et est en train de remplacer Hadoop. En effet, il a �
 qu'Hadoop pour les mêmes tâches. La dernière version de Spark est Spark 2.2.0 et est disponible depuis le 11 juillet 2017. Spark fournit une API haut-niveau en
 Java, Scala, Python et R.
 
+.. figure:: images/spark-logo.png
+   :width: 350px
+   :align: center
+   :alt: Logo d'Apache-Spark
+
+   Logo d'Apache-Spark
+
 Afin de fonctionner aussi rapidement Spark fonctionne directement en mémoire et cherche a avoir un traitement proche du temps-réel. Lorsque Spark execute des tâches,
 il cherche à maintenir les résultats intermédiaires en mémoire plutôt que sur le disque. Cette manière de faire permet de facilement pouvoir travailler à plusieurs
 reprises sur le même jeu de données. Toutefois Spark n'est pas restreint au travail en mémoire. Il peut aussi bien travailler sur le disque. Les opérateurs réalisent
@@ -276,6 +361,12 @@ Dans cet écosystème, on trouve notamment:
 * Spark MLlib: Est une bibliothèque d'apprentissage automatique qui contient tous les algorithmes et utilitaires d'apprentissage classiques, tel que la classification,
   la régression, le clustering, le filtrage collaboratif et la réduction de dimension, en plus des primitives d'optimisation nécessaires à ces tâches.
 
+.. figure:: images/Spark-screen-shot-3.png
+   :width: 350px
+   :align: center
+   :alt: Illustration de l'écosystème Spark
+
+   Illustration de l'écosystème Spark
 
 L'architecture de Spark comprend les trois composants principaux suivants: 
 
@@ -283,6 +374,13 @@ L'architecture de Spark comprend les trois composants principaux suivants:
 * Une API haut-niveau
 * Un composant de gestion des ressources. Ce composant permet a Spark d'être déployé comme un serveur autonome ou sur un framework de traitements distribués comme Apache-Mesos
   ou Apache-YARN.
+
+.. figure:: images/2.png
+   :width: 350px
+   :align: center
+   :alt: Composant principaux de Spark
+
+   Composant principaux de Spark
 
 
 L'élément de base principal au coeur de Spark est le "Resilient Distributed Dataset" ou RDD. Un RDD est une abstraction de collection sur laquelle les opérations sont effectué
@@ -298,7 +396,12 @@ son ensemble de données. Les RDD supportent deux types d'opérations:
 L'exécution de Spark peut se faire de plusieurs manière différente. Pour celà il suffit de donner le bon paramètre de connexion au moteur de Spark (Master, chef d'orchestre). Ainsi, la connexion
 au moteur peut se faire de manière local (sur un ou K "worker"), en se connectant à un cluster Spark, Mesos ou Yarn.
 
-(Add tableau)
+.. figure:: images/23.png
+   :width: 350px
+   :align: center
+   :alt: Mode de connection à Spark
+
+   Mode de connection à Spark
 
 Spark fournit également une interface web. Pour joindre cette interface, il suffit, une fois Spark en cours d'exécution, de se connecter sur le port 4040 du localhost. Cette interface permet de
 surveiller le stockage, l'environnement, les exécuteurs et les étapes effectué par Spark.
@@ -318,6 +421,9 @@ concept et d'aborder plus sereinement l'état de l'art des bibliothèques de dee
 
 Considération générale
 **********************
+Cette partie du rapport présente les généralitées concernant le deeplearning. Nous verrons dans quel domaine de l'informatique se situe le deeplearning, le principe de neurone formel,
+les réseaux de neurones et la manière d'entrainer un réseau de neurones.
+
 Machine learning et bases
 +++++++++++++++++++++++++
 Le deeplearning est un ensemble de méthodes de machine learning. Le machine learning est l'un des champs d'étude de l'intelligence artificielle
@@ -360,12 +466,26 @@ des entrées reçues, puis applique au résultat de ce calcul une fonction d'act
 sortie du neurone. Ces neurones formels peuvent ensuite être assemblé entre eux pour former des réseaux et réaliser des tâches plus
 complexe. Ainsi le neurone formel est l'unité élémentaire des réseaux de neurones artificiels.
 
+.. figure:: images/neurone_bio.jpg
+   :width: 350px
+   :align: center
+   :alt: Illustration d'un neurone biologique
+
+   Illustration d'un neurone biologique
+
 L'un des éléments capitaux d'un neurones formels est la valeur de ces biais. Un biais est la pondération d'une des entrées. La plupart des
 neurones informatiques effectue une somme pondéré de leur entrée. Ainsi, plus une entrée à une valeur de biais importante, plus la "force"
 de la connexions est grande. Cela simule le comportement d'un neurone biologique, dans lequel plus une connexion est importante, plus
 celle-ci est sensible aux stimulis chimiques. Dans un reseau de neurones, la valeur des biais est mis à jour durant la phase d'apprentissage
 que nous avons évoqué plus haut. Durant cette phase, on va chercher à faire converger les valeurs des biais pour s'assurer une classification
 aussi proche que possible de l'optimal.
+
+.. figure:: images/neurone.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'un neurone formel
+
+   Illustration d'un neurone formel
 
 L'autre éléments important d'un neurones formel est sa fonction d'activation. Dans un premier temps, le neurone va récupérer ces entrées
 et les agrégers avec une fonction d'agrégation. La fonction d'agrégation la plus simple consiste en une somme pondéré par les biais des
@@ -383,6 +503,12 @@ cette dernière. Il existe en effet plusieurs fonctions d'activations typiques:
 * La fonction SOFTMAX  
 * etc...
 
+.. figure:: images/activation_fonction.png
+   :width: 350px
+   :align: center
+   :alt: Illustration des principales fonctions d'activation d'un neurone formel
+
+   Illustration des principales fonctions d'activation d'un neurone formel
 
 L'objectif de la fonction d'activation est d'introduire de la non-linéarité dans le fonctionnement du neurone. Les fonctions d'activation
 présente, en règle général, trois intervalles: 
@@ -390,7 +516,6 @@ présente, en règle général, trois intervalles:
 * Sous le seuil d'activation, le neurone est inactif
 * Au alentour du seuil, le neurone est dans une phase de transition
 * Au dessus du seuil, le neurone est actif
-
 
 Le neurone formel est la brique de base des réseaux de neurones que nous allons voir dans la partie suivante.
 
@@ -410,6 +535,13 @@ matrice est rempli avec les différents poids de chacunes des connexions avec le
 poids. En étendant ce principe nous pouvons en déduire que les réseaux de neurones même plus complexe, sont en réalité de longues chaines
 de calcul matriciel.
 
+.. figure:: images/perceptron.jpeg
+   :width: 350px
+   :align: center
+   :alt: Illustration d'un perceptron simple
+
+   Illustration d'un perceptron simple
+
 Un perceptron tel que décrit au dessus est également un réseau feed-forward. Il existe, en effet, manière de "nourrir" un réseau de neurones.
 Un réseau de neurones peut donc être "feed-forward" ou récurrent. Un modèle récurrent peut alimenter ses entrées avec ses sorties. Tandis que
 les réseaux "feed-forward" ne le peuvent pas.
@@ -417,6 +549,13 @@ les réseaux "feed-forward" ne le peuvent pas.
 Nous pouvons pouvons étendre le concept du perceptron en lui ajoutant des couches. Le perceptron de l'exemple précédent devient alors un
 perceptron multi-couches. Une couche est un ensemble de neurones connectés aux mêmes entrées mais pas relié entre eux. Dans le modèle
 multi-couches, les réseaux récurrents peuvent utiliser leurs sorties pour alimenter des entrées des couches précédentes.
+
+.. figure:: images/PMC.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'un perceptron multicouche
+
+   Illustration d'un perceptron multicouche
 
 Les modèles de deeplearning sont bâtis sur le même principe que les perceptrons multi-couche. Dans ce genre de modèle, le nombre de couche
 du perceptron sont plus nombreuses. Chacune des couches intermédiaires étant chargé de résoudre ou de découper un sous-problème. Ainsi si
@@ -466,10 +605,18 @@ sur le reste du réseau. Cela permet de faire gagner du temps pour la tâche a e
 
 Réseaux de convolution
 **********************
-Notions générales
-+++++++++++++++++
+Dans cette partie, le rapport se concentrera sur ce qu'est un réseau de convolution. Ces réseaux sont très courant dans le domaine de la vision par ordinateur.
+C'est pourquoi, nous allons voir quelques notions générales sur les réseaux de convolution, 
+
 Ce projet vise a traiter des images d'IRM. L'un des type de réseau de neurones dont la spécialité est de traiter des images est le réseau de neurones
-convolution (CNN). Cette partie du rapport est consacré à ce type de réseau.
+convolution (CNN).
+
+.. figure:: images/FirstLayers.png
+   :width: 350px
+   :align: center
+   :alt: Illustration du résultat du filtrage par convolution
+
+   Illustration du résultat du filtrage par convolution
 
 Les réseaux de convolution sont un type de réseau de neurones acyclique ("feed-forward") dans lequel le motif de connexion entre les neurones
 est inspiré par le cortex visuel des animaux. On peut donc lui passer en entrée une image et lui demander de la classifier.
@@ -480,6 +627,13 @@ pour créer de nouvelles images (carte de convolution). Les couches de convoluti
 utilisant la fonction d'activation RELU. On peut placer, entre les opérations de convolution, des filtres chargé de réduire la résolution
 de l'image par une opération de maximum local (Pooling). Au terme de cette étape, les cartes de convolutions sont concaténé en un vecteur
 de caractéristiques. Ce vecteur est souvent appelé le code CNN.
+
+.. figure:: images/CNN.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'un réseau de neurones de convolution
+
+   Illustration d'un réseau de neurones de convolution
 
 Ce code est alors utilisé en entrée de la seconde partie du réseau convolutif. Cette partie est en règle général constitué de couches
 entièrement connectées entre elle. Le but de cette partie est de combiner les caractéristiques du code CNN pour classifier l'image. 
@@ -530,7 +684,7 @@ Il existe plusieurs modèles de réseau convolutif devenus des standards. Ces ar
 
 * INPUT + CONVOLUTION + RELU + FULLY CONNECTED + LOSS
 * INPUT + (CONVOLUTION + RELU +POOLING)\*2 + FULLY CONNECTED + RELU + FULLY CONNECTED + LOSS
-* Input + (CONVOLUTION + RELU + CONVOLUTION + RELU + POOLING)\*3 + (FULLY CONNECTED + RELU)\* 2 + FULLY CONNECTED + LOSS 
+* Input + (CONVOLUTION + RELU + CONVOLUTION + RELU + POOLING)\*3 + (FULLY CONNECTED + RELU)\* 2 + FULLY CONNECTED + LOSS
 
 
 Deeplearning et calcul distribué
@@ -545,6 +699,13 @@ réseau de deeplearning. Il existe deux modèles principaux:
 
 Dans la parallélisation du modèle, les différentes machines sur le réseau distribué sont en charge d'une partie du réseau. Par exemple,
 chaque machine peut se voir assigné la gestion d'une couche du réseau de neurones.
+
+.. figure:: images/ModelDataParallelism.png
+   :width: 350px
+   :align: center
+   :alt: Illustration des modes de parallélisation
+
+   Illustration des modes de parallélisation
 
 Dans la parallélisation des données, les différentes machines sur le réseau distribué ont une copie complète du modèle de réseau. Chaque
 machine reçoit alors une partie des données et entraîne son modèle. Au terme de l'entraînement, les résultats sont combinés entre eux.
@@ -563,6 +724,14 @@ l'apprentissage fonctionne ainsi:
 3. Chaque machine entraîne son modèle avec les données en sa possession
 4. De nouveaux paramètres globaux sont calculés en fonction de la moyenne des paramètres de chaque machine
 5. Tant qu'il y a des données à traiter, on retourne a l'étape 2
+
+
+.. figure:: images/Updatebased.png
+   :width: 350px
+   :align: center
+   :alt: Illustration de l'approche de la moyenne des paramètres
+
+   Illustration de l'approche de la moyenne des paramètres
 
 
 Bibliothèque disponible et choix
@@ -677,7 +846,7 @@ ce chapitre contiendra les schémas utilisés durant la conception. Chacunes des
 afin d'en expliquer le concept et l'utilité.
 
 (A vérifier si toujours vrai + préciser si ca ne marche qu'avec IntelliJ ou aussi avec le jar)
-Toutefois, il est a noté que le rendu de ce projet contient deux programmes excécutable. Ces exécutable sont nommés "LREN-Deeplearning.jar"
+Toutefois, il est a noté que le rendu de ce projet contient deux programmes excécutables. Ces exécutable sont nommés "LREN-Deeplearning.jar"
 et "LREN_Deeplearning_DemoLocal.jar". Ceci est du à un problème de compatibilité de dépendance dans la bibliothèque Deeplearning4j. En
 effet, les dépendances liées à l'emploie de Spark et à l'emploi d'une UI pour la visualisation de l'entraînement ne sont pas compatible
 entre. Ce problème est plus précisément expliqué plus tard dans ce rapport. Cependant, ce qui est décrit dans ce rapport peut se porter
@@ -686,10 +855,16 @@ fournit un outil de visualisation de l'entraînement mais ne fournit pas d'outil
 
 Description du workflow et schéma de classe
 -------------------------------------------
-(Inserer un schéma du workflow)
 Ce projet peut fonctionner de plusieurs manières différentes. Les différents comportements du programme peuvent être configurer dans un
 fichier "\*.properties". Un fichier de configuration détaillé avec une brève explication des paramètres est fournit en annexe de ce rapport.
 La suite de ce rapport n'en reprendra que les grandes lignes.
+
+.. figure:: images/Workflow_appli.png
+   :width: 350px
+   :align: center
+   :alt: Illustration du workflow du programme
+
+   Illustration du workflow du programme
 
 La première chose que fait le programme est donc de créer un objet capabe de créer et de lire un fichier de configuration. Pour créer
 le fichier de configuration il suffit de lancer le fichier jar du projet sans autre paramètre. Le programme générera alors un fichier de
@@ -718,17 +893,20 @@ Puis dans le deux cas le programme termine la création d'un réseau avec la con
 fait pour fonctionner sur cet outil.
 
 Suite à cela le réseau est entrainé avec les données d'apprentissage puis évaluer avec les données de test. Les résultats de l'évaluation
-sont affiché à l'utilisateur et le réseau est sauvegarder dans un fichier selon la méthode demandé par le fichier de configuration, si la
+sont affiché à l'utilisateur et le réseau est sauvegarder dans un fichier selon la méthode demandée par le fichier de configuration, si la
 sauvegarde est demandé.
 
 Une fois le workflow défini, le schéma de classe a pu être conçu. Ce dernier a été imaginé en se focalisant sur les principales tâches
 du programme. Ainsi chaque tâche du programme peut être représenté par une classe.
 
-(Insert schema de classe)
+.. figure:: images/Schema_Classe.png
+   :width: 350px
+   :align: center
+   :alt: Schéma de classe
+
+   Schéma de classe
 
 Les classes représentées sur ce schéma sont décrite dans la suite du rapport.
-
-(trouve un endroit ou case la description du partage de donnee avec Spark.)
 
 Description des classes
 -------------------------
@@ -748,7 +926,7 @@ La classe "Configuration" est une classe très simple. Elle répertorie la liste
 Ces paramètres, comme vu plus haut permettent de choisir le fonctionnement du programme mais également de modifier le comportement du réseau
 de neurones.
 
-Cette classe contient de nombreuses méthodes. Toutefois celle-ci peuvent être classer en trois type de méthode:
+Cette classe contient de nombreuses méthodes. Toutefois celle-ci peuvent être classer en trois types de méthode:
 
 * Une méthode permettant de générer un fichier de configuration standard. Ce fichier permet de lancer une expérience de test fonctionnelle du programme.
 * Une méthode de lecture d'un fichier de configuration. Cette méthode lit le fichier et stock les valeurs des paramètres dans des attributs de la classe.
@@ -873,12 +1051,21 @@ Elle possède ainsi des méthodes pour:
 * d'entrainer le réseau au travers de Spark.
 * d'évaluer le réseau au travers de Spark.
 
-
 Cette classe est construite autour de la bibliothèque deeplearning4j.
 
 Choix de la topologie du réseau de neurones
 ------------------------------------------------
-(A remplir avec inspiration)
+La topologie du réseau de neurones retenu pour ce projet est une topologie on ne peut plus simple. 
+
+Le réseau de neurones est constitué d'une couche de convolution, d'une couche de pooling, d'une couche de complètement connecté et d'une couche de sortie pour deux classes.
+
+Cette topologie a finalement été choisie à cause de la quantité de mémoire disponible pour faire les tests. En effet, d'autre réseau plus complexe possédant par exemple plusieurs
+couches de convolutions, de pooling ont été essayé. Toutefois, les 32Go de mémoire RAM de la machine qui a servi au développement ne suffisait plus. Il a donc été décidé de partir
+sur un réseau bien plus simple mais fonctionnel sur la machine de développement. 
+
+Les résultats et les performances du réseau s'en ressentiront probablement lors des tests et des expérimentations. Toutefois, ce projet
+vise, avant tout, à vérifier que le traitement de fichiers au format NIFTI par un réseau de deeplearning est envisageable et peut donner des résultats
+encourageant vers le développement de cette technologie pour la plateforme du LREN.
 
 Implémentation
 ================
@@ -906,7 +1093,7 @@ dont voici la signature:
 prend comme paramètre le nom du fichier dont on va se servir et le paramètre booléen permet de dire si il doit généré ou lire le fichier spécifié. Cette variable booléenne
 est a true si le programme est lancé sans nom de fichier passé en paramètre. Elle est à false si le programme a comme paramètre le nom d'un fichier de configuration. 
 
-Si le programme doit généré un fichier de configuration, le nom de ce dernier sera "default.properties". Il sera généré par la méthode
+Si le programme doit généré un fichier de configuration, le nom de ce dernier sera "default.properties". Il sera généré par la méthode:
 
 .. code-block:: java
    :linenos:
@@ -979,7 +1166,7 @@ Le paramètre batchSize permet de lui donner le nombre d'exemple de chaques form
 nx, ny, nz permettend de fixer une taille à chacunes des dimensions spatiales du NIFTI. Ainsi, on peut obtenir des NIFTI dont les dimensions vaudront celle couramment employé par le CHUV,
 à savoir 190x190x160.
 
-Pour ce qui est de la génération a proprement parlé, deux méthodes sont employé. Chacunes d'entre elle a pour but de créer une forme selon les informations qui lui sont données en argument.
+Pour ce qui est de la génération a proprement parlé, deux méthodes sont employées. Chacunes d'entre elle a pour but de créer une forme selon les informations qui lui sont données en argument.
 Ces arguments sont les dimensions du NIFTI, la dimension du diamètre de la sphère ou la longueur du côté du cube, un offset pour la position de la forme et le nom du fichier à créer.
 On parcours ensuite l'ensemble des voxels du NIFTI en imbriquant trois boucle "for". Pour chaque voxel, on calcul si il appartient ou non à la forme. S'il appartient à la forme on lui
 assigne une valeur de 255 sinon une valeur de 0. 
@@ -1036,7 +1223,7 @@ la matrice que l'on veut créer.
 
 Une fois que les données sont lu et que les labels leurs sont liées, on peut créer un iterateur. Un itérateur est un objet dont les méthodes demandant l'entraînement du réseau se 
 serve. La classe dataReader fabrique alors deux itérateurs. Un pour le lot de données d'entrainement et le second pour le lot de données de test. La taille de chacun de ceux-ci est
-régis par le ratio fourni au constructeur de la classe. A la création de l'itérateur d'entraînement, nous lui fournissons le second paramètre de la méthode "createDataSet". Celui-ci
+régis par le ratio fourni au constructeur de la classe. A la création de l'itérateur d'entraînement, nous lui fournissons le second paramètre de la méthode "createDataSet()". Celui-ci
 correspond a la taille de minibatch de l'itérateur. C'est à dire le nombre d'image qui sont contenu dans chaque partition du dataset d'image complet.
 
 Ces itérateurs sont alors stocké tel quel dans l'objet "DataReader" en tant qu'attribut. Il est alors possible, à l'aide de getter, d'y avoir accès. Cependant, un pré-traitement peut
@@ -1071,8 +1258,7 @@ code ci-dessous:
             .learningRate(learningRate)
             .regularization(true)
             .l2(0.0001)
-            .update(Updater.NESTEROVS)
-            .momentum(momentum)
+            .update(Updater.RMSPROP)
             .list()
                 .layer(0, convolutionLayer)
                 .layer(1, subsamplingLayer)
@@ -1107,16 +1293,13 @@ Il existe différent type de méthode de régularisation dans Deeplearning4j:
   l2 a été choisie. Cette méthode fonctionne communément bien avec des valeurs comprise entre 0.001 et 0.00001. Cette valeur est configurable dans le fichier de configuration du programme.
 * La régularisation par "Dropout" est également utilisable. Cette méthode éteint des noeuds dans le réseau de neurones en les mettant à 0. Le réseau doit par conséquent compter sur
   d'autres parties du réseau.
-* "DropConnect" fonctionne sur le même principe que la méthode précédente mais en éteignant des connexions et non pas des noeuds. Cette méthode est moins usuelle.
+* "DropConnect" fonctionne sur le même principe que la méthode précédente mais en éteignant des connexions et non pas des noeuds. Cette technique est moins usuelle.
 * La régularisation peut également se faire en limitant le nombre de couche et la taille de ces dernières. Notre réseau est très simple et respecte donc par défaut cette règle.
-* Il existe une dernière méthode de régularisation. Celle-ci est la méthode dites d'"early stopping". Avec cette méthode, on cherche a arrêter l'entrainement du réseau lorsque le score
+* Il existe une dernière méthode de régularisation. Celle-ci est la méthode dites d'"early stopping". Avec cette technique, on cherche à arrêter l'entrainement du réseau lorsque le score
   du réseau lors des tests diminue alors que les scores du réseau lors de l'apprentissage continue d'augmenter.
 
-
-(Attention peut etre RMSPROP)
 Le paramètre "update" a pour but de fournir une méthode d'appréciation du learningRate. Elles permettent de modifier le learningRate durant l'entraînement pour le faire converger
-plus vite. Pour ce travail, le choix de la méthode Nesterovs a été fait. Cette méthode est très courammenet utilisé avec la descente de gradient stochastique. Le "momentum" permet
-de configurer la méthode Nesterovs. Ce paramètre est configurable dans le fichier de configuration.
+plus vite. Pour ce travail, le choix de la méthode RMSPROP a été fait. Car c'est avec cette méthode que les meilleurs résultats ont été obtenus. Ce choix est, ainsi fait, par l'expérimentation.
 
 Le paramètre "list" correspond à la liste des différentes couches du réseau. Les différentes couches sont décrite plus loin dans ce chapitre. En résumé, on crée ici un réseau de neurones
 de convolution très simple. Ce réseau possède une couche de convolution suivi d'une couche de pooling puis une couche de réseau entièrement connecté et d'une couche de sortie.
@@ -1153,6 +1336,13 @@ fonction "NEGATIVELOGLIKELIHOOD". Cette fonction de "loss" est une des fonctions
 utilisé. Le nombre de sortie de cette couche doit correspondre au nombre de classe de notre "classifier". Ce nombre de sortie peut être configuré dans le fichier de configuration du programme. Pour
 les expériences il a été utilisé avec une valeur de 2. La fonction d'activation de cette couche est la fonction "SOFTMAX" qui est très souvent conseillé lorsqu'il s'agit de faire un classifier avec 2
 classes.
+
+.. figure:: images/Schema_reseau.png
+   :width: 350px
+   :align: center
+   :alt: Topologie du réseau
+
+   Topologie du réseau
 
 
 Note sur l'apprentissage avec Deeplearning4j
@@ -1264,7 +1454,7 @@ Le paramètre "listTrainData" est une simple liste de "DataSet". Celle-ci peut �
 
 Entraînement et évaluation avec Spark sur un cluster
 ----------------------------------------------------
-(Attention ! Cette partie n'a pas pu être testé. En effet, l'accès à un cluster n'a pas été possible pendant la durée du projet.)
+(Attention! Cette partie n'a pas pu être testé. En effet, l'accès à un cluster n'a pas été possible pendant la durée du projet.)
 
 Pour faire fonctionner le "SparkDl4jMultiLayer" non plus en local mais sur un cluster, il faut faire quelques adaptions. 
 
@@ -1274,6 +1464,8 @@ Au moment de la configuration du "TrainingMaster", il est nécessaire de modifie
 * "mesos://HOST:PORT" si le réseau de neurones doit fonctionner sur un cluster tournant sur Mesos.
 * "yarn-client" si le réseau de neurones doit se connecter sur un cluster Yarn en tant que client. L'adresse du cluster doit se trouver dans le HADOOP_CONF_DIR.
 * "yarn-cluster" si le réseau de neurones doit tourner sur un cluster Yarn en mode cluster. L'adresse du cluster se trouve dans le HADOOP_CONF_DIR.
+
+Si on lance le réseau sur un cluster avec un fichier jar, il faut faire attention au paramètre de lancement. Ceux-ci dépendront du cluster sur lequel on veut le lancer.
 
 Sauvegarde et chargement d'un réseau
 ------------------------------------
@@ -1296,22 +1488,22 @@ Pour la sauvegarde dans un fichier binaire, il faut utiliser la méthode suivant
 
 On écrit ainsi les différents paramètres du réseau dans le fichier binaire.
 
-Pour les sauvegardes en JSON et YAML la méthode est quasiment la même. Il suffit de  d'écrire dans un fichier, à l'extension correspondante,
-le retour de la méthode "getLayerWiseConfiguration()". Cette méthode peut être suivi d'une méthode "toYaml()" ou "toJson()".
+Pour les sauvegardes en JSON et YAML la manière de faire est quasiment la même. Il suffit de  d'écrire dans un fichier, à l'extension correspondante,
+le retour de la méthode "getLayerWiseConfiguration()". Cette méthode peut être suivi d'une fonction "toYaml()" ou "toJson()".
 
 Pour la sauvegarde complète, Deeplearning4j fournit un objet "ModelSerializer". Ce dernier permet via sa méthode "writeModel()" de sauvegarder la
 configuration du réseau et les paramètres de ce dernier. Cette méthode prend en paramètre le réseau de neurones à sauvegarder, le chemin ou sauvegarder le réseau et
 un paramètre booléen activant ou non la sauvegarder des paramètres du réseau. Cette sauvegarde permet de recharger le réseau dans son état final.
 
 Pour ce qui est du chargement, celui-ci peut se faire également à l'aide de l'objet "ModelSerializer". Celui-ci offre en effet une méthode
-"restoreMultiLayerNetwork()". Celle-ci permet de charger un MultiLayerNetwork avec le réseau sauvegardé.
+"restoreMultiLayerNetwork()". Celle-ci permet de charger un "MultiLayerNetwork" avec le réseau sauvegardé.
 
 Expérience réalisée avec le CHUV
 =================================
 Afin de permettre de vérifier la faisabilité du projet demandé, le LREN a demandé la réalisation d'une expérience de classification sur des images IRM au format NIFTI qu'il utilise
 sur leur plateforme.
 
-Ce chapitre décrire la données de l'expérience, la préparation, le déroulement, l'exécution de l'expérience et les résultats obtenus. Pour des raisons de confidentialité, aucune image
+Ce chapitre décrit la données de l'expérience, la préparation, le déroulement, l'exécution de l'expérience et les résultats obtenus. Pour des raisons de confidentialité, aucune image
 fournit par le LREN ne pourra être affiché ici en guise d'exemple.
 
 Données de l'expérience
@@ -1328,11 +1520,42 @@ Préparation et exécution de l'expérience
 Pour réaliser cette expérience, les images ont été mise dans un dossier IRM_Expérience. Ce dossier contenait en vrac toutes les images NIFTI. Cette expérience a été réalisé en local sur la machine sans Spark puis sur Spark
 en local. Lancer l'expérience en local a permis de de visualiser l'expérience grâce la UI fournit par Deeplearning4j, puis sur Spark pour vérifier que les résultats soient les mêmes. 
 
-(Insérer l'image de la UI)
+.. figure:: images/DL4J_UI_Example.png
+   :width: 350px
+   :align: center
+   :alt: Illustration d'exemple de l'interface utilisateur de Deeplearning4j
 
-Cette UI a permis de faire un peu de tunning sur les paramètres du réseau. Au terme de nombreuses tentatives, les meilleurs résultats ont été obtenus avec ces paramètres:
+   Illustration d'exemple de l'interface utilisateur de Deeplearning4j
 
-* Ratio d'images d'entraînement 80% et 20% d'images de validation. Ces ratios sont appliquée de manière stratifiée.
+Cette UI a permis de faire un peu de tunning sur les paramètres du réseau. Afin d'utiliser au mieux cette interface utilisateur il est utile de
+savoir que: 
+
+* Le diagramme en haut à gauche représente le score en fonction des itérations. Il s'agit de la valeur
+  de la focntion de "loss" durant le minibatch courant. Cette courbe devrait, de manière général, toujours être décroissante.
+  Les caractéristiques de cette courbe peuvent aider à règler les paramètres de l'expérience:
+
+  + Si le score est de manière général est croissant, le "learningRate" est probablement trop grand ou que les données sont mal normalisées.
+  + Si le score est plat ou à décroissance lente:
+    
+    - Le "learningRate" est trop faible
+    - L'optimisation choisi n'est pas la bonne
+
+* Le tableau en haut à droite fournit des informations sur le réseau de neurones.
+* Le diagramme en bas à gauche fournit des informations sur le ratio de paramètres à mettre à jour par couche. Elle représente les poids par rapport aux itérations.
+  il fournit un outils pratique pour paramètrer le "learningRate".
+* Le diagramme en bas à droite fournit des informations sur les déviations standards par rapport au temps de l'activation, des gradients et des mise à jours des poids.
+  Il le fait pour chaque couche du réseau.
+
+  + Pour l'activation une bonne déviation standard doit se situer et être stabilisé entre 0.5 et 2.0.
+    Si ce n'est pas le cas, le problème peut venir d'une iniatilisation des poids trop faible, d'une régularisation trop importante, d'un manque de normalisation des données ou d'un "learningRate" trop haut.
+  + Pour les paramètres, seul la plus récentes des itérations est affiché. Si cette courbe part vers une asymptote verticale, le "learningRate" est trop haute ou la régularisation est trop faible.
+  + Pour les mise à jour, seul la plus récentes des itérations est affiché. Si cette courbe a de grandes valeurs, celà peut indiquer un problème de "learningRate" ou de normalisation.
+
+C'est en se servant de ces outils que les paramètres ont été fixé, notamment du premier diagramme. 
+
+Au terme de nombreuses tentatives, les meilleurs résultats ont été obtenus avec ces paramètres:
+
+* Ratio d'images d'entraînement 80% et 20% d'images de validation. Ces ratios sont appliqués de manière stratifiée.
 * Taille des minibatchs à 8
 * Normalisation des données activée
 * Nombre de sortie de la couche dense égal à 100
@@ -1340,50 +1563,390 @@ Cette UI a permis de faire un peu de tunning sur les paramètres du réseau. Au 
 * Nombre d'itération égal à 100
 * Nombre de label égal à 2
 * Nombre de couleur égal à 1 (donc niveau de gris)
-* LearningRate égal à 0.1
+* LearningRate égal à 0.001
 * Valeur de la régularisation l2 égal à 0.0005
 
-
-
+Le réseau de neurones utilisé correspond à celui-implémenter dans le programme et n'a donc pas été chargé depuis un fichier précédemment sauvegardé.
+Les résultats obtenus sont exposé dans la partie suivante.
 
 Résultats
 ---------
+Cette expérience nous a fournit comme les résultats suivants au terme de l'évaluation: 
 
-Analyses des résultats du projet
-================================
+(Insert printscreen résultat)
 
-Gestion de projet
+Les résultats affichés affichés ci-dessus sont plutôt réjouissant. On peut voir que le réseau permet de classifier les différents type des cerveaux avec un taux de réussite de près de 70%. 
+
+
+Analyses du projet
 ==================
-Diagramme de Gantt
--------------------
-Journal de travail
--------------------
-Analyse de la gestion de projet
--------------------------------
+Ce chapitre a pour but de présenter une analyse du projet rendu. Le rapport présente dans la suite de ce chapitre, les fonctionnalités implémentés, les fonctionnalités manquantes, les difficultés rencontrées
+seront abordées. Une explication aux deux projets rendus est également donnée.
+
+Fonctionnalité implémenté
+-------------------------
+Ce projet implémente les fonctionnalités suivantes:
+
+* Génération de données au format NIFTI. Ces fichiers représentent des sphères et des cubes.
+* Lecture d'une base de données d'images. Cette base de données d'images est un simple dossier contenant en vrac les images nécessaires à l'entraînement et à la validation du réseau de neurones.
+* Configuration d'un réseau de neurones.
+* Déploiement du réseau de neurones sur une machine simple, sur Spark en local et sur un cluster.
+* Sauvegarde du modèle d'un réseau de neurones sur un fichier (YAML, JSON, BIN)
+* Sauvegarde et chargement du modèle et des poids d'un réseau de neurones.
+* Entraînement et évaluation d'un réseau de neurones.
+* Configuration du programme par un fichier de configuration afin de pouvoir aisément modifier de nombreux paramètres du programme.
+
+
+Grâce à ces fonctionnalités des expériences ont pu être exécuté. La suite de ce chapitre présente les conclusions que permettent de faire les résultats de ces dernières.
+
+Conclusion sur les résultats des expériences
+--------------------------------------------
+Grâce à ce projet, deux types d'expériences ont été exécutés. La première consiste en la classification de 300 images de sphères et de 300 images de cubes au format NIFTI. Ces fichiers sont des images noirs et blanches et respecte précisément le format des fichiers du CHUV.
+La seconde expérience est celle fournit par le LREN et consiste en la classification d'image IRM de la matière grise du cerveau. Ces dernières sont en niveaux de gris et sont évidemment plus bruité que les images générées.
+
+La classification des formes simples ont données d'excellents résultats malgré la simplicité du réseau de neurones utilisé. En effet, cette expérience a permis de classifier les sphères et les cubes avec un taux de succès de près de
+97.5%. Ces résultats prouvent que la classification d'images au format NIFTI est possible avec un réseau de neurones. Toutefois, il ne faut pas perdre de vue le fait que ces images sont très simple. Le traitement
+de NIFTI semblant être possible, il a été intéressant d'ensuite tenté l'expérience du CHUV.
+
+.. figure:: images/Schema_Classe.png
+   :width: 350px
+   :align: center
+   :alt: Schéma de classe
+
+   Schéma de classe
+
+Cette dernière a obtenu des performances bien moindre. Avec ces taux de classification proche de 69.4%, on ne peut pas dire que la fiabilité du résultat est suffisante pour dire que l'expérience est un succès
+total. Toutefois, ces images sont beaucoup plus complexe que les précédentes et le réseau est toujours aussi simple. De plus le nombre d'images alloué à cette expérience est très faible (183). Avec plus de temps et une machine plus puissante,
+il aurait été possible de mieux ajuster les paramètres du réseau (d'essayer plus de mélanges de paramètres), d'essayer d'autre configuration de réseau. De plus, afin de créer un réseau entraîner performant avoir un jeu d'images plus imposants
+permettrait de meilleurs résultats.
+
+De ces deux expériences, nous pouvons dire que la classification d'images IRM du cerveau et le diagnostique automatique de maladie neurologique avec un réseau de neurones est très prometteurs.
+
+Fonctionnalités manquantes
+--------------------------
+Pour être un projet parfaitement complet, il manque un certain nombre de fonctionnalité. Ces fonctionnalités n'ont pas pu être réalisé faute de temps:
+
+* Intégration du programme à la plateforme du CHUV
+* Modification du portail Web pour permettre l'utilisation des algorithmes de deeplearning
+* Intégration des bases de données du CHUV
+* K-Fold Cross Validation
+
+Difficultés rencontrées
+-----------------------
+Comme la plupart des projets, certaines difficultés ont été rencontrées durant sa réalisation. Cette partie de rapport soulignes ces dernières afin de mettre en garde sur ces points là, dans le cas où se projet serait
+repris.
+
+Ces difficultés sont: 
+
+* la gestion des dépendances de deeplearning4j avec Maven. Notamment, un problème de dépendance concernant l'interface utilisateur et l'utilisation de Spark. Ceci rend l'utilisation de Spark et d'une interface utilisateur bien plus complexe.
+* la lecture des données et sa mise en forme pour qu'elles puissent être gérées par le réseau de neurones.
+* la compréhension des différents paramètres du réseau de neurones et leurs effets sur l'entraînement de ce dernier.
+* la gestion de la mémoire. En effet, la taille et le nombre de données à traiter ont facilement tendance a remplir la mémoire. Il était donc très difficiles de tester des types et des configurations de réseau de neurones différents sans faire planter la mémoire.
+
+Pourquoi deux projets ?
+-----------------------
+Les difficultés rencontrées sont la raison pour laquelle le rendu contient deux projets. Notamment la difficulté à faire cohabiter les dépendances de Spark avec les dépendances de l'interface utilisateur de deeplearning4j.
+Afin de palier a ce problème, un projet ne comportant que la partie ne fonctionnant pas sur Spark et une interface a été réaliser pour permettre de visualiser l'entraînement du réseau pour règler les paramètres de ce dernier.
+
+Le dossier de rendu du projet complet est nommé "Projet_complet". Ce dossier contient le programme complet contenant les deux manières d'entraîner un réseau (avec ou sans Spark).
+
+Le dossier de rendu du projet ne fonctionnant pas sur Spark mais permettant de visualiser l'entraînement en direct est nommé "Projet_demo".
+
+Note sur la gestion de projet
+===============================
+Une part non-négligeable du projet portait sur sa gestion. En effet, les premières semaines du projet était réservé à sa plannification et un journal de travail devait être tenu régulièrement par l'élève
+réalisant ce travail. De plus, ce projet est une collaboration entre le LREN du CHUV et la HES de Neuchâtel et il fallait pouvoir tenir les deux parties au courant des évolutions du projet. Pour rappel, ce projet
+devait être réalisé sur un total de 450h. La suite de ce chapitre présentera la manière dont ces heures ont été organisé, la tenue du journal de travail, l'organisation de la collaboration et la méthodologie de travail
+sont présenté. 
+
+Les 450 heures alloués à ce projet furent réparties de cette manière:
+
+* 50 heures (5h de travail par semaine pendant 10 semaines) ont été données à l'analyses du projet, aux choix des outils et à la prise en main de ces derniers.
+* 320 heures (8h de travail par jour pendant 8 semaines) ont été données à la conception, la réalisation et les tests du programme.
+* 80 heures (8h de travail par jour pendant 2 semaines) ont été données aux expériences, à leur analyse et à la rédaction du rapport.
+
+Ce nombre d'heures a régulièrement été un peu dépassé afin d'avoir un programme et un rendu convenable aux dates demandées.
+
+Au terme de chaque journée de travail, une dizaine de minutes était alloué à la tenue d'un journal de travail. Ce dernier résume en quelques mots le travail effectué durant la journée.
+
+Afin de pouvoir collaboré avec le LREN de nombreuses petites scéances ont été prévus et faites durant la période de travail. Au minimum une rencontre entre l'élève et le superviseur du projet était organisé
+par semaine. Le but de ces rencontres était de tenir au courant le superviseur de la HES des avancées du travail et de ce qui a été décidé lors des réunions entre l'élèves et le mandant du LREN. Les réunions entre
+le mandant du CHUV et l'élève de la HES aurait dû avoir lieu chaque semaine. Toutefois, il n'a pas été possible de respecté ce rythme sur toute la durée du projet. Les deux parties ont donc fait au mieux pour fonctionner
+ensemble. Ainsi, un Trello et un channel de discussion Slack ont été mise en place afin de facilité la communication entre le LREN et l'exécutant de la HES.
+
+La méthodologie de travail du CHUV a été adopté pour ce travail. Ces derniers travaillent en utilisant une méthodologie agile. Donc bien qu'une plannification du travail ait été faites au début du projet,
+cette dernière n'a que très peu servi de guide au travail.
 
 Conclusion
 ============
+Ce projet demandait la réalisation d'un pipeline permettant d'exécuter des expériences de
+classification Deeplearning sur des images IRM au format NIFTI pour le CHUV.
+
+Ce projet avait pour contrainte de pouvoir fonctionner sur une plateforme fonctionnant sur
+Java Virtual Machine. De plus, il doit pouvoir permettre la distribution du calcul avec la
+technologie Apache-Spark. Les images a traiter sont des images au format NIFTI, un format
+spécialisé pour les scanner IRM.
+
+Cette tâche a été découpé en différentes étapes. Les premières semaines du projet furent
+consacrées à l'analyse du problème, au choix des différentes technologies et à la prise en main
+de ces dernières par des travaux d'exemples. La seconde partie a servi à la conception du projet et
+à son implémentation. Puis une troisième partie importante fût consacré au test et à divers essaie
+afin de tuner au mieux le réseau de neurones. Une fois ce dernier en place, une expérience donnée par
+le CHUV fût réalisé.
+
+Les outils choisi pour la réalisation de ce travail sont:
+
+* niftijio pour permettre de lire les fichiers au format NIFTI et les utiliser dans un code Java
+* Deeplearning4j, une bibliothèque de deeplearning pour Java et pouvant fonctionner avec Spark et aussi bien sur un CPU que sur un GPU
+
+Le programme conçu peut tourner aussi bien sur une machine seule que sur un cluster Spark.
+Cette possibilité est offerte par le programme grâce à un fichier de configuration. Ce dernier permet,
+en plus de choisir le mode d'exécution, de modifier des paramètres inhérents au réseau de neurones.
+
+En effet, ce programme fourni un réseau de neurones plutôt simple. Ce dernier est un réseau de convolution fonctionnant
+avec 4 couches (Convolution + Pooling + Dense + couche de sortie). D'autres topologies de réseau ont été essayé, toutefois
+pour des raisons de mémoire sur la machine de test, le réseau a dû être simplifié au maximum.
+
+Ce projet permet également de généré des données d'expérimentation au format NIFTI. En effet,
+au début du projet, il fallait un jeu de données classifiable et simple. Afin, de ne pas perdre trop
+de temps avec la recherche d'image IRM open-source, le choix a été fait de créer un générateur. Ce dernier
+permet de créer des représentations de sphères et de cubes dans des fichiers NIFTI. Ces fichiers ont la même
+caractéristiques que les images du CHUV. 
+
+Les résultats obtenues par les essais de classification des sphères et des cubes sont prometteurs.
+En effet, ces données très simple et binaire peuvent être classifier avec des taux de succès de 97,5%.
+Il est a noté que l'entrainement et les tests se sont fait sur un lot de 600 images. 300 d'entre elles représentant
+des cubes et les 300 autres représentant les sphères.
+
+Pour obtenir ces résultats le programme fonctionne en séparant le jeu de données en 2 lots, un lot de test et un lot
+d'entrainement. La séparation dans ces deux lots des fichiers se fait de manière aléatoire.
+
+Les résultats prometteurs sur les cubes et les sphères ont permis de lancer l'expérience proposé par le CHUV. Celle-ci
+visait à classifier des images IRM de la matière grise de patient. Cette classification visait à séparer les images de
+cerveau porteur d'Alzheimer des cerveaux sains. 
+
+Cette expérience a été réalisé avec un lot de 183 images et le meilleur résultats obtenu pour la classification de ces images
+est de 69.4% de classification réussi.
+
+Ces résultats sont sans doute encore améliorable mais sont déjà plutôt prometteur. Il semble indiquer qu'il est possible de classifier
+des cerveaux selon ces critères. Toutefois, il faudrait des réseaux de neurones plus complexes, un jeu de données plus grand et
+des techniques d'entrainements plus spécifique (EarlyStop, k-fold Cross Validation). Ces améliorations sont mentionnée dans la suite
+de ce chapitre.
+
+Il est donc possible de conclure que le projet de traité des données au format NIFTI d'IRM du cerveau est totalement réalisable. Celà pourrait
+même fournir des résultats de diagnostique automatique très fiable. Cependant, pour faire celà, il faudra des machines bien plus performantes que
+la machine ayant servi au développement de ce projet. Ainsi les réseaux de neurones utilisable pourront être plus complexe et fournir de meilleurs
+résultats. Un cluster serait idéal pour réaliser une version plus performantes de ce projet.
+
 Améliorations futures
-----------------------
-Ressenti personnel
--------------------
+---------------------
+Comme tout travail, ce projet est encore perfectible. Cette partie du chapitre est consacré à quelques améliorations que ce projet
+pourrait encore subir. 
+
+Afin d'améliorer la qualité de l'entrainement, deeplearning4j recommande d'utiliser ce qu'il appelle la technique "earlyStopping".
+Le fonctionnement de la méthode "earlyStopping" est relativement simple. Il suffit de séparer les données en 2 datasets, test et training.
+Ceci est déjà en place dans le projet. Ensuite on entraîne le réseau  et à chaque epoch (ou N epoch), on
+évalue le réseau avec le set de données de test. Si les performances de sortie du réseau sont meilleurs que les performances de sortie du réseau
+à l'epoch précédente, on sauvegarde le model du réseau à l'epoch courante. On arrête l'entrainement selon des critères que l'on choisit.
+Par exemple, un nombre d'epoch maximum ou un temps maximum. Le modèle final est le réseau sauvegardé et
+le meilleur des modèles qui a été entrainé. Le but de cette méthode étant d'éviter l'overfitting (sur-apprentissage). Il arrêterait en
+effet, l'entraînement au moment ou la précision de prédiction de test diminue. Le graphique ci-dessous montre ce que cherche à faire cette technique.
+
+Cette solution est presque déjà implémenté grâce aux outils fournit par deeplearning4j[*]_. Toutefois, en l'état, lorsqu'elle
+est utilisé cette dernière lève une exception dû à un problème de lecture d'un fichier qui n'existe pas. Cependant, le temps
+manquant cette option n'a pas été terminé.
+
+.. [*] https://deeplearning4j.org/earlystopping
+
+Une autre des améliorations possible est l'intégration de la technique de "K-Fold Cross Validation". Cette technique consiste à séparer
+les données en K dossiers. Généralement K vaudra 10. On prend ensuite un des K dossier comme ensemble de validation et les (k-1) ensembles
+restant comme dataset d'entraînement. On entraine le réseau et on calcul la performance du réseau. On recommence ensuite l'opération en prenant un autre
+ensemble comme ensemble de validation et l'on fait celà jusqu'à ce que tout les ensembles aient servis d'ensemble de validation. On calcul enfin la moyenne des
+erreurs pour estimer l'erreur de prédiction que fait le réseau. 
+
+Deeplearning fournit des outils pour réaliser cette technique. Ils ont un objet "KFoldIterator" qui sert
+à réaliser cette expérience. Il faudrait donc le remplir avec nos données et le donner comme itérateur à la méthode d'entraînement de notre réseau.
+
+Une autre amélioration possible serait d'intégrer/créer des outils d'"Automated Machine Learning". Ce concept est un concept encore très jeune (millieu 2016).
+Le but de de ce concept est de permettre le choix du modèle, des hyperparameter d'un réseau et même la manière de vectoriser les données en entrée d'un algorithme de
+machine learning. On pourrait donc imaginer celà adapter à deeplearning4j et au deeplearning. Il pourrait ainsi permettre l'automatisation du choix du modèle et de ces paramètres
+pour avoir une expérience la plus proche possible de l'optimal. Ce concept est encore très récent et les implémentations de ce dernier sont encore très peu nombreuses. Toutefois,
+le concept est prometteur et pourrait être intéressant à ajouter à un projet semblable.
+
+Ressenti personnel et remerciements
+-----------------------------------
+A titre personnel, j'ai trouvé ce projet réellement très enrichissant. Ce dernier m'a permis de me perfectionner dans une branche que je trouve captivante.
+Nous voyons assez peu de deeplearning durant les cours données à la HES de Neuchâtel. Et j'ai donc trouvé ca intéressant de pouvoir m'y plonger un peu plus au travers de ce projet.
+J'ai ainsi beaucoup appris sur ce domaine. 
+
+De plus, le fait de travailler avec le LREN sur un projet de l'envergure du "Human Brain Project" était une réelle motivation supplémentaire. J'espère avoir pu apporter
+une contribution, aussi infime soit-elle, intéressante pour ce projet. C'est le genre d'initiative que je trouve importante. Et je suis ravi d'avoir pu travailler un moment sur ce projet.
+
+Je tiens également, à travers cette partie de rapport, remercier Messieurs Fabrizio Albertetti et Arnaud Jutzeler pour leurs aides, leurs soutiens et leurs conseils lors de la réalisation de ce projet.
 
 Sources
 ========
+Toutes les sources citées ci-dessous ont été vérifié à la relecture de ce rapport en date du 26.01.2017.
+
+Human Brain Project et LREN
+---------------------------
+
+* Département des neurosciences cliniques, "Le Human Brain Project au CHUV": http://www.chuv.ch/neurosciences/dnc_home/dnc-recherche/dnc-hbp.htm
+* Laboratoire de recherche en neuroimagerie, "The Human Brain Project": https://www.unil.ch/lren/en/home/menuinst/human-brain-project.html
+* Laboratoire de recherche en neuroimagerie, "Home page": https://www.unil.ch/lren/en/home.html
+* Human Brain Project, "Home page": https://www.humanbrainproject.eu/en/
+* Human Brain Project, "The medical Informatics Platform": https://www.humanbrainproject.eu/en/medicine/medical-informatics-platform/
+
+Le calcul distribué
+-------------------
+
+* Wikipédia, "Calcul distribué": https://fr.wikipedia.org/wiki/Calcul_distribu%C3%A9
+* Céline Hudelot et Régis Behmo, "Réalisez des calculs distribués sur des données massives": https://openclassrooms.com/courses/realisez-des-calculs-distribues-sur-des-donnees-massives/initiez-vous-au-calcul-distribue
+* Pierre Pinard, "Calcul distribué": http://assiste.com/Calcul_distribue.html
+* Emmanuel Jeannot, "Calcul distribué: une introduction": http://cdsweb.u-strasbg.fr/meeting3/Calcul_distribue.pdf
+* Salvatore Salamone, "Le calcul distribué part à la conquête des entreprises": http://www.zdnet.fr/actualites/le-calcul-distribue-part-a-la-conquete-des-entreprises-2110797.htm
+* SOSPC, "Calcul distribué": https://www.sospc2424.ch/site/fr/lexique/-99-calcul-distribue/
+* Wikipédia, "Hadoop": https://fr.wikipedia.org/wiki/Hadoop
+
+Le Deeplearning et réseau de convolution
+----------------------------------------
+
+* SQLI et Manuel Alves, "Le Deeplearning pas à pas: Les concepts (1/2)": https://www.technologies-ebusiness.com/enjeux-et-tendances/le-deep-learning-pas-a-pas
+* SQLI et Manuel Alves, "Le Deeplearning pas à pas: Les concepts (2/2)": https://www.technologies-ebusiness.com/langages/le-deep-learning-pas-a-pas-limplementation-22
+* Philippe Beraud, "Une première introduction au Deep Learning": https://blogs.msdn.microsoft.com/mlfrance/2016/04/28/une-premiere-introduction-au-deep-learning/
+* Alp Mestan, "Introduction aux Réseaux de Neurones Artificiels Feed Forward": http://alp.developpez.com/tutoriels/intelligence-artificielle/reseaux-de-neurones/
+* Wikipédia, "Réseau neuronal convolutif": https://fr.wikipedia.org/wiki/R%C3%A9seau_neuronal_convolutif
+* Wikipédia, "Apprentissage profond": https://fr.wikipedia.org/wiki/Apprentissage_profond
+* LISA lab., "Convolutional Neural Networks (LeNet)": http://deeplearning.net/tutorial/lenet.html
+* Michael Nielsen, "Deep learning": http://neuralnetworksanddeeplearning.com/chap6.html
+* Tim Dettmers, "Understanding Convolution in Deep Learning": http://timdettmers.com/2015/03/26/convolution-deep-learning/
+* Rutger Ruizendaal, "Deep Learning #2: Convolutional Neural Networks": https://medium.com/towards-data-science/deep-learning-2-f81ebe632d5c
+* Adam Geitgey, "Machine Learning is Fun! Part 3: Deep Learning and Convolutional Neural Networks": https://medium.com/@ageitgey/machine-learning-is-fun-part-3-deep-learning-and-convolutional-neural-networks-f40359318721
+* Stanford University CS231n, "Convolutional Neural Network": http://ufldl.stanford.edu/tutorial/supervised/ConvolutionalNeuralNetwork/
+* Stanford University CS231n, "CS231n: Convolutional Neural Networks for Visual Recognition": http://cs231n.stanford.edu/
+
+La technologie Spark
+--------------------
+
+* Databricks, "Intro to Apache Spark": http://training.databricks.com/workshop/itas_workshop.pdf
+* Wikipédia, "Apache-Spark": https://fr.wikipedia.org/wiki/Apache_Spark
+* Apache Spark, "Apache-Spark": https://spark.apache.org/
+* HortonWorks, "Apache Spark": https://fr.hortonworks.com/apache/spark/
+* Alexis Seigneurin, "Introduction à Apache Spark": https://blog.ippon.fr/2014/11/06/introduction-a-apache-spark/
+* Srini Penchikala, "Traitements Big Data avec Apache Spark - 1ère partie : Introduction": https://www.infoq.com/fr/articles/apache-spark-introduction
+* Semtech Solutions Ltd, "An introduction to Apache Spark": https://fr.slideshare.net/mikejf12/an-introduction-to-apache-spark
+* Nitin Bandugula, "Spark": https://mapr.com/blog/5-minute-guide-understanding-significance-apache-spark/
+
+Deeplearning4j
+--------------
+
+* Wikipédia, "Deeplearning4j": https://en.wikipedia.org/wiki/Deeplearning4j
+* Deeplearning4j, "Deeplearning4j": https://deeplearning4j.org/
+* Deeplearning4j, "Deeplearning4j doc": https://deeplearning4j.org/doc/
+* Github, "Deeplearning4j github": https://github.com/deeplearning4j
+* Nd4j, "Nd4j": http://nd4j.org/
+* Github, "Nd4j github": https://github.com/deeplearning4j/nd4j
+* Gitter, "Deeplearning4j": https://gitter.im/deeplearning4j/deeplearning4j
+
+Java
+----
+
+* Oracle, "Java": https://www.java.com/fr/
+* Oracle, "Java 8 doc": https://docs.oracle.com/javase/8/docs/api/
+
+Etat de l'art des bibliothèques de deeplearning
+-----------------------------------------------
+TensorFlow
+++++++++++
+
+* TensorFlow, "Home page": https://www.tensorflow.org/
+* Github, "TensorFlow": https://github.com/tensorflow/tensorflow
+* Shadaj, "TensorFlow in Scala with ScalaPy": http://blog.shadaj.me/2017/01/04/tensorflow-in-scala-with-scalapy.html
+* Tim Hunter, "Deep Learning with Apache Spark and TensorFlow": https://databricks.com/blog/2016/01/25/deep-learning-with-apache-spark-and-tensorflow.htm
+* PhD. Christopher Nguyen - Chris Smith - Ushnish De - Vu Pham et Nanda Kishore, "Distributed TensorFlow: Scaling Google's Deep Learning Library on Spark": https://www.slideshare.net/arimoinc/distributed-tensorflow-scaling-googles-deep-learning-library-on-spark-58527889
+
+
+TensorFrames
+++++++++++++
+
+* Github, "TensorFrames": https://github.com/databricks/tensorframes
+* Tim Hunter, "TensorFrames: Google TensorFlow on Apache Spark": https://fr.slideshare.net/databricks/tensorframes-google-tensorflow-on-apache-spark
+* DataBriks, "TensorFrames user guide": https://github.com/databricks/tensorframes/wiki/TensorFrames-user-guide
+
+BigDL
++++++
+
+* Alexandre Rodrigues, "Intel open source BigDL, une bibliothèque d'apprentissage en profondeur distribuée pour Apache Spark": https://www.infoq.com/fr/news/2017/01/bigdl-deep-learning-on-spark
+* Intel, "BigDL: Distributed Deep Learning on Apache Spark": https://software.intel.com/en-us/articles/bigdl-distributed-deep-learning-on-apache-spark
+* Sue Ann Hong et Joseph Bradley, "Intel’s BigDL on Databricks: Distributed deep learning on Apache Spark": https://databricks.com/blog/2017/02/09/intels-bigdl-databricks.html
+* Serdar Yegulalp, "Intel's BigDL deep learning framework snubs GPUs for CPUs": http://www.infoworld.com/article/3158162/artificial-intelligence/intels-bigdl-deep-learning-framework-snubs-gpus-for-cpus.html
+* Docker, "Docker: BigDL": https://hub.docker.com/r/intelanalytics/bigdl/
+
+Keras
++++++
+
+* Joeri Hermans, "Distributed Deep Learning with Apache Spark and Keras": https://db-blog.web.cern.ch/blog/joeri-hermans/2017-01-distributed-deep-learning-apache-spark-and-keras
+* Github, "Github: Elephas": https://github.com/maxpumperla/elephas
+* Joeri Hermans, "Distributed Keras": http://joerihermans.com/work/distributed-keras/
+* Keras, "Home page": https://keras.io/
+
+Caffe on Spark
+++++++++++++++
+
+* Andy Feng, "CaffeOnSpark Open Sourced for Distributed Deep Learning on Big Data Clusters": http://yahoohadoop.tumblr.com/post/139916563586/caffeonspark-open-sourced-for-distributed-deep
+* Github, "CaffeOnSpark": https://github.com/yahoo/CaffeOnSpark
+* Xiaoyong Zhu, "Distributed Deep Learning on HDInsight with Caffe on Spark": https://blogs.msdn.microsoft.com/azuredatalake/2017/02/02/distributed-deep-learning-on-hdinsight-with-caffe-on-spark/
+
+SparkNet
+++++++++
+
+* Github, "SparkNet": https://github.com/amplab/SparkNet
+* Matthew Mayo, "Spark + Deep Learning: Distributed Deep Neural Network Training with SparkNet": http://www.kdnuggets.com/2015/12/spark-deep-learning-training-with-sparknet.html
+
+dllib
++++++
+
+* dllib, "A Distributed Deep Learning framework running on Apache Spark": https://www.lewuathe.com/dllib/
+* Github, "dllib": https://github.com/Lewuathe/dllib
+* dllib, "Introduction of dllib": https://www.lewuathe.com/introduction-of-dllib.html
+
+Comparaison
++++++++++++
+
+* Zhe Dong et Dr. Yu Cao, "Which is deeper: Comparison of Deep Learning Frameworks Atop Spark": https://www.slideshare.net/SparkSummit/which-is-deeper-comparison-of-deep-learning-frameworks-on-spark
+* John Murphy, "Deep Learning Frameworks: A Survey of TensorFlow, Torch, Theano, Caffe, Neon, and the IBM Machine Learning Stack": https://www.microway.com/hpc-tech-tips/deep-learning-frameworks-survey-tensorflow-torch-theano-caffe-neon-ibm-machine-learning-stack/
+
+Forums
+------
+
+* Stackoverflow, "Home page": https://stackoverflow.com/$
+
+K-Fold Cross validation avec Deeplearning4j
+-------------------------------------------
+
+* Github, "KFoldIterator": https://github.com/deeplearning4j/nd4j/blob/63d6e2520acec97bce5a052512d1a73163163fd1/nd4j-backends/nd4j-api-parent/nd4j-api/src/main/java/org/nd4j/linalg/dataset/api/iterator/KFoldIterator.java
+* Wikipédia, "Validation croisé": https://fr.wikipedia.org/wiki/Validation_crois%C3%A9e
+* Wikipédia, "Cross-validation (statistics)": https://en.wikipedia.org/wiki/Cross-validation_(statistics)
+
+
+Automated Machine Learning
+--------------------------
+
+* charleslparker, "Machine Learning Automation: Beware of the Hype!": https://blog.bigml.com/2017/01/23/machine-learning-automation-beware-of-the-hype/
+* Hamel Husain, "Automated Machine Learning — A Paradigm Shift That Accelerates Data Scientist Productivity @ Airbnb": https://medium.com/airbnb-engineering/automated-machine-learning-a-paradigm-shift-that-accelerates-data-scientist-productivity-airbnb-f1f8a10d61f8
+* Matthew Mayo, "The Current State of Automated Machine Learning": http://www.kdnuggets.com/2017/01/current-state-automated-machine-learning.html
+
 
 Annexes
 ========
-Cahier des charges
-------------------
+En annexe de ce travail sont fournit:
 
-Journal de travail
--------------------
+* Le cahier des charges du projet
+* Le journal de travail de l'étudiant ayant travaillé sur ce projet
+* La plannification du projet faites au début du projet
+* Le manuel utilisateur pour les tests
+* Un fichier de configuration commenté
+* La Java Doc du projet
+* Schéma de classe
+* Schéma du workFlow du programme
 
-Plannification
----------------
-
-Manuel utilisateur
--------------------
-
-Bibliographie
---------------
