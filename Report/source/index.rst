@@ -102,7 +102,7 @@ médicale. N'étant pas employé dans le reste du projet, il ne sera pas plus d�
 image IRM mis en place par quelques uns des acteurs les plus influents de la neuro-imagerie. Etant le format principalement
 employé dans ce projet, il fera l'objet d'une description détaillé dans la partie consacré aux analyses préliminaires.
 
-.. figure:: images/brain_IRM.png
+.. figure:: images/Brain_IRM.png
    :width: 350px
    :align: center
    :alt: Illustration d'une IRM du cerveau au format NIFTI
@@ -726,7 +726,7 @@ l'apprentissage fonctionne ainsi:
 5. Tant qu'il y a des données à traiter, on retourne a l'étape 2
 
 
-.. figure:: images/Updatebased.png
+.. figure:: images/UpdateBased.png
    :width: 350px
    :align: center
    :alt: Illustration de l'approche de la moyenne des paramètres
@@ -1337,7 +1337,7 @@ utilisé. Le nombre de sortie de cette couche doit correspondre au nombre de cla
 les expériences il a été utilisé avec une valeur de 2. La fonction d'activation de cette couche est la fonction "SOFTMAX" qui est très souvent conseillé lorsqu'il s'agit de faire un classifier avec 2
 classes.
 
-.. figure:: images/Schema_reseau.png
+.. figure:: images/schemaReseau.png
    :width: 350px
    :align: center
    :alt: Topologie du réseau
